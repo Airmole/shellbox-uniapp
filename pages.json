@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "pages/index/feature"
+		},
+		{
+			"path": "pages/setting/profile"
 		}
 	],
 	"globalStyle": {

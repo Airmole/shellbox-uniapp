@@ -1,14 +1,13 @@
 <template>
 	<view>
-		<view class="bg-img bg-mask"
-			:style="{ backgroundImage: `url(${bgImgUrl})`, height: pageHeight + 'px' }">
-			<cu-custom bgColor="#ffffff" :isBack="false">
+		<view class="bg-img bg-mask" :style="{ backgroundImage: `url(${bgImgUrl})`, height: pageHeight + 'px' }">
+			<cu-custom bgColor="#ffffff" :isBack="true">
 				<block slot="content"><span class="text-white">登录</span></block>
 			</cu-custom>
 			<view class="margin-top-xxl padding margin radius">
 				<view class="text-center margin">
-					<image class='cu-avatar round' style="height: 180upx;width: 180upx;;"
-						src="https://store2018.muapp.cn/images/weapp/logo.jpeg" mode="aspectFit"></image>
+					<image class='cu-avatar round' style="height: 180upx;width: 180upx;;" :src="logoUrl"
+						mode="aspectFit"></image>
 				</view>
 				<form>
 					<view class="cu-form-group round margin-top-xl">
@@ -25,8 +24,18 @@
 				<view class="flex padding-top">
 					<button style="visibility: hidden;" class="flex-sub round margin-right cu-btn lg">快速免密登录</button>
 					<button @click="submitLogin()" class="flex-sub round margin-left cu-btn lg bg-green">
-						绑定登录 <span class="cuIcon-right"></span>
+						绑定登录 <span class="cuIcon-right margin-left-xs"></span>
 					</button>
+				</view>
+			</view>
+		</view>
+
+
+		<view class="cu-modal" :class="isLoading?'show':''">
+			<view class="cu-dialog" style="width: 120px; height: 120px;">
+				<view class="bg-img" :style="{ backgroundImage: `url(${loadingUrl})`, height: '120px' }"></view>
+				<view class="text-center" style="position: absolute;top: 40%;left: 28%;">
+					<text>登录中...</text>
 				</view>
 			</view>
 		</view>
@@ -36,14 +45,15 @@
 </template>
 
 <script>
-	import {
-		globalVar
-	} from '@/global.js'
+	const app = getApp()
 	export default {
 		data() {
 			return {
-				pageHeight: globalVar.screenHeight,
-				bgImgUrl: 'https://cn.bing.com/th?id=OHR.HokkaidoSwans_ZH-CN8733312972_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp',
+				loadingUrl: 'https://store2018.muapp.cn/images/weapp/loading_cat.gif',
+				logoUrl: app.globalData.logoImageUrl,
+				pageHeight: app.globalData.screenHeight,
+				isLoading: false,
+				bgImgUrl: '',
 				loginForm: {
 					account: '',
 					password: ''
@@ -51,7 +61,7 @@
 			}
 		},
 		onLoad() {
-
+			this.fetchBackgroundImage()
 		},
 		methods: {
 			accountInput(e) {
@@ -61,6 +71,18 @@
 			},
 			submitLogin() {
 				console.log(this.loginForm)
+			},
+			fetchBackgroundImage() {
+				const _this = this
+				uni.request({
+					url: `${app.globalData.apiDomain}/wap/login/image`,
+					success(res) {
+						const min = 0
+						const max = 4
+						const index = Math.floor(Math.random() * (max - min + 1)) + min
+						_this.bgImgUrl = `https://bing.com${res.data.images[index].url}`
+					}
+				})
 			}
 		}
 	}

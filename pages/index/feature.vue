@@ -40,9 +40,9 @@
 			<view class="flex-sub margin-right-sm">
 				<button class="round bg-default shadow">分享</button>
 			</view>
-			<view class="flex-sub margin-left-sm">
+			<navigator class="flex-sub margin-left-sm" url="/pages/index/login">
 				<button class="round bg-default">登录</button>
-			</view>
+			</navigator>
 		</view>
 		
 		<view class="text-center padding"></view>

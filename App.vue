@@ -1,11 +1,14 @@
 <script>
 	import Vue from 'vue'
-	import { globalVar, getOpenId, uniLogin } from '@/global.js'
 	export default {
 		globalData: {
+			apiDomain: 'http://localhost',
+			screenHeight: 800,
+			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
 		},
 		onLaunch: function() {
+			var self = this
 			uni.getSystemInfo({
 				success: function(e) {
 					// #ifndef MP
@@ -37,22 +40,22 @@
 			})
 
 			// #ifdef MP-WEIXIN
-			const openid = getOpenId()
+			const openid = this.getOpenId()
 			if (!openid) {
-				uniLogin()
+				this.uniLogin()
 			} else {
 				uni.checkSession({
 					success() {
 						console.log('getOpenid', openid)
 					},
 					fail() {
-						uniLogin()
+						this.uniLogin()
 					}
 				})
 			}
 			uni.getSystemInfo({
 				success(e) {
-					globalVar.screenHeight = e.screenHeight
+					self.globalData.screenHeight = e.screenHeight
 				}
 			})
 			// #endif
@@ -62,8 +65,38 @@
 		},
 		onHide: function() {
 			console.log('App Hide')
+		},
+		methods: {
+			setOpenId(openid = '') {
+				uni.setStorageSync('openid', openid)
+			},
+			getOpenId() {
+				return uni.getStorageSync('openid')
+			},
+			uniLogin() {
+				const self = this
+				uni.login({
+					success(res) {
+						if (!res.code) {
+							console.log('登录失败！' + res.errMsg)
+						} else {
+							//发起网络请求
+							wx.request({
+								url: `${self.globalData.apiDomain}/wap/weapp/login/code`,
+								method: 'post',
+								data: {
+									code: res.code
+								},
+								success(loginRes) {
+									console.log('openid', loginRes.data)
+									setOpenId(loginRes.data.openid)
+								}
+							})
+						}
+					}
+				})
+			}
 		}
-
 	}
 </script>
 
@@ -71,6 +104,7 @@
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
 	@import "static/css/icon.css";
+
 	.press-class {
 		background: rgb(230, 230, 230);
 	}
