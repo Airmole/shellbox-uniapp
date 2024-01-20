@@ -70,12 +70,49 @@
 
 			},
 			submitLogin() {
-				console.log(this.loginForm)
+				let loginForm = this.loginForm
+				// #ifdef MP-WEIXIN
+				loginForm.wx_open_id = app.getOpenId()
+				// #endif
+				// #ifdef MP-QQ
+				loginForm.qq_open_id = app.getOpenId()
+				// #endif
+				if (loginForm.account.length == 0 || loginForm.password.length == 0) {
+					uni.showToast({ title: '请填写账号密码', icon: 'error' })
+					return
+				}
+				this.isLoading = true
+				console.log('this.loginForm', this.loginForm)
+				this.autoLogin(loginForm)
+			},
+			autoLogin (loginForm) {
+				var _this = this
+				uni.request({
+					// url: `${app.globalData.apiDomain}/login`,
+					url: 'https://mock.apifox.com/m1/3906316-0-default/wap/login',
+					method: 'POST',
+					data: loginForm,
+					success (res) {
+						console.log(res)
+						_this.isLoading = false
+						if (res.statusCode != 200) {
+							uni.showToast({ title: res.data.message, icon: 'none'})
+							return
+						}
+						app.setLoginStatus(res.data.auth, loginForm.account, loginForm.password)
+						console.log('登录成功')
+						uni.switchTab({ url: '/pages/index/index' })
+					},
+					fail (error) {
+						_this.isLoading = false
+						console.log(error)
+					}
+				})
 			},
 			fetchBackgroundImage() {
 				const _this = this
 				uni.request({
-					url: `${app.globalData.apiDomain}/wap/login/image`,
+					url: `${app.globalData.apiDomain}/login/image`,
 					success(res) {
 						const min = 0
 						const max = 4

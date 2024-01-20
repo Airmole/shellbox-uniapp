@@ -2,7 +2,7 @@
 	import Vue from 'vue'
 	export default {
 		globalData: {
-			apiDomain: 'http://localhost',
+			apiDomain: 'http://localhost/wap',
 			screenHeight: 800,
 			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
@@ -49,7 +49,7 @@
 						console.log('getOpenid', openid)
 					},
 					fail() {
-						this.uniLogin()
+						self.uniLogin()
 					}
 				})
 			}
@@ -67,6 +67,10 @@
 			console.log('App Hide')
 		},
 		methods: {
+			logout () {
+				uni.clearStorageSync()
+				uni.redirectTo({ url: '/pages/index/login' })
+			},
 			setOpenId(openid = '') {
 				uni.setStorageSync('openid', openid)
 			},
@@ -89,12 +93,35 @@
 								},
 								success(loginRes) {
 									console.log('openid', loginRes.data)
-									setOpenId(loginRes.data.openid)
+									self.setOpenId(loginRes.data.openid)
 								}
 							})
 						}
 					}
 				})
+			},
+			getLoginStatus () {
+				const edusysAccount = uni.getStorageSync('edusysAccount')
+				if (edusysAccount.length == 0 || edusysAccount.account.length == 0 || edusysAccount.password.length == 0) {
+					return false
+				}
+				if (edusysAccount.account.length > 0 && edusysAccount.password.length > 0) {
+					return true
+				}
+			},
+			getAuthValue () {
+				const auth = uni.getStorageSync('auth')
+				if (auth == null || auth.length == 0) return false
+				return auth
+			},
+			getEdusysAccount () {
+				const edusysAccount = uni.getStorageSync('edusysAccount')
+				if (edusysAccount == null || edusysAccount.length == 0) return false
+				return edusysAccount
+			},
+			setLoginStatus (auth, account, password) {
+				uni.setStorageSync('auth', auth)
+				uni.setStorageSync('edusysAccount', { account: account, password: password })
 			}
 		}
 	}

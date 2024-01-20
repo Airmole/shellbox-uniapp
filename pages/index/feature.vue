@@ -3,11 +3,14 @@
 		<view class="padding-top bg-height bg-img bg-mask flex justify-center"
 			:style="{backgroundImage: `url(${backgroundImageUrl})`}">
 			<view class="padding-xl text-white radius bg-card">
-				<view class="margin-top-xxl">
-					<image class="cu-avatar round avatar" :src="defaultAvatar" mode=" scaleToFill"></image>
+				<view class="margin-top-xxl flex justify-center">
+					<image class="cu-avatar round avatar"
+						:src="loginStatus&&profile&&profile.avatar?profile.avatar:defaultAvatar" mode="scaleToFill">
+					</image>
 				</view>
-				<view class="round bg-gray text-center margin-tb padding-xxs">
-					<span>您尚未登录</span>
+				<view class="round bg-gray text-center margin-tb padding-xs">
+					<span v-if="!loginStatus">您尚未登录</span><span
+						v-else>{{profile.nickname}}({{edusysAccount.account}})</span>
 				</view>
 			</view>
 			<image class="gif-wave" :src="waterWaveUrl" mode="scaleToFill"></image>
@@ -38,13 +41,14 @@
 
 		<view class="flex margin">
 			<view class="flex-sub margin-right-sm">
-				<button class="round bg-default shadow">分享</button>
+				<button class="round bg-default shadow" open-type="share">分享</button>
 			</view>
-			<navigator class="flex-sub margin-left-sm" url="/pages/index/login">
+			<navigator v-if="!loginStatus" class="flex-sub margin-left-sm" url="/pages/index/login">
 				<button class="round bg-default">登录</button>
 			</navigator>
+			<button v-else @click="logout()" class="flex-sub margin-left-sm round bg-red">注销退出</button>
 		</view>
-		
+
 		<view class="text-center padding"></view>
 
 
@@ -56,6 +60,9 @@
 	export default {
 		data() {
 			return {
+				loginStatus: app.getLoginStatus(),
+				edusysAccount: app.getEdusysAccount(),
+				profile: '',
 				defaultAvatar: app.globalData.defaultAvatar,
 				backgroundImageUrl: 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp',
 				waterWaveUrl: 'https://store2018.muapp.cn/images/weapp/water-wave.gif',
@@ -307,9 +314,47 @@
 			}
 		},
 		onLoad() {
-
+			this.fetchProfile()
+		},
+		onShow() {
+			this.refreshLoginStatus()
 		},
 		methods: {
+			logout() {
+				uni.showModal({
+					title: '提示',
+					content: '确定要退出账号吗？',
+					success(res) {
+						if (res.confirm) {
+							app.logout()
+						} else if (res.cancel) {
+							console.log('用户点击取消')
+						}
+					}
+				})
+			},
+			fetchProfile() {
+				var _this = this
+				uni.request({
+					// url: `${app.globalData.apiDomain}/profile`,
+					url: `https://mock.apifox.com/m1/3906316-0-default/wap/profile`,
+					method: 'GET',
+					success(res) {
+						console.log(res.data)
+						_this.profile = res.data
+					}
+				})
+			},
+			refreshLoginStatus() {
+				const loginStatus = app.getLoginStatus()
+				if (!loginStatus) {
+					this.loginStatus = loginStatus
+					this.edusysAccount = false
+				} else {
+					this.loginStatus = loginStatus
+					this.edusysAccount = app.getEdusysAccount()
+				}
+			},
 			foldMenu(e) {
 				const index = e.currentTarget.dataset.index
 				let menuList = this.menuList
