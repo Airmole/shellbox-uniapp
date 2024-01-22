@@ -87,38 +87,28 @@
 			},
 			autoLogin (loginForm) {
 				var _this = this
-				uni.request({
-					// url: `${app.globalData.apiDomain}/login`,
-					url: 'https://mock.apifox.com/m1/3906316-0-default/wap/login',
-					method: 'POST',
-					data: loginForm,
-					success (res) {
-						console.log(res)
-						_this.isLoading = false
-						if (res.statusCode != 200) {
-							uni.showToast({ title: res.data.message, icon: 'none'})
-							return
-						}
-						app.setLoginStatus(res.data.auth, loginForm.account, loginForm.password)
-						console.log('登录成功')
-						uni.switchTab({ url: '/pages/index/index' })
-					},
-					fail (error) {
-						_this.isLoading = false
-						console.log(error)
+				_this.$api.autoLogin(loginForm).then(res => {
+					console.log(res)
+					_this.isLoading = false
+					if (res.statusCode != 200) {
+						uni.showToast({ title: res.data.message, icon: 'none'})
+						return
 					}
+					app.setLoginStatus(res.data.auth, loginForm.account, loginForm.password)
+					console.log('登录成功')
+					uni.switchTab({ url: '/pages/index/index' })
+				}).catch(error => {
+					_this.isLoading = false
+					console.log(error)
 				})
 			},
 			fetchBackgroundImage() {
 				const _this = this
-				uni.request({
-					url: `${app.globalData.apiDomain}/login/image`,
-					success(res) {
-						const min = 0
-						const max = 4
-						const index = Math.floor(Math.random() * (max - min + 1)) + min
-						_this.bgImgUrl = `https://bing.com${res.data.images[index].url}`
-					}
+				_this.$api.getLoginBackground().then(res => {
+					const min = 0
+					const max = 4
+					const index = Math.floor(Math.random() * (max - min + 1)) + min
+					_this.bgImgUrl = `https://bing.com${res.data.images[index].url}`
 				})
 			}
 		}

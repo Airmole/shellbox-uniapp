@@ -3,15 +3,19 @@
 		<view class="padding-top bg-height bg-img bg-mask flex justify-center"
 			:style="{backgroundImage: `url(${backgroundImageUrl})`}">
 			<view class="padding-xl text-white radius bg-card">
-				<view class="margin-top-xxl flex justify-center">
+				<navigator :url="loginStatus?'/pages/setting/profile':'/pages/index/login'"
+					class="margin-top-xxl flex justify-center">
 					<image class="cu-avatar round avatar"
 						:src="loginStatus&&profile&&profile.avatar?profile.avatar:defaultAvatar" mode="scaleToFill">
 					</image>
-				</view>
-				<view class="round bg-gray text-center margin-tb padding-xs">
-					<span v-if="!loginStatus">您尚未登录</span><span
-						v-else>{{profile.nickname}}({{edusysAccount.account}})</span>
-				</view>
+				</navigator>
+				<navigator url="/pages/index/login" v-if="!loginStatus"
+					class="round bg-gray text-center margin-tb padding-xs">
+					<span>您尚未登录</span>
+				</navigator>
+				<navigator url="/pages/setting/profile" v-else class="round bg-gray text-center margin-tb padding-xs">
+					<span>{{profile.nickname}}({{edusysAccount.account}})</span>
+				</navigator>
 			</view>
 			<image class="gif-wave" :src="waterWaveUrl" mode="scaleToFill"></image>
 		</view>
@@ -335,14 +339,10 @@
 			},
 			fetchProfile() {
 				var _this = this
-				uni.request({
-					// url: `${app.globalData.apiDomain}/profile`,
-					url: `https://mock.apifox.com/m1/3906316-0-default/wap/profile`,
-					method: 'GET',
-					success(res) {
-						console.log(res.data)
-						_this.profile = res.data
-					}
+				if (!_this.loginStatus) return
+				_this.$api.fetchProfile().then(res => {
+					console.log(res.data)
+					_this.profile = res.data
 				})
 			},
 			refreshLoginStatus() {
@@ -353,6 +353,7 @@
 				} else {
 					this.loginStatus = loginStatus
 					this.edusysAccount = app.getEdusysAccount()
+					this.fetchProfile()
 				}
 			},
 			foldMenu(e) {

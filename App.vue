@@ -67,9 +67,11 @@
 			console.log('App Hide')
 		},
 		methods: {
-			logout () {
+			logout() {
 				uni.clearStorageSync()
-				uni.redirectTo({ url: '/pages/index/login' })
+				uni.redirectTo({
+					url: '/pages/index/login'
+				})
 			},
 			setOpenId(openid = '') {
 				uni.setStorageSync('openid', openid)
@@ -84,23 +86,17 @@
 						if (!res.code) {
 							console.log('登录失败！' + res.errMsg)
 						} else {
-							//发起网络请求
-							wx.request({
-								url: `${self.globalData.apiDomain}/wap/weapp/login/code`,
-								method: 'post',
-								data: {
-									code: res.code
-								},
-								success(loginRes) {
-									console.log('openid', loginRes.data)
-									self.setOpenId(loginRes.data.openid)
-								}
+							self.$api.uniLogin({
+								code: res.code
+							}).then(loginRes => {
+								console.log('openid', loginRes.data)
+								self.setOpenId(loginRes.data.openid)
 							})
 						}
 					}
 				})
 			},
-			getLoginStatus () {
+			getLoginStatus() {
 				const edusysAccount = uni.getStorageSync('edusysAccount')
 				if (edusysAccount.length == 0 || edusysAccount.account.length == 0 || edusysAccount.password.length == 0) {
 					return false
@@ -109,19 +105,22 @@
 					return true
 				}
 			},
-			getAuthValue () {
+			getAuthValue() {
 				const auth = uni.getStorageSync('auth')
 				if (auth == null || auth.length == 0) return false
 				return auth
 			},
-			getEdusysAccount () {
+			getEdusysAccount() {
 				const edusysAccount = uni.getStorageSync('edusysAccount')
 				if (edusysAccount == null || edusysAccount.length == 0) return false
 				return edusysAccount
 			},
-			setLoginStatus (auth, account, password) {
+			setLoginStatus(auth, account, password) {
 				uni.setStorageSync('auth', auth)
-				uni.setStorageSync('edusysAccount', { account: account, password: password })
+				uni.setStorageSync('edusysAccount', {
+					account: account,
+					password: password
+				})
 			}
 		}
 	}
