@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "pages/setting/profile"
+		},
+		{
+			"path" : "pages/course/my"
 		}
 	],
 	"globalStyle": {
