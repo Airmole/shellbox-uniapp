@@ -1,11 +1,13 @@
-const app = getApp()
 const BASE_URL = 'http://localhost/wap'
 const TOKEN = uni.getStorageSync('auth')
+const MOCK_URL = 'https://mock.apifox.com/m1/3906316-0-default/wap'
+const MOCK = true
 
 const request = (url, method = 'GET', data = {}, isUpload = false) => {
 	return new Promise((resolve, reject) => {
 		let baseUrl = BASE_URL
 		if (url.indexOf('http') >= 0) baseUrl = ''
+		if (MOCK) baseUrl = MOCK_URL
 		if (!isUpload) {
 			uni.request({
 				url: baseUrl + url,

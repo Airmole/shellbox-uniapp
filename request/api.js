@@ -2,6 +2,7 @@ import request from './index.js'
 const api = request
 
 export default {
+	// 登录换取openID
 	uniLogin: (data) => {
 		return api.request('/weapp/login/code', 'POST', data)
 	},
@@ -9,19 +10,20 @@ export default {
 	getLoginBackground: () => {
 		return api.request('/login/image', 'GET')
 	},
+	// 自动登录接口
 	autoLogin: (data) => {
-		let url = '/login'
-		url = 'https://mock.apifox.com/m1/3906316-0-default/wap/login'
-		return api.request(url, 'POST', data)
+		return api.request('/login', 'POST', data)
 	},
+	// 获取资料
 	fetchProfile: () => {
-		let url = '/profile'
-		url = 'https://mock.apifox.com/m1/3906316-0-default/wap/profile'
-		return api.request(url, 'GET')
+		return api.request('/profile', 'GET')
 	},
+	// 更新资料
 	updateProfile: (data) => {
-		let url = '/profile'
-		url = 'https://mock.apifox.com/m1/3906316-0-default/wap/profile'
-		return api.request(url, 'PUT')
+		return api.request('/profile', 'PUT')
+	},
+	// 个人学期课表
+	fetchSemesterCourse: (query = '') => {
+		return api.request(`/edusys/course/semester?${query}`, 'GET')
 	}
 }
