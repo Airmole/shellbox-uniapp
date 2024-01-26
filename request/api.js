@@ -22,8 +22,12 @@ export default {
 	updateProfile: (data) => {
 		return api.request('/profile', 'PUT')
 	},
+	// 个人学期课表筛选项
+	fetchSemesterCourseOptions: () => {
+		return api.request(`/edusys/course/semester/options`, 'GET')
+	},
 	// 个人学期课表
-	fetchSemesterCourse: (query = '') => {
-		return api.request(`/edusys/course/semester?${query}`, 'GET')
+	fetchSemesterCourse: (semester = '', week = '') => {
+		return api.request(`/edusys/course/semester?semester=${semester}&week=${week}`, 'GET')
 	}
 }
