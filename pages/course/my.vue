@@ -61,12 +61,12 @@
 				<view class="cu-bar bg-white justify-end">
 					<view class="content">课程详情（{{details.length}}节）</view>
 					<view class="action" @tap="hideModal">
-						<text class="cuIcon-close text-red"></text>
+						<text class="cuIcon-close text-red text-bold"></text>
 					</view>
 				</view>
 				<view class="text-left">
 					<swiper :indicator-dots="true" :autoplay="false" style="height: 760upx;">
-						<block v-for="(detail, index) in details">
+						<block v-for="(detail, index) in details" :key="index">
 							<swiper-item>
 								<view class="swiper-item">
 									<view class="cu-list menu sm-border">
@@ -90,7 +90,7 @@
 										</view>
 										<view class="cu-item">
 											<view class="content">
-												<text class="cuIcon-remind text-blue"></text><text
+												<text class="cuIcon-sort text-blue"></text><text
 													class="text-grey">节次</text>
 											</view>
 											<view class="action">
