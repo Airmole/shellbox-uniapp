@@ -135,4 +135,7 @@
 	.press-class {
 		background: rgb(230, 230, 230);
 	}
+	.card-radius {
+		border-radius: 30upx;
+	}
 </style>

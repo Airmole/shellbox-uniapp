@@ -40,12 +40,20 @@ export default {
 	},
 	// 成绩查询
 	fetchScore: (semester = '', nature = '', course = '', show = '') => {
-		const params = new URLSearchParams();
-		if (semester.length > 0) params.append('semester', semester)
-		if (nature.length > 0) params.append('nature', nature)
-		if (course.length > 0) params.append('course', course)
-		if (show.length > 0) params.append('show', show)
-		const queryString = params.toString()
+		const params = {}
+		if (semester.length > 0) params.semester = semester
+		if (nature.length > 0) params.nature = nature
+		if (course.length > 0) params.course = course
+		if (show.length > 0) params.show = show
+		let queryString = ''
+		const queryStringArray = []
+		for (let key in params) {
+			const value = params[key]
+			const queryString = `${key}=${encodeURIComponent(value)}`
+			queryStringArray.push(queryString)
+		}
+		queryString = queryStringArray.join('&')
+		console.log(queryString)
 		return api.request(`/edusys/score?${queryString}`, 'GET')
 	}
 }
