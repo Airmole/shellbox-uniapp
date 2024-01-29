@@ -20,7 +20,7 @@ export default {
 	},
 	// 更新资料
 	updateProfile: (data) => {
-		return api.request('/profile', 'PUT')
+		return api.request('/profile', 'PUT', data)
 	},
 	// 个人学期课表筛选项
 	fetchSemesterCourseOptions: () => {

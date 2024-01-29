@@ -3,7 +3,6 @@
 	export default {
 		globalData: {
 			apiDomain: 'http://localhost/wap',
-			mock: true,
 			screenHeight: 800,
 			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'

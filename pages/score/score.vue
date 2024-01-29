@@ -133,7 +133,7 @@
 								<view class="content">
 									<text class="text-grey">课程名称</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.courseName}}</view>
 								</view>
 							</view>
@@ -141,7 +141,7 @@
 								<view class="content">
 									<text class="text-grey">课程编码</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.courseCode}}</view>
 								</view>
 							</view>
@@ -149,7 +149,7 @@
 								<view class="content">
 									<text class="text-grey">课程性质</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.courseNature}}</view>
 								</view>
 							</view>
@@ -157,7 +157,7 @@
 								<view class="content">
 									<text class="text-grey">课程学期</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.courseSemester}}</view>
 								</view>
 							</view>
@@ -165,7 +165,7 @@
 								<view class="content">
 									<text class="text-grey">课程类型</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.courseType}}</view>
 								</view>
 							</view>
@@ -173,7 +173,7 @@
 								<view class="content">
 									<text class="text-grey">考核方式</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.accessMethod}}</view>
 								</view>
 							</view>
@@ -181,7 +181,7 @@
 								<view class="content">
 									<text class="text-grey">学分</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.credit}}</view>
 								</view>
 							</view>
@@ -189,7 +189,7 @@
 								<view class="content">
 									<text class="text-grey">考试性质</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.examNature}}</view>
 								</view>
 							</view>
@@ -197,7 +197,7 @@
 								<view class="content">
 									<text class="text-grey">学时</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.period}}</view>
 								</view>
 							</view>
@@ -205,7 +205,7 @@
 								<view class="content">
 									<text class="text-grey">成绩得分</text>
 								</view>
-								<view class="action">
+								<view class="content">
 									<view>{{detail.score}}</view>
 								</view>
 							</view>
@@ -320,6 +320,7 @@
 				this.semesterIndex = -1
 				this.natureIndex = -1
 				this.showIndex = -1
+				this.fetchScore()
 			}
 		}
 	}
