@@ -139,7 +139,7 @@
 							</view>
 							<view class="cu-item">
 								<view class="content">
-									<text class="text-grey">课程编码</text>
+									<text class="text-grey">课程编号</text>
 								</view>
 								<view class="content">
 									<view>{{detail.courseCode}}</view>
@@ -155,7 +155,7 @@
 							</view>
 							<view class="cu-item">
 								<view class="content">
-									<text class="text-grey">课程学期</text>
+									<text class="text-grey">开课学期</text>
 								</view>
 								<view class="content">
 									<view>{{detail.courseSemester}}</view>
@@ -163,7 +163,7 @@
 							</view>
 							<view class="cu-item">
 								<view class="content">
-									<text class="text-grey">课程类型</text>
+									<text class="text-grey">课程属性</text>
 								</view>
 								<view class="content">
 									<view>{{detail.courseType}}</view>
@@ -195,7 +195,7 @@
 							</view>
 							<view class="cu-item">
 								<view class="content">
-									<text class="text-grey">学时</text>
+									<text class="text-grey">总学时</text>
 								</view>
 								<view class="content">
 									<view>{{detail.period}}</view>
@@ -203,7 +203,7 @@
 							</view>
 							<view class="cu-item">
 								<view class="content">
-									<text class="text-grey">成绩得分</text>
+									<text class="text-grey">成绩</text>
 								</view>
 								<view class="content">
 									<view>{{detail.score}}</view>
