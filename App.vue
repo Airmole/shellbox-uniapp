@@ -45,20 +45,13 @@
 				this.uniLogin()
 			} else {
 				uni.checkSession({
-					success() {
-						console.log('getOpenid', openid)
-					},
-					fail() {
-						self.uniLogin()
-					}
+					success() { console.log('getOpenid', openid) },
+					fail() { self.uniLogin() }
 				})
 			}
-			uni.getSystemInfo({
-				success(e) {
-					self.globalData.screenHeight = e.screenHeight
-				}
-			})
+			uni.getSystemInfo({ success(e) { self.globalData.screenHeight = e.screenHeight} })
 			// #endif
+			this.slientLoginEdusys()
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -69,9 +62,7 @@
 		methods: {
 			logout() {
 				uni.clearStorageSync()
-				uni.redirectTo({
-					url: '/pages/index/login'
-				})
+				uni.redirectTo({ url: '/pages/index/login' })
 			},
 			setOpenId(openid = '') {
 				uni.setStorageSync('openid', openid)
@@ -120,6 +111,24 @@
 				uni.setStorageSync('edusysAccount', {
 					account: account,
 					password: password
+				})
+			},
+			slientLoginEdusys () {
+				this.$api.fetchProfile().then(res => {
+					if (res.statusCode == 200) {
+						console.log('auth cookie值有效')
+					} else if (res.statusCode == 401 && res.data.message == '请先登录') {
+						const edusysAccount = this.getEdusysAccount()
+						if (edusysAccount == false) return
+						this.$api.autoLogin(edusysAccount).then(loginRes => {
+							if (loginRes.statusCode != 200) {
+								uni.showToast({ title: res.data.message, icon: 'none'})
+							} else {
+								this.setLoginStatus(loginRes.data.auth, edusysAccount.account, edusysAccount.password)
+								console.log('登录成功')
+							}
+						})
+					}
 				})
 			}
 		}

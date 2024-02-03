@@ -24,6 +24,9 @@
 		onLoad() {
 
 		},
+		onShow() {
+			this.loginStatus = app.getLoginStatus()
+		},
 		methods: {
 
 		}

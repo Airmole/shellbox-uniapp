@@ -1,10 +1,10 @@
 const BASE_URL = 'http://localhost/wap'
-const TOKEN = uni.getStorageSync('auth')
 const MOCK_URL = 'https://mock.apifox.com/m1/3906316-0-default/wap'
 const MOCK = false
 
 const request = (url, method = 'GET', data = {}, isUpload = false) => {
 	return new Promise((resolve, reject) => {
+		const auth = uni.getStorageSync('auth')
 		let baseUrl = BASE_URL
 		if (url.indexOf('http') >= 0) baseUrl = ''
 		if (MOCK) baseUrl = MOCK_URL
@@ -15,7 +15,7 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 				method: method,
 				header: {
 					'Content-Type': 'application/json',
-					'Auth': TOKEN
+					'Auth': auth
 				},
 				success: (res) => {
 					resolve(res)
@@ -31,7 +31,7 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 				filePath: data,
 				name: 'file',
 				header: {
-					'Auth': TOKEN
+					'Auth': auth
 				},
 				formData: {
 					file: data,
