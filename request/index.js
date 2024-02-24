@@ -1,6 +1,6 @@
 const BASE_URL = 'http://localhost/wap'
 const MOCK_URL = 'https://mock.apifox.com/m1/3906316-0-default/wap'
-const MOCK = false
+const MOCK = true
 
 const request = (url, method = 'GET', data = {}, isUpload = false) => {
 	return new Promise((resolve, reject) => {

@@ -1,5 +1,4 @@
 <script>
-	import Vue from 'vue'
 	export default {
 		globalData: {
 			apiDomain: 'http://localhost/wap',

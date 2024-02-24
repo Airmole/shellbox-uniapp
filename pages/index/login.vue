@@ -13,12 +13,12 @@
 					<view class="cu-form-group round margin-top-xl">
 						<view class="title">账号</view>
 						<input v-model="loginForm.account" type="number" placeholder="教务系统账号(学号)" name="account"
-							maxlength="10" focus="true" confirm-type="next" @input="accountInput"></input>
+							maxlength="10" focus="true" confirm-type="next" @input="accountInput" />
 					</view>
 					<view class="cu-form-group round margin-tb-xl">
 						<view class="title">密码</view>
 						<input v-model="loginForm.password" password="true" placeholder="教务系统登录密码"
-							name="password"></input>
+							name="password" />
 					</view>
 				</form>
 				<view class="flex padding-top">

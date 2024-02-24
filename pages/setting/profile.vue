@@ -13,7 +13,7 @@
 		</view>
 		<view class="cu-form-group round margin-xl">
 			<view class="title">昵称</view>
-			<input type="nickname" v-model="nickname" placeholder="请输入昵称" bindchange="nicknameChange"></input>
+			<input type="nickname" v-model="nickname" placeholder="请输入昵称" bindchange="nicknameChange" />
 		</view>
 
 		<view class="margin-xl bg-white padding radius shadow-wrap" style="border-radius: 20upx;">
