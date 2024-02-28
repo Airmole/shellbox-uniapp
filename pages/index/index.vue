@@ -9,7 +9,11 @@
 		</template>
 		<template v-else>
 			<view class="padding margin text-xxl">登录成功</view>
+			<navigator class="flex-sub margin-left-sm" url="/pages/course/my">
+				<button class="round bg-default">我的课表</button>
+			</navigator>
 		</template>
+		
 	</view>
 </template>
 

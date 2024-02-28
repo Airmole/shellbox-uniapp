@@ -45,6 +45,7 @@
 </template>
 
 <script>
+	import api from '@/request/api.js'
 	const app = getApp()
 	export default {
 		data() {
@@ -55,8 +56,8 @@
 				isLoading: false,
 				bgImgUrl: '',
 				loginForm: {
-					account: '',
-					password: ''
+					account: '235160545',
+					password: '20040526'
 				}
 			}
 		},
@@ -87,7 +88,7 @@
 			},
 			autoLogin (loginForm) {
 				var _this = this
-				_this.$api.autoLogin(loginForm).then(res => {
+				api.autoLogin(loginForm).then(res => {
 					console.log(res)
 					_this.isLoading = false
 					if (res.statusCode != 200) {
@@ -104,7 +105,7 @@
 			},
 			fetchBackgroundImage() {
 				const _this = this
-				_this.$api.getLoginBackground().then(res => {
+				api.getLoginBackground().then(res => {
 					const min = 0
 					const max = 4
 					const index = Math.floor(Math.random() * (max - min + 1)) + min

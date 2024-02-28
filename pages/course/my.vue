@@ -142,12 +142,12 @@
 				</view>
 			</view>
 		</view>
-
-
 	</view>
 </template>
 
 <script>
+	import api from '@/request/api.js'
+	
 	export default {
 		data() {
 			return {
@@ -217,9 +217,10 @@
 				this.itemHeight = itemHeight
 				this.tableWidth = tableWidth
 				this.tableHeight = tableHeight
+				
 			},
 			fetchCourseOptions() {
-				this.$api.fetchSemesterCourseOptions().then(res => {
+				api.fetchSemesterCourseOptions().then(res => {
 					console.log('fetchCourseOptions', res.data)
 					this.weekOptions = res.data.week
 					this.semesterOptions = res.data.semester
@@ -231,7 +232,7 @@
 				uni.showLoading({
 					title: '加载中...'
 				})
-				this.$api.fetchSemesterCourse(semester, week).then(res => {
+				api.fetchSemesterCourse(semester, week).then(res => {
 					this.courseData = this.convertFormatCourse(res.data)
 					console.log(this.courseData)
 					uni.hideLoading()

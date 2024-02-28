@@ -1,7 +1,7 @@
 <script>
+	import api from './request/api.js' 
 	export default {
 		globalData: {
-			apiDomain: 'http://localhost/wap',
 			screenHeight: 800,
 			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
@@ -10,31 +10,31 @@
 			var self = this
 			uni.getSystemInfo({
 				success: function(e) {
-					// #ifndef MP
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					if (e.platform == 'android') {
-						Vue.prototype.CustomBar = e.statusBarHeight + 50;
-					} else {
-						Vue.prototype.CustomBar = e.statusBarHeight + 45;
-					};
-					// #endif
+					// // #ifndef MP
+					// Vue.prototype.StatusBar = e.statusBarHeight;
+					// if (e.platform == 'android') {
+					// 	Vue.prototype.CustomBar = e.statusBarHeight + 50;
+					// } else {
+					// 	Vue.prototype.CustomBar = e.statusBarHeight + 45;
+					// };
+					// // #endif
 
-					// #ifdef MP-WEIXIN || MP-QQ
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					let capsule = wx.getMenuButtonBoundingClientRect();
-					if (capsule) {
-						Vue.prototype.Custom = capsule;
-						// Vue.prototype.capsuleSafe = uni.upx2px(750) - capsule.left + uni.upx2px(750) - capsule.right;
-						Vue.prototype.CustomBar = capsule.bottom + capsule.top - e.statusBarHeight;
-					} else {
-						Vue.prototype.CustomBar = e.statusBarHeight + 50;
-					}
-					// #endif		
+					// // #ifdef MP-WEIXIN || MP-QQ
+					// Vue.prototype.StatusBar = e.statusBarHeight;
+					// let capsule = wx.getMenuButtonBoundingClientRect();
+					// if (capsule) {
+					// 	Vue.prototype.Custom = capsule;
+					// 	// Vue.prototype.capsuleSafe = uni.upx2px(750) - capsule.left + uni.upx2px(750) - capsule.right;
+					// 	Vue.prototype.CustomBar = capsule.bottom + capsule.top - e.statusBarHeight;
+					// } else {
+					// 	Vue.prototype.CustomBar = e.statusBarHeight + 50;
+					// }
+					// // #endif		
 
-					// #ifdef MP-ALIPAY
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					Vue.prototype.CustomBar = e.statusBarHeight + e.titleBarHeight;
-					// #endif
+					// // #ifdef MP-ALIPAY
+					// Vue.prototype.StatusBar = e.statusBarHeight;
+					// Vue.prototype.CustomBar = e.statusBarHeight + e.titleBarHeight;
+					// // #endif
 				}
 			})
 
@@ -76,7 +76,7 @@
 						if (!res.code) {
 							console.log('登录失败！' + res.errMsg)
 						} else {
-							self.$api.uniLogin({
+							api.uniLogin({
 								code: res.code
 							}).then(loginRes => {
 								console.log('openid', loginRes.data)
@@ -113,13 +113,13 @@
 				})
 			},
 			slientLoginEdusys () {
-				this.$api.fetchProfile().then(res => {
+				api.fetchProfile().then(res => {
 					if (res.statusCode == 200) {
 						console.log('auth cookie值有效')
 					} else if (res.statusCode == 401 && res.data.message == '请先登录') {
 						const edusysAccount = this.getEdusysAccount()
 						if (edusysAccount == false) return
-						this.$api.autoLogin(edusysAccount).then(loginRes => {
+						api.autoLogin(edusysAccount).then(loginRes => {
 							if (loginRes.statusCode != 200) {
 								uni.showToast({ title: res.data.message, icon: 'none'})
 							} else {
@@ -128,6 +128,8 @@
 							}
 						})
 					}
+				}).catch(err => {
+					console.log(err)
 				})
 			}
 		}
