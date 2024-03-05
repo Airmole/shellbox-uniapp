@@ -1,8 +1,11 @@
 <template>
-	<view>
+	<view class="index-page">
 		<cu-custom bgColor="bg-gradual-blue" :isBack="false">
 		  <block slot="content">贝壳小盒子</block>
 		</cu-custom>
+		
+		<box-calendar></box-calendar>
+		
 		
 		<template v-if="!loginStatus">
 			<view class="padding margin text-xxl">尚未登录</view>
@@ -17,25 +20,22 @@
 	</view>
 </template>
 
-<script>
+<script setup>
+	import { ref } from 'vue';
+	import BoxCalendar from './components/calendar.vue'
 	const app = getApp()
-	export default {
-		data() {
-			return {
-				loginStatus: app.getLoginStatus()
-			}
-		},
-		onLoad() {
-
-		},
-		onShow() {
-			this.loginStatus = app.getLoginStatus()
-		},
-		methods: {
-
-		}
+	
+	const loginStatus = ref(app.getLoginStatus())
+	function onLoad() {
+		loginStatus = app.getLoginStatus()
+	}
+	function onShow() {
+		loginStatus = app.getLoginStatus()
 	}
 </script>
 
 <style>
+	.index-page {
+		background: #f1f1f1;
+	}
 </style>

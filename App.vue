@@ -136,11 +136,15 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
 	@import "static/css/icon.css";
+	@import "~@/utils/css/index.scss";
 
+	body {
+		background: #f1f1f1;
+	}
 	.press-class {
 		background: rgb(230, 230, 230);
 	}

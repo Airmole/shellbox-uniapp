@@ -60,6 +60,7 @@
 </template>
 
 <script>
+	import api from '@/request/api.js'
 	const app = getApp()
 	export default {
 		data() {
@@ -122,7 +123,7 @@
 			fetchProfile() {
 				var _this = this
 				if (!_this.loginStatus) return
-				_this.$api.fetchProfile().then(res => {
+				api.fetchProfile().then(res => {
 					console.log(res.data)
 					_this.profile = res.data
 				})

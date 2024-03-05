@@ -27,8 +27,6 @@
 	const StatusBar = ref(statusBarHeight)
 	const CustomBar = ref(customBarHeight)
 	
-	console.log("获取到的信息：？？》》》》",menuBarInfo, statusBarHeight, customBarHeight, StatusBar, CustomBar);
-	
 	const style = computed(() => {
 		const style = `height:${CustomBar.value}px;padding-top:${StatusBar.value}px;`;
 		return style
