@@ -37,7 +37,32 @@
 .flex-1 {
 	flex: 1;
 }
+.flex-shrink-0 {
+	flex-shrink: 0;
+}
 
 .margin-top-auto {
 	margin-top: auto;
+}
+
+.width-50 {
+	width: 50%;
+}
+
+.line-height-1 {
+	line-height: 1;
+}
+
+.overflow-ellipsis-2 {
+	  display: -webkit-box;
+	  display: -moz-box;
+	  -webkit-box-orient: vertical;
+	  -moz-box-orient: vertical;
+	  -webkit-line-clamp: 2;
+	  -moz-line-clamp: 2;
+	  word-wrap: break-word;
+	    overflow: hidden;
+	text-overflow: ellipsis;
+		
+		
 }

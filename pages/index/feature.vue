@@ -6,7 +6,7 @@
 				<navigator :url="loginStatus?'/pages/setting/profile':'/pages/index/login'"
 					class="margin-top-xxl flex justify-center">
 					<image class="cu-avatar round avatar"
-						:src="loginStatus&&profile&&profile.avatar?profile.avatar:defaultAvatar" mode="scaleToFill">
+						:src="(loginStatus&&userInfo?.avatar) ? userInfo.avatar : defaultAvatar" mode="scaleToFill">
 					</image>
 				</navigator>
 				<navigator url="/pages/index/login" v-if="!loginStatus"
@@ -14,7 +14,7 @@
 					<span>您尚未登录</span>
 				</navigator>
 				<navigator url="/pages/setting/profile" v-else class="round bg-gray text-center margin-tb padding-xs">
-					<span>{{profile.nickname}}({{edusysAccount.account}})</span>
+					<span>{{userInfo?.nickname}}({{edusysAccount.account}})</span>
 				</navigator>
 			</view>
 			<image class="gif-wave" :src="waterWaveUrl" mode="scaleToFill"></image>
@@ -31,15 +31,19 @@
 					<text :class="(item.fold?'cuIcon-right':'cuIcon-unfold') + ' text-green'"></text>
 				</view>
 			</view>
-			<view class="cu-list grid col-5 no-border text-green line-green" style="padding: 0;">
-				<view @click="goPage(index, idx)" class="cu-item" v-for="(itm,idx) in item.items" :key="idx" v-if="idx<5">
+			<view class="cu-list grid col-5 no-border text-green line-green" :class="[item.fold && 'fold']" style="padding: 0;">
+				<!-- 未展开 -->
+				<view @click="goPage(index, idx)" class="cu-item" v-for="(itm,idx) in item.items" :key="idx">
 					<text :class="'iconfont icon-' + itm.icon" style="color: #39B54A;font-size: 40upx;"></text>
 					<text>{{itm.name}}</text>
 				</view>
-				<view class="cu-item" v-for="(itm,idx) in item.items" :key="idx" v-if="idx>=5 && !item.fold">
-					<text :class="'iconfont icon-' + itm.icon" style="color: #39B54A;font-size: 40upx;"></text>
-					<text>{{itm.name}}</text>
-				</view>
+				<!-- 展开 -->
+			<!-- 	<block>
+					<view class="cu-item" v-for="(itm,idx) in item.items" :key="idx">
+						<text :class="'iconfont icon-' + itm.icon" style="color: #39B54A;font-size: 40upx;"></text>
+						<text>{{itm.name}}</text>
+					</view>
+				</block> -->
 			</view>
 		</view>
 
@@ -54,99 +58,46 @@
 		</view>
 
 		<view class="text-center padding"></view>
-
-
 	</view>
 </template>
 
-<script>
+<script setup>
 	import api from '@/request/api.js'
+	import { useAppStore } from '@/stores/app.js'
+	import { storeToRefs } from 'pinia'
+	import { menuList } from './feature.js'
+	
 	const app = getApp()
-	export default {
-		data() {
-			return {
-				loginStatus: app.getLoginStatus(),
-				edusysAccount: app.getEdusysAccount(),
-				profile: '',
-				defaultAvatar: app.globalData.defaultAvatar,
-				backgroundImageUrl: 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp',
-				waterWaveUrl: 'https://store2018.muapp.cn/images/weapp/water-wave.gif',
-				menuList: [{
-						title: '课表成绩',
-						fold: false,
-						items: [{
-							id: 'myCourse',
-							icon: 'wodekebiao',
-							teacher: true,
-							student: true,
-							name: '我的课表',
-							url: '../course/my',
-							login: true,
-						}, {
-							id: 'score',
-							icon: 'chengji',
-							teacher: false,
-							student: true,
-							name: '成绩查询',
-							url: '../score/score',
-							login: true,
-						}]
-					}
-				],
-			}
-		},
-		onLoad() {
-			this.fetchProfile()
-		},
-		onShow() {
-			this.refreshLoginStatus()
-		},
-		methods: {
-			goPage (index, idx) {
-				const page = this.menuList[index]['items'][idx]
-				uni.navigateTo({ url: page.url })
-				console.log(page)
-			},
-			logout() {
-				uni.showModal({
-					title: '提示',
-					content: '确定要退出账号吗？',
-					success(res) {
-						if (res.confirm) {
-							app.logout()
-						} else if (res.cancel) {
-							console.log('用户点击取消')
-						}
-					}
-				})
-			},
-			fetchProfile() {
-				var _this = this
-				if (!_this.loginStatus) return
-				api.fetchProfile().then(res => {
-					console.log(res.data)
-					_this.profile = res.data
-				})
-			},
-			refreshLoginStatus() {
-				const loginStatus = app.getLoginStatus()
-				if (!loginStatus) {
-					this.loginStatus = loginStatus
-					this.edusysAccount = false
-				} else {
-					this.loginStatus = loginStatus
-					this.edusysAccount = app.getEdusysAccount()
-					this.fetchProfile()
-				}
-			},
-			foldMenu(e) {
-				const index = e.currentTarget.dataset.index
-				let menuList = this.menuList
-				menuList[index].fold = !menuList[index].fold
-				this.menuList = menuList
-			}
-		}
+	const appStore = useAppStore()
+	const { loginStatus, userInfo, edusysAccount } = storeToRefs(appStore)
+	const defaultAvatar = 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
+	const backgroundImageUrl = 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp'
+	const waterWaveUrl = 'https://store2018.muapp.cn/images/weapp/water-wave.gif'
+	
+	function goPage (index, idx) {
+		// const page = menuList[index]['items'][idx]
+		// uni.navigateTo({ url: page.url })
+		// console.log(page)
 	}
+	function logout() {
+		uni.showModal({
+			title: '提示',
+			content: '确定要退出账号吗？',
+			success(res) {
+				if (res.confirm) {
+					app.logout()
+				} else if (res.cancel) {
+					console.log('用户点击取消')
+				}
+			}
+		})
+	}
+	function foldMenu(e) {
+		// const index = e.currentTarget.dataset.index
+		// menuList[index].fold = !menuList[index].fold
+		// menuList = menuList
+	}
+	
 </script>
 
 <style>

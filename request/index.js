@@ -14,7 +14,6 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 		} else if (MOCK) {
 			baseUrl = MOCK_URL
 		}
-		console.log('baseUrl:>>', baseUrl)
 		
 		if (!isUpload) {
 			uni.request({
@@ -26,7 +25,11 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 					'Auth': auth
 				},
 				success: (res) => {
-					resolve(res)
+					if (res.statusCode === 200) {
+						resolve(res)
+					} else {
+						reject(res)
+					}
 				},
 				fail(error) {
 					reject(error)

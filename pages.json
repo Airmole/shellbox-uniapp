@@ -9,9 +9,9 @@
 		{
 			"path": "pages/index/feature"
 		},
-		// {
-		// 	"path": "pages/setting/profile"
-		// },
+		{
+			"path": "pages/setting/profile"
+		},
 		{
 			"path" : "pages/course/my"
 		}

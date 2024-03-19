@@ -46,6 +46,8 @@
 
 <script>
 	import api from '@/request/api.js'
+	import { setLoginStatus } from '@/common/utils/auth.js'
+	
 	const app = getApp()
 	export default {
 		data() {
@@ -91,16 +93,14 @@
 				api.autoLogin(loginForm).then(res => {
 					console.log(res)
 					_this.isLoading = false
-					if (res.statusCode != 200) {
-						uni.showToast({ title: res.data.message, icon: 'none'})
-						return
-					}
-					app.setLoginStatus(res.data.auth, loginForm.account, loginForm.password)
+					setLoginStatus(res.data.auth, loginForm.account, loginForm.password)
 					console.log('登录成功')
 					uni.switchTab({ url: '/pages/index/index' })
-				}).catch(error => {
+				}).catch(err => {
+					console.log('err:>>', err);
 					_this.isLoading = false
-					console.log(error)
+					uni.showToast({ title: err.data.message, icon: 'none'})
+					console.log(err)
 				})
 			},
 			fetchBackgroundImage() {

@@ -54,5 +54,17 @@ export default {
 		queryString = queryStringArray.join('&')
 		console.log(queryString)
 		return request(`/edusys/score?${queryString}`, 'GET')
+	},
+	// 首页组件数据
+	fetchHomeWidget(widgetNameList = []) {
+		if (!Array.isArray(widgetNameList)) {
+			widgetNameList = []
+		}
+		const paramsStr = widgetNameList.join(',')
+		return request(`/widget/batch?widgets=${paramsStr}`, 'GET')
+	},
+	// 校历查询
+	fetchCalendar() {
+		return request(`/edusys/calendar`, `Get`)
 	}
 }

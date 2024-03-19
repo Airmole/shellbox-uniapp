@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-	import menuBarInfo from '@/utils/use/useMenuBarInfo.js'
+	import menuBarInfo from '@/common/use/useMenuBarInfo.js'
 	import { computed, defineProps, ref } from "vue"
 	const { statusBarHeight, customBarHeight } = menuBarInfo
 
