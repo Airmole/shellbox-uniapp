@@ -1,5 +1,5 @@
 <template>
-	<view class="margin-lg">
+	<view class="cu-list card-menu">
 		<view class="flex" style="gap: 40rpx;">
 			<view class="flex flex-direction flex-1 box-card text-center shadow-blur">
 				<view class="padding-sm text-white" style="background: #ed6663;">{{nowYMD[0]}}年{{nowYMD[1]}}月</view>
