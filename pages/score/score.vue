@@ -47,7 +47,7 @@
 							<text class="text-grey">课程名称</text>
 						</view>
 						<view class="action text-right">
-							<input placeholder="请输入课程名称" name="course" v-model="optionForm.course"></input>
+							<input placeholder="请输入课程名称" name="course" v-model="optionForm.course" />
 						</view>
 					</view>
 					<view class="cu-item arrow">

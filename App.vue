@@ -1,43 +1,15 @@
 <script>
-	import Vue from 'vue'
+	import api from './request/api.js'
+	import { setLoginStatus, getEdusysAccount, clearLoginStatus } from '@/common/utils/auth.js'
+	
 	export default {
 		globalData: {
-			apiDomain: 'http://localhost/wap',
 			screenHeight: 800,
 			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
-			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
+			loginPromise: null,
 		},
 		onLaunch: function() {
 			var self = this
-			uni.getSystemInfo({
-				success: function(e) {
-					// #ifndef MP
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					if (e.platform == 'android') {
-						Vue.prototype.CustomBar = e.statusBarHeight + 50;
-					} else {
-						Vue.prototype.CustomBar = e.statusBarHeight + 45;
-					};
-					// #endif
-
-					// #ifdef MP-WEIXIN || MP-QQ
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					let capsule = wx.getMenuButtonBoundingClientRect();
-					if (capsule) {
-						Vue.prototype.Custom = capsule;
-						// Vue.prototype.capsuleSafe = uni.upx2px(750) - capsule.left + uni.upx2px(750) - capsule.right;
-						Vue.prototype.CustomBar = capsule.bottom + capsule.top - e.statusBarHeight;
-					} else {
-						Vue.prototype.CustomBar = e.statusBarHeight + 50;
-					}
-					// #endif		
-
-					// #ifdef MP-ALIPAY
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					Vue.prototype.CustomBar = e.statusBarHeight + e.titleBarHeight;
-					// #endif
-				}
-			})
 
 			// #ifdef MP-WEIXIN
 			const openid = this.getOpenId()
@@ -51,7 +23,7 @@
 			}
 			uni.getSystemInfo({ success(e) { self.globalData.screenHeight = e.screenHeight} })
 			// #endif
-			this.slientLoginEdusys()
+			this.clientLoginEdusys()
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -77,7 +49,7 @@
 						if (!res.code) {
 							console.log('登录失败！' + res.errMsg)
 						} else {
-							self.$api.uniLogin({
+							api.uniLogin({
 								code: res.code
 							}).then(loginRes => {
 								console.log('openid', loginRes.data)
@@ -87,47 +59,27 @@
 					}
 				})
 			},
-			getLoginStatus() {
-				const edusysAccount = uni.getStorageSync('edusysAccount')
-				if (edusysAccount.length == 0 || edusysAccount.account.length == 0 || edusysAccount.password.length == 0) {
-					return false
-				}
-				if (edusysAccount.account.length > 0 && edusysAccount.password.length > 0) {
-					return true
-				}
-			},
-			getAuthValue() {
-				const auth = uni.getStorageSync('auth')
-				if (auth == null || auth.length == 0) return false
-				return auth
-			},
-			getEdusysAccount() {
-				const edusysAccount = uni.getStorageSync('edusysAccount')
-				if (edusysAccount == null || edusysAccount.length == 0) return false
-				return edusysAccount
-			},
-			setLoginStatus(auth, account, password) {
-				uni.setStorageSync('auth', auth)
-				uni.setStorageSync('edusysAccount', {
-					account: account,
-					password: password
-				})
-			},
-			slientLoginEdusys () {
-				this.$api.fetchProfile().then(res => {
-					if (res.statusCode == 200) {
-						console.log('auth cookie值有效')
-					} else if (res.statusCode == 401 && res.data.message == '请先登录') {
-						const edusysAccount = this.getEdusysAccount()
-						if (edusysAccount == false) return
-						this.$api.autoLogin(edusysAccount).then(loginRes => {
-							if (loginRes.statusCode != 200) {
-								uni.showToast({ title: res.data.message, icon: 'none'})
-							} else {
-								this.setLoginStatus(loginRes.data.auth, edusysAccount.account, edusysAccount.password)
+			clientLoginEdusys () {
+				this.globalData.loginPromise = new Promise(async (resolve, reject) => {
+					try {
+						const res = await api.fetchProfile()
+						console.log('登录成功11:》》', res);
+						resolve(res.data)
+					} catch(err) {
+						if (err?.statusCode == 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
+							const edusysAccount = getEdusysAccount()
+							if (edusysAccount == false) return
+							await api.autoLogin(edusysAccount).then(loginRes => {
+								resolve(Object.assign({
+									...edusysAccount
+								}, loginRes.data))
 								console.log('登录成功')
-							}
-						})
+							}).catch(err => {
+								console.log('登录失败');
+								uni.showToast({ title: err.data.message, icon: 'none'})
+								reject(err)
+							})
+						}
 					}
 				})
 			}
@@ -135,11 +87,15 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
 	@import "static/css/icon.css";
+	@import "~@/common/css/index.scss";
 
+	body {
+		background: #f1f1f1;
+	}
 	.press-class {
 		background: rgb(230, 230, 230);
 	}

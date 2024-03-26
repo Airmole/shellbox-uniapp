@@ -1,42 +1,41 @@
-import request from './index.js'
-const api = request
+import { request } from './index.js'
 
 export default {
 	// 登录换取openID
 	uniLogin: (data) => {
-		return api.request('/weapp/login/code', 'POST', data)
+		return request('/weapp/login/code', 'POST', data)
 	},
 	// 获取登录页背景图
 	getLoginBackground: () => {
-		return api.request('/login/image', 'GET')
+		return request('/login/image', 'GET')
 	},
 	// 自动登录接口
 	autoLogin: (data) => {
-		return api.request('/login', 'POST', data)
+		return request('/login', 'POST', data)
 	},
 	// 获取资料
 	fetchProfile: () => {
-		return api.request('/profile', 'GET')
+		return request('/profile', 'GET')
 	},
 	// 更新资料
 	updateProfile: (data) => {
-		return api.request('/profile', 'PUT', data)
+		return request('/profile', 'PUT', data)
 	},
 	// 个人学期课表筛选项
 	fetchSemesterCourseOptions: () => {
-		return api.request(`/edusys/course/semester/options`, 'GET')
+		return request(`/edusys/course/semester/options`, 'GET')
 	},
 	// 个人学期课表
 	fetchSemesterCourse: (semester = '', week = '') => {
-		return api.request(`/edusys/course/semester?semester=${semester}&week=${week}`, 'GET')
+		return request(`/edusys/course/semester?semester=${semester}&week=${week}`, 'GET')
 	},
 	// 个人当天日期本周课表
 	fetchDateCourse: (date = '') => {
-		return api.request(`/edusys/course/date?date=${date}`, 'GET')
+		return request(`/edusys/course/date?date=${date}`, 'GET')
 	},
 	// 成绩查询筛选项
 	fetchScoreOptions: () => {
-		return api.request(`/edusys/score/options`, 'GET')
+		return request(`/edusys/score/options`, 'GET')
 	},
 	// 成绩查询
 	fetchScore: (semester = '', nature = '', course = '', show = '') => {
@@ -54,6 +53,18 @@ export default {
 		}
 		queryString = queryStringArray.join('&')
 		console.log(queryString)
-		return api.request(`/edusys/score?${queryString}`, 'GET')
+		return request(`/edusys/score?${queryString}`, 'GET')
+	},
+	// 首页组件数据
+	fetchHomeWidget(widgetNameList = []) {
+		if (!Array.isArray(widgetNameList)) {
+			widgetNameList = []
+		}
+		const paramsStr = widgetNameList.join(',')
+		return request(`/widget/batch?widgets=${paramsStr}`, 'GET')
+	},
+	// 校历查询
+	fetchCalendar() {
+		return request(`/edusys/calendar`, `Get`)
 	}
 }

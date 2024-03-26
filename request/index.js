@@ -1,13 +1,20 @@
 const BASE_URL = 'http://localhost/wap'
 const MOCK_URL = 'https://mock.apifox.com/m1/3906316-0-default/wap'
-const MOCK = false
+const TEST_URL = 'https://dev-api.shellbox.ustb.tj.cn/wap'
+const MOCK = true
+const IS_TEST = true
 
 const request = (url, method = 'GET', data = {}, isUpload = false) => {
 	return new Promise((resolve, reject) => {
 		const auth = uni.getStorageSync('auth')
 		let baseUrl = BASE_URL
 		if (url.indexOf('http') >= 0) baseUrl = ''
-		if (MOCK) baseUrl = MOCK_URL
+		if (IS_TEST) {
+			baseUrl = TEST_URL
+		} else if (MOCK) {
+			baseUrl = MOCK_URL
+		}
+		
 		if (!isUpload) {
 			uni.request({
 				url: baseUrl + url,
@@ -18,7 +25,11 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 					'Auth': auth
 				},
 				success: (res) => {
-					resolve(res)
+					if (res.statusCode === 200) {
+						resolve(res)
+					} else {
+						reject(res)
+					}
 				},
 				fail(error) {
 					reject(error)
@@ -51,6 +62,6 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 	})
 }
 
-export default {
+export {
 	request
 }

@@ -47,13 +47,15 @@
 						<template v-else></template>
 					</view>
 				</view>
-				<view class="flex" :style="{width: `${tableWidth}px`}">
-					<view class="tb-height text-center flex justify-center align-center">
-						<view class="padding-tb-sm margin-lr-xs">{{courseData.tips}}</view>
-					</view>
-				</view>
+				
 				<view class="flex padding-tb-sm" :style="{width: `${tableWidth}px`}"></view>
 			</scroll-view>
+			
+			<view class="flex">
+				<view class="tb-height text-center flex justify-center align-center">
+					<view class="padding-tb-sm margin-lr-xs text-gray">{{courseData.tips}}</view>
+				</view>
+			</view>
 		</view>
 
 		<view class="cu-modal" :class="displayDetailModal?'show':''">
@@ -65,7 +67,7 @@
 					</view>
 				</view>
 				<view class="text-left">
-					<swiper :indicator-dots="true" :autoplay="false" style="height: 760upx;">
+					<swiper :indicator-dots="true" :autoplay="false" style="height: 295px;">
 						<block v-for="(detail, index) in details" :key="index">
 							<swiper-item>
 								<view class="swiper-item">
@@ -142,12 +144,12 @@
 				</view>
 			</view>
 		</view>
-
-
 	</view>
 </template>
 
 <script>
+	import api from '@/request/api.js'
+	
 	export default {
 		data() {
 			return {
@@ -217,9 +219,10 @@
 				this.itemHeight = itemHeight
 				this.tableWidth = tableWidth
 				this.tableHeight = tableHeight
+				
 			},
 			fetchCourseOptions() {
-				this.$api.fetchSemesterCourseOptions().then(res => {
+				api.fetchSemesterCourseOptions().then(res => {
 					console.log('fetchCourseOptions', res.data)
 					this.weekOptions = res.data.week
 					this.semesterOptions = res.data.semester
@@ -231,7 +234,7 @@
 				uni.showLoading({
 					title: '加载中...'
 				})
-				this.$api.fetchSemesterCourse(semester, week).then(res => {
+				api.fetchSemesterCourse(semester, week).then(res => {
 					this.courseData = this.convertFormatCourse(res.data)
 					console.log(this.courseData)
 					uni.hideLoading()

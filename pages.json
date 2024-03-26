@@ -14,10 +14,10 @@
 		},
 		{
 			"path" : "pages/course/my"
-		},
-		{
-			"path" : "pages/score/score"
 		}
+		// {
+		// 	"path" : "pages/score/score"
+		// }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
