@@ -1,7 +1,7 @@
 <template>
 	<view class="index-page">
 		<cu-custom bgColor="bg-gradual-blue" :isBack="false">
-		  <block slot="content">贝壳小盒子</block>
+		  <view>贝壳小盒子</view>
 		</cu-custom>
 		<!-- 教学周日期显示 -->
 		<block v-if="!!calendar">
@@ -31,8 +31,8 @@
 				  <view class="action"><text class="cuIcon-title text-green"></text>下节课</view>
 				  <view class="action padding-right"><text class="cuIcon-creative line-wegreen"></text></view>
 				</view>
-				<navigator url="../course/my" class="cu-item">
-				  <view class="content padding-tb-sm text-cut">
+				<navigator url="../course/my" class="cu-item bg-white">
+				  <view class="content padding-sm text-cut">
 					<view class="text-black text-cut">{{nextCourseArray.courseName}}</view>
 					<view class="text-gray">{{nextCourseArray.teachWeek}} <text class="text-green">{{nextCourseArray.startAt}}</text>上课 ~ {{nextCourseArray.endAt}}下课</view>
 				  </view>
@@ -57,17 +57,17 @@
 			  <view class="action">
 				<text class="cuIcon-title text-green"></text>今日课程
 			  </view>
-			  <view class="action padding-right">
+			  <view class="action">
 				<text class="cuIcon-activity line-wegreen"></text>
 			  </view>
 			</navigator>
 			<block v-for="(item, todayCourseKey) in todayCourses" :key="todayCourseKey"> 
-				<navigator url="../course/my" class="cu-item" v-if="item.courseName!=''" >
-				  <view class="content padding-tb-sm text-cut">
+				<navigator url="../course/my" class="cu-item bg-white" v-if="item.courseName!=''" >
+				  <view class="content padding-sm text-cut">
 					<view class="text-black text-cut">{{item.courseName}}</view>
 					<view class="text-gray">{{item.teachWeek}} {{item.startAt}}上课 ~ {{item.endAt}}下课</view>
 				  </view>
-				  <view class="action padding-right">
+				  <view class="action padding-lr-sm">
 					<text class="text-xl text-black">{{item.place}}</text>
 				  </view>
 				</navigator>

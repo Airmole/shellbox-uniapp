@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<view class="bg-img bg-mask" :style="{ backgroundImage: `url(${bgImgUrl})`, height: pageHeight + 'px' }">
+	<view class="height-screen">
+		<view class="bg-img bg-mask height-full" :style="{ backgroundImage: `url(${bgImgUrl})`, height: pageHeight + 'px' }">
 			<cu-custom bgColor="#ffffff" :isBack="true">
 				<block slot="content"><span class="text-white">登录</span></block>
 			</cu-custom>
@@ -44,75 +44,65 @@
 	</view>
 </template>
 
-<script>
+<script setup>
 	import api from '@/request/api.js'
-	import { setLoginStatus } from '@/common/utils/auth.js'
-	
+	import { useAppStore } from '@/stores/app.js'
+	import { onMounted, reactive, ref, toRefs } from 'vue'
 	const app = getApp()
-	export default {
-		data() {
-			return {
-				loadingUrl: 'https://store2018.muapp.cn/images/weapp/loading_cat.gif',
-				logoUrl: app.globalData.logoImageUrl,
-				pageHeight: app.globalData.screenHeight,
-				isLoading: false,
-				bgImgUrl: '',
-				loginForm: {
-					account: '235160545',
-					password: '20040526'
-				}
-			}
-		},
-		onLoad() {
-			this.fetchBackgroundImage()
-		},
-		methods: {
-			accountInput(e) {
-				const length = e.detail.value.length
-				if (length == 9) uni.hideKeyboard()
-
-			},
-			submitLogin() {
-				let loginForm = this.loginForm
-				// #ifdef MP-WEIXIN
-				loginForm.wx_open_id = app.getOpenId()
-				// #endif
-				// #ifdef MP-QQ
-				loginForm.qq_open_id = app.getOpenId()
-				// #endif
-				if (loginForm.account.length == 0 || loginForm.password.length == 0) {
-					uni.showToast({ title: '请填写账号密码', icon: 'error' })
-					return
-				}
-				this.isLoading = true
-				console.log('this.loginForm', this.loginForm)
-				this.autoLogin(loginForm)
-			},
-			autoLogin (loginForm) {
-				var _this = this
-				api.autoLogin(loginForm).then(res => {
-					console.log(res)
-					_this.isLoading = false
-					setLoginStatus(res.data.auth, loginForm.account, loginForm.password)
-					console.log('登录成功')
-					uni.switchTab({ url: '/pages/index/index' })
-				}).catch(err => {
-					console.log('err:>>', err);
-					_this.isLoading = false
-					uni.showToast({ title: err.data.message, icon: 'none'})
-					console.log(err)
-				})
-			},
-			fetchBackgroundImage() {
-				const _this = this
-				api.getLoginBackground().then(res => {
-					const min = 0
-					const max = 4
-					const index = Math.floor(Math.random() * (max - min + 1)) + min
-					_this.bgImgUrl = `https://bing.com${res.data.images[index].url}`
-				})
-			}
+	const { setAppAuth } = useAppStore()
+	const loadingUrl = 'https://store2018.muapp.cn/images/weapp/loading_cat.gif'
+	const logoUrl = app.globalData.logoImageUrl
+	const isLoading = ref(false)
+	const bgImgUrl = ref('')
+	const loginForm = ref({
+		account: '235160545',
+		password: '20040526'
+	})
+	
+	onMounted(() => {
+		fetchBackgroundImage()
+	})
+	
+	function accountInput(e) {
+		const length = e.detail.value.length
+		if (length == 9) uni.hideKeyboard()
+	
+	}
+	function submitLogin() {
+		// #ifdef MP-WEIXIN
+		loginForm.value.wx_open_id = app.getOpenId()
+		// #endif
+		// #ifdef MP-QQ
+		loginForm.value.qq_open_id = app.getOpenId()
+		// #endif
+		if (loginForm.value.account.length == 0 || loginForm.value.password.length == 0) {
+			uni.showToast({ title: '请填写账号密码', icon: 'error' })
+			return
 		}
+		this.isLoading = true
+		this.autoLogin(loginForm.value)
+	}
+	function autoLogin (formData) {
+		api.autoLogin(formData).then(res => {
+			setAppAuth(Object.assign({
+				account: formData.account,
+				password: formData.password
+			}, res.data))
+			uni.switchTab({ url: '/pages/index/index' })
+		}).catch(err => {
+			console.log(err)
+			uni.showToast({ title: err.data.message, icon: 'none'})
+		}).finally(()=> {
+			isLoading.value = false
+		})
+	}
+	function fetchBackgroundImage() {
+		api.getLoginBackground().then(res => {
+			const min = 0
+			const max = 4
+			const index = Math.floor(Math.random() * (max - min + 1)) + min
+			bgImgUrl.value = `https://bing.com${res.data.images[index].url}`
+		})
 	}
 </script>
 

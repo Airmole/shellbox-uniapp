@@ -20,18 +20,25 @@ export const useAppStore = defineStore('app', () => {
 	
 	function dataInit() {
 		app.globalData.loginPromise.then((res) => {
-			const { auth, account, password } = res
-			if (account || password) {
-				setLoginStatus(auth, account, password)
-			}
-			store.edusysAccount = getEdusysAccount()
-			store.loginStatus = true
-			console.log('权限校验完成');
-			getCourses() // 获取课表信息
-			getCalendar() // 
+			setAppAuth(res)
 		}).catch(err => {
+			console.log('err:>>',err);
 			clearLoginStatus()
 		})
+	}
+	function setAppAuth(res) {
+		const { auth, account, password } = res
+		console.log('tt:>.', res);
+		if (account && password) {
+			console.log('set auth', res);
+			setLoginStatus(auth, account, password)
+		}
+		console.log('errr:>>', account, password);
+		store.edusysAccount = getEdusysAccount()
+		store.loginStatus = true
+		console.log('权限校验完成');
+		getCourses() // 获取课表信息
+		getCalendar() // 
 	}
 	// 获取课表信息
 	function getCourses() {
@@ -50,6 +57,7 @@ export const useAppStore = defineStore('app', () => {
 	return {
 		getCourses,
 		dataInit,
+		setAppAuth,
 		...toRefs(store)
 	}
 })

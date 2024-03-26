@@ -20,7 +20,7 @@
 			<image class="gif-wave" :src="waterWaveUrl" mode="scaleToFill"></image>
 		</view>
 
-		<view class="cu-list menu sm-border" v-for="(item, index) in menuList" style="margin-top: 0;" :key="index">
+<!-- 		<view class="cu-list menu sm-border" v-for="(item, index) in menuList" style="margin-top: 0;" :key="index">
 			<view class="cu-bar solid-bottom bg-white" :data-index="index" @click="foldMenu" style="min-height: 60upx;"
 				:hover-class="item.items.length > 5?'press-class':''">
 				<view class="action">
@@ -32,20 +32,23 @@
 				</view>
 			</view>
 			<view class="cu-list grid col-5 no-border text-green line-green" :class="[item.fold && 'fold']" style="padding: 0;">
-				<!-- 未展开 -->
 				<view @click="goPage(index, idx)" class="cu-item" v-for="(itm,idx) in item.items" :key="idx">
 					<text :class="'iconfont icon-' + itm.icon" style="color: #39B54A;font-size: 40upx;"></text>
 					<text>{{itm.name}}</text>
 				</view>
-				<!-- 展开 -->
-			<!-- 	<block>
+				<block>
 					<view class="cu-item" v-for="(itm,idx) in item.items" :key="idx">
 						<text :class="'iconfont icon-' + itm.icon" style="color: #39B54A;font-size: 40upx;"></text>
 						<text>{{itm.name}}</text>
 					</view>
-				</block> -->
+				</block>
 			</view>
-		</view>
+		</view> -->
+		<block v-for="(item, index) in menuList" :key="index">
+			<menuGuide :title="item.title" :menuList="item.items"></menuGuide>
+		</block>
+		
+		
 
 		<view class="flex margin">
 			<view class="flex-sub margin-right-sm">
@@ -66,6 +69,7 @@
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
 	import { menuList } from './feature.js'
+	import menuGuide from './components/menuGuide.vue'
 	
 	const app = getApp()
 	const appStore = useAppStore()
