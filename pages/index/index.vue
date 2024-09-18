@@ -5,9 +5,9 @@
 		</cu-custom>
 		<!-- 教学周日期显示 -->
 		<block v-if="!!calendar">
-			<block v-if="calendar?.nowWeek != 'N/A'">
+			<block v-if="calendar?.title">
 			  <navigator url="/pages/index/feature" class="padding-lr-sm bg-white margin radius padding-bottom">
-			    <view class="padding-top"><text class="cuIcon-title text-green"></text><text>{{ calendar.nowWeek }} {{getDayByDateStr(calendar.date)}}</text></view>
+			    <view class="padding-top"><text class="cuIcon-title text-green"></text><text>{{ calendar.title }} </text></view>
 			    <!-- <view class="padding-top praise"><text class="text-black">{{praise}}</text></view> -->
 			  </navigator>
 			</block>
@@ -22,10 +22,9 @@
 		<view class="remind-box" v-if="isLoading">
 		  <image class="remind-img" src="https://store2018.muapp.cn/images/weapp/loading_cat.gif"></image>
 		</view>
-		
 		<view v-else>
 			<!-- 下节课卡片 -->
-			<block v-if="nextCourseArray?.courseName">
+<!-- 			<block v-if="nextCourseArray?.courseName">
 			  <view class="cu-list menu sm-border card-menu margin">
 				<view class="cu-bar bg-white solid-bottom">
 				  <view class="action"><text class="cuIcon-title text-green"></text>下节课</view>
@@ -47,11 +46,11 @@
 				  <text class="text-center">朕知道了，赶紧收起来吧😂</text>
 				</view>
 			  </view>
-			</block>
+			</block> -->
 		</view>
 		
 		<!-- 今日全天课程卡片 -->
-		<block v-if="isShowTodayCourse">
+<!-- 		<block v-if="isShowTodayCourse">
 		  <view class="cu-list menu sm-border card-menu margin">
 			<navigator url="../course/my" class="cu-bar bg-white solid-bottom">
 			  <view class="action">
@@ -74,19 +73,21 @@
 			</block>
 			
 		  </view>
-		</block>
+		</block> -->
 		
 		
 		<!-- 首页小组件 -->
 		<box-home-widgets></box-home-widgets>
 		
 		<block v-if="!loginStatus">
-			<view class="padding margin text-xxl">尚未登录</view>
+			<navigator class="flex-sub margin" url="/pages/index/login">
+				<button class="round bg-default">立即登录</button>
+			</navigator>
 		</block>
 		<block v-else>
-			<view class="padding margin text-xxl">登录成功</view>
-			<navigator class="flex-sub margin-left-sm" url="/pages/course/my">
-				<button class="round bg-default">我的课表</button>
+			<view class="padding margin text-xxl text-center">登录成功</view>
+			<navigator class="flex-sub margin-sm" url="/pages/course/my">
+				<button class="round bg-default">查看我的课表</button>
 			</navigator>
 		</block>
 		

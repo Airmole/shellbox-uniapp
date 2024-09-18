@@ -149,6 +149,7 @@
 
 <script>
 	import api from '@/request/api.js'
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	
 	export default {
 		data() {
@@ -172,6 +173,12 @@
 			}
 		},
 		onLoad() {
+			if (getEdusysAccount() === false) {
+				uni.redirectTo({
+					url: '/pages/index/login'
+				})
+				return
+			}
 			this.calcTableSize()
 			this.fetchCourseOptions()
 			this.fetchCourse()

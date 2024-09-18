@@ -1,11 +1,11 @@
 <template>
 	<view class="cu-list card-menu">
-		<view class="flex" style="gap: 40rpx;">
+		<view class="flex margin-top" style="gap: 40rpx;">
 			<view class="flex flex-direction flex-1 box-card text-center shadow-blur">
 				<view class="padding-sm text-white" style="background: #ed6663;">{{nowYMD[0]}}年{{nowYMD[1]}}月</view>
 				<view class="flex-1 flex flex-direction text-center padding-tb-sm padding-lr-lg bg-white">
 					<view class="margin-bottom-sm text-bold text-xsl line-height-1">{{nowYMD[2]}}</view>
-					<view class="margin-top-auto text-gray text-df">第{{nowDays}}天 第{{nowWeek}}周</view>
+					<view class="margin-top-auto text-gray text-df">今年{{nowDays}}天 第{{nowWeek}}周</view>
 					<view class="margin-top-sm">{{calendarDate.IMonthCn}}{{calendarDate.IDayCn}} {{calendarDate.ncWeek}}</view>
 				</view>
 			</view>
@@ -15,21 +15,23 @@
 						<view :class="[`flex justify-between align-center padding-tb-sm border-bottom-dashed border-xs`, index === 0 ? 'border-top-dashed':'' ]">
 							<view>
 								<text class="block">{{ holiday.name }}</text>
-								<text class="text-sm opacity-7">{{getHolidayShowText(holiday.start)}}-{{getHolidayShowText(holiday.end)}}</text>
+								<text class="text-sm opacity-7" v-if="holiday.start && holiday.end">{{getHolidayShowText(holiday.start)}}-{{getHolidayShowText(holiday.end)}}</text>
+								<text class="text-sm opacity-7" v-else>{{holiday.holiday}}</text>
 							</view>
-							<view>
+							<view v-if="holiday.start">
 								<text>{{getHolidayDays(holiday.start)}}</text>天
 							</view>
+							<view v-else><text></text></view>
 						</view>
 					</template>
 				</view>
 			</view>
 		</view>
 		<view class="flex margin-top-lg" style="gap: 40rpx;">
-			<view v-if="movieRef" class="box-card flex-1 text-white padding-sm bg-img" :style="movieStyle">
+			<view v-if="movieRef" class="box-card flex-1 text-white padding-sm bg-img bg-mask" :style="movieStyle" @click="goDoubanMovie()">
 				<view class="text-right">
-					<text class="block text-xxl">{{movieRef?.date?.[0]}}</text>
-					<text class="text-lg opacity-9 ">{{+movieRef?.date?.[1]}}月/{{getWeekNameByDayNumber(movieRef?._date?.getDay())}}</text>
+					<text class="block text-xxl">{{nowYMD[0]}}</text>
+					<text class="text-lg opacity-9 ">{{nowYMD[1]}}月/{{calendarDate.ncWeek}}</text>
 				</view>
 				<view class="margin-top-sm">
 					<text class="block text-lg">《{{movieRef.mov_title}}》</text>
@@ -56,7 +58,7 @@
 	import { getYMDByDateString, getWeekNameByDayNumber } from '@/common/utils/tools.js'
 
 	const now = new Date();
-	const nowYMD = [now.getFullYear(), now.getMonth(), now.getDate()] // 当前年月日
+	const nowYMD = [now.getFullYear(), now.getMonth()+1, now.getDate()] // 当前年月日
 	const nowDays = Math.ceil((now - new Date(nowYMD[0].toString())) / 86400000) // 当前是今年的第几天
 	const nowWeek = Math.ceil(nowDays/7) // 当前是今年的第几周
 	const calendarDate = calendar.solar2lunar(...nowYMD) // 农历
@@ -78,7 +80,8 @@
 	
 	
 	function getHolidayShowText(dateStr) {
-		 return dateStr.split('-').slice(1).map(item => +item).join('.')
+		if (!dateStr) return ''
+		return dateStr.split('-').slice(1).map(item => +item).join('.')
 	}
 	function getHolidayDays(start) {
 		 return Math.ceil((new Date(start) - now)/86400000)
@@ -94,6 +97,11 @@
 		famousSayingRef.value = famousSayings.data
 		console.log(`famousSayings.value:>>>`, famousSayingRef.value);
 	})
+	
+	function goDoubanMovie () {
+		const doubanUrl = movieRef.value.mov_link
+		// window.location.href = doubanUrl
+	}
 	
 </script>
 

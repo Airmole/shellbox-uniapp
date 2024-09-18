@@ -220,6 +220,8 @@
 </template>
 
 <script>
+	import api from '@/request/api.js'
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	export default {
 		data() {
 			return {
@@ -242,6 +244,12 @@
 			}
 		},
 		onLoad() {
+			if (getEdusysAccount() === false) {
+				uni.redirectTo({
+					url: '/pages/index/login'
+				})
+				return
+			}
 			this.fetchOptions()
 			this.fetchScore()
 		},
@@ -275,7 +283,7 @@
 				this.optionForm.show = this.showOptionsList[index].value
 			},
 			fetchOptions() {
-				this.$api.fetchScoreOptions().then(res => {
+				api.fetchScoreOptions().then(res => {
 					console.log('获取成绩筛选项', res.data)
 					this.semesterOptionsList = res.data.time
 					this.natureOptionsList = res.data.nature
@@ -285,7 +293,7 @@
 			fetchScore() {
 				console.log(this.optionForm)
 				uni.showLoading({ title: '查询中...' })
-				this.$api.fetchScore(
+				api.fetchScore(
 					this.optionForm.semester,
 					this.optionForm.nature,
 					this.optionForm.course,

@@ -14,15 +14,15 @@
 		},
 		{
 			"path" : "pages/course/my"
+		},
+		{
+			"path" : "pages/score/score"
 		}
-		// {
-		// 	"path" : "pages/score/score"
-		// }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "贝壳小盒子",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},

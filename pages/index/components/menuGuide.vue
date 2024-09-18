@@ -21,6 +21,7 @@
 
 <script setup>
 	import { computed, ref } from 'vue';
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	
 	const props = defineProps({
 		menuList: Object,
@@ -36,6 +37,10 @@
 	})
 	
 	function goPage(menu) {
+		if (menu.login === true && getEdusysAccount() === false) {
+			uni.showToast({ title: '此功能需要登录', icon: 'none' })
+			return
+		}
 		uni.navigateTo({ url: menu.url })
 	}
 	

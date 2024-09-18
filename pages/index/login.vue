@@ -55,8 +55,8 @@
 	const isLoading = ref(false)
 	const bgImgUrl = ref('')
 	const loginForm = ref({
-		account: '235160545',
-		password: '20040526'
+		account: '',
+		password: ''
 	})
 	
 	onMounted(() => {
@@ -79,8 +79,8 @@
 			uni.showToast({ title: '请填写账号密码', icon: 'error' })
 			return
 		}
-		this.isLoading = true
-		this.autoLogin(loginForm.value)
+		isLoading.value = true
+		autoLogin(loginForm.value)
 	}
 	function autoLogin (formData) {
 		api.autoLogin(formData).then(res => {

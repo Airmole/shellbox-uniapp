@@ -52,7 +52,7 @@
 
 		<view class="flex margin">
 			<view class="flex-sub margin-right-sm">
-				<button class="round bg-default shadow" open-type="share">分享</button>
+				<button class="round bg-default shadow" @click="shareApp()" open-type="share">分享</button>
 			</view>
 			<navigator v-if="!loginStatus" class="flex-sub margin-left-sm" url="/pages/index/login">
 				<button class="round bg-default">登录</button>
@@ -100,6 +100,21 @@
 		// const index = e.currentTarget.dataset.index
 		// menuList[index].fold = !menuList[index].fold
 		// menuList = menuList
+	}
+	function shareApp() {
+		// #ifdef MP-WEIXIN
+		return
+		// #endif
+		// #ifdef MP-QQ
+		return
+		// #endif
+		uni.setClipboardData({
+			data: 'https://shellbox.ustb.tj.cn',
+			showToast: false,
+			success() {
+				uni.showToast({ title: '已复制链接到粘贴板，可分享给同学', icon: 'none' })
+			}
+		})
 	}
 	
 </script>

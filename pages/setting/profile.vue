@@ -30,6 +30,7 @@
 </template>
 
 <script>
+	import api from '@/request/api.js'
 	const app = getApp()
 	export default {
 		data() {
@@ -44,7 +45,7 @@
 		methods: {
 			fetchProfile () {
 				var _this = this
-				_this.$api.fetchProfile().then(res => {
+				api.fetchProfile().then(res => {
 					_this.avatarUrl = res.data.avatar
 					_this.nickname = res.data.nickname
 				})
@@ -61,7 +62,7 @@
 				// #ifdef MP-QQ
 				data.qq_open_id = app.getOpenId()
 				// #endif
-				_this.$api.updateProfile(data).then(res => {
+				api.updateProfile(data).then(res => {
 					if (res.statusCode) {
 						uni.showToast({ title: '保存成功~' })
 						_this.fetchProfile()
