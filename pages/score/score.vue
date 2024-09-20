@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
-			<block slot="content">成绩查询</block>
+			<view>成绩查询</view>
 		</cu-custom>
 
 		<!-- 成绩筛选操作区 -->
@@ -110,7 +110,7 @@
 					算术平均分：<text class="text-bold">{{semester.avg}}</text>
 				</view>
 				<view class="content text-right">
-					加权平均法：<text class="text-bold">{{semester.gpa}}</text>
+					加权平均分：<text class="text-bold">{{semester.gpa}}</text>
 				</view>
 			</view>
 		</view>

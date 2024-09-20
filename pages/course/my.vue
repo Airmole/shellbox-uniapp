@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
-			<block slot="content">我的课表</block>
+			<view>我的课表</view>
 		</cu-custom>
 		<view class="flex justify-center">
 			<picker @change="semesterChange" :value="semesterIndex" :range="semesterOptions" range-key="name">
@@ -67,7 +67,7 @@
 					</view>
 				</view>
 				<view class="text-left">
-					<swiper :indicator-dots="true" :autoplay="false" style="height: 295px;">
+					<swiper :indicator-dots="true" :autoplay="false" style="height: 720rpx;">
 						<block v-for="(detail, index) in details" :key="index">
 							<swiper-item>
 								<view class="swiper-item">
@@ -108,7 +108,7 @@
 												<view>{{detail.place || '教务系统没写'}}</view>
 											</view>
 										</view>
-										<view class="cu-item">
+										<view class="cu-item" v-if="detail.teacher">
 											<view class="content">
 												<text class="cuIcon-people text-blue"></text><text
 													class="text-grey">教师</text>
@@ -283,6 +283,10 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+	}
+	
+	.content {
+		min-width: 200rpx;
 	}
 
 	.course-name {}

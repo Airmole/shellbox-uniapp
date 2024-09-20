@@ -3,7 +3,7 @@ export function getYMDByDateString(s) {
 }
 
 // 0-6 对应 周天-周六
-const weekNameList = ['周天','周一','周二','周三','周四','周五','周六']
+const weekNameList = ['周日','周一','周二','周三','周四','周五','周六']
 export function getWeekNameByDayNumber(n) {
 	return weekNameList[n]
 }

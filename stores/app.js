@@ -38,7 +38,7 @@ export const useAppStore = defineStore('app', () => {
 		store.loginStatus = true
 		console.log('权限校验完成');
 		getCourses() // 获取课表信息
-		getCalendar() // 
+		getCalendar() // 获取校历
 	}
 	// 获取课表信息
 	function getCourses() {

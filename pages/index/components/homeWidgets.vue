@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-list card-menu">
-		<view class="flex margin-top" style="gap: 40rpx;">
+		<view class="flex margin-top-sm" style="gap: 40rpx;">
 			<view class="flex flex-direction flex-1 box-card text-center shadow-blur">
 				<view class="padding-sm text-white" style="background: #ed6663;">{{nowYMD[0]}}年{{nowYMD[1]}}月</view>
 				<view class="flex-1 flex flex-direction text-center padding-tb-sm padding-lr-lg bg-white">
@@ -35,7 +35,7 @@
 				</view>
 				<view class="margin-top-sm">
 					<text class="block text-lg">《{{movieRef.mov_title}}》</text>
-					<text class="margin-sm cu-tag round bg-yellow">豆瓣 {{movieRef.mov_rating}}</text>
+					<text class="margin-tb-sm cu-tag round bg-yellow">豆瓣 {{movieRef.mov_rating}}</text>
 					<text class="block overflow-ellipsis-2">{{movieRef.mov_text}}</text>
 				</view>
 			</view>
@@ -89,13 +89,11 @@
 	
 	api.fetchHomeWidget([`todayMovie`, `famousSayings`, `nextHoliday`]).then(({ data: resData }) => {
 		const { todayMovie, nextHoliday, famousSayings } = resData
-		console.log('dddd:>>', todayMovie, resData);
 		todayMovie.data.date = getYMDByDateString(todayMovie.data.date)
 		todayMovie.data._date = new Date(todayMovie.data.date.join('-'))
 		movieRef.value = todayMovie.data
 		holidaysRef.value = nextHoliday.data.filter(item => new Date(item.holiday) > now)
 		famousSayingRef.value = famousSayings.data
-		console.log(`famousSayings.value:>>>`, famousSayingRef.value);
 	})
 	
 	function goDoubanMovie () {
