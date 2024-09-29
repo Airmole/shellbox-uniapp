@@ -89,8 +89,8 @@
 			<template v-if="!semester.fold">
 				<view @click="showDetail(semesterIdx, index)" class="cu-item press-class" v-for="(record, index) in semester.items" :key="index">
 					<view class="content padding-tb-sm text-cut">
-						<view>
-							<text class="text-black">{{record.courseName}}</text><text>({{record.courseType}})</text>
+						<view class="text-title">
+							<text class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
 						</view>
 						<view class="text-gray text-sm">
 							<text class="margin-right-xs">{{record.examNature}}</text>
@@ -264,7 +264,7 @@
 			foldSemesterScore (semesterIndex) {
 				let value = this.score.data[semesterIndex].fold
 				if (value == undefined) value = true
-				console.log(value)
+				// console.log(value)
 				this.score.data[semesterIndex].fold = !value
 			},
 			semesterChange(e) {

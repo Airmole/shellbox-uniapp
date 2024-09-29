@@ -34,7 +34,9 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 				fail(error) {
 					reject(error)
 				},
-				complete() {}
+				complete(res) {
+					// console.log('complete', res)
+				}
 			});
 		} else {
 			uni.uploadFile({

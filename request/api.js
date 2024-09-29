@@ -52,7 +52,7 @@ export default {
 			queryStringArray.push(queryString)
 		}
 		queryString = queryStringArray.join('&')
-		console.log(queryString)
+		// console.log(queryString)
 		return request(`/edusys/score?${queryString}`, 'GET')
 	},
 	// 首页组件数据
@@ -65,6 +65,49 @@ export default {
 	},
 	// 校历查询
 	fetchCalendar() {
-		return request(`/edusys/calendar`, `Get`)
+		return request(`/edusys/calendar`, `GET`)
+	},
+	// 班级课表筛选项
+	fetchClassCourseOptions () {
+		return request(`/edusys/course/class/options`, `GET`)
+	},
+	// 班级课表专业选项
+	fetchClassCourseProfessionOptions (collegeCode = '', grade = '') {
+		let query = {}
+		if (collegeCode !== '') query.collegeCode = collegeCode
+		if (grade !== '') query.grade = grade
+		const queryString = new URLSearchParams(query).toString()
+		return request(`/edusys/course/class/professionOptions?${queryString}`, `GET`)
+	},
+	// 获取班级课表
+	fetchClassCourse (
+		semester = '',
+		timeModel = '',
+		college = '',
+		grade= '',
+		profession = '',
+		className = '',
+		weekStart = '',
+		weekEnd = '',
+		dayOfWeekStart = '',
+		dayOfWeekEnd = '',
+		serialNoStart = '',
+		serialNoEnd = ''
+	) {
+		let query = {}
+		if (semester.length) query.semester = semester
+		if (timeModel.length) query.timeModel = timeModel
+		if (college.length) query.college = college
+		if (grade.length) query.grade = grade
+		if (profession.length) query.profession = profession
+		if (className.length) query.className = className
+		if (weekStart.length) query.weekStart = weekStart
+		if (weekEnd.length) query.weekEnd = weekEnd
+		if (dayOfWeekStart.length) query.dayOfWeekStart = dayOfWeekStart
+		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
+		if (serialNoStart.length) query.serialNoStart = serialNoStart
+		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
+		const queryString = new URLSearchParams(query).toString()
+		return request(`/edusys/course/class/course?${queryString}`, `GET`)
 	}
 }

@@ -83,7 +83,8 @@
 	})
 	
 	watch(courses, (newValue) => {
-		todayCourses.value = newValue.table[(new Date()).getDay() - 1].items.filter((item) => item && item.courseName)
+		const dayIndex = (new Date()).getDay() > 0 ? ((new Date()).getDay() - 1) : (newValue.table.length - 1)
+		todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
 		console.log('todayCourses',todayCourses)
 	})
 	

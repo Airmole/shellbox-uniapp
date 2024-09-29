@@ -17,6 +17,9 @@
 		},
 		{
 			"path" : "pages/score/score"
+		},
+		{
+			"path" : "pages/course/class"
 		}
 	],
 	"globalStyle": {

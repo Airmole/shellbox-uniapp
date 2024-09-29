@@ -9,6 +9,14 @@ export const menuList = [{
 		name: '我的课表',
 		url: '../course/my',
 		login: true,
+	},{
+		id: 'classCourse',
+		icon: 'banjikebiao',
+		teacher: true,
+		student: true,
+		name: '班级课表',
+		url: '../course/class',
+		login: true,
 	}, {
 		id: 'score',
 		icon: 'chengji',

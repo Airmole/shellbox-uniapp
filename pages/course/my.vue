@@ -165,9 +165,7 @@
 				semesterOptions: [],
 				weekIndex: 0,
 				weekOptions: [],
-				bgColors: ['red', 'orange', 'yellow', 'olive', 'green', 'cyan', 'blue', 'purple', 'mauve', 'pink', 'brown',
-					'grey'
-				],
+				bgColors: ['red', 'orange', 'yellow', 'olive', 'green', 'cyan', 'blue', 'purple', 'mauve', 'pink', 'brown','grey'],
 				displayDetailModal: false,
 				details: []
 			}
