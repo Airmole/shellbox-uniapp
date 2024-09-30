@@ -20,34 +20,9 @@
 			<image class="gif-wave" :src="waterWaveUrl" mode="scaleToFill"></image>
 		</view>
 
-<!-- 		<view class="cu-list menu sm-border" v-for="(item, index) in menuList" style="margin-top: 0;" :key="index">
-			<view class="cu-bar solid-bottom bg-white" :data-index="index" @click="foldMenu" style="min-height: 60upx;"
-				:hover-class="item.items.length > 5?'press-class':''">
-				<view class="action">
-					<text class="cuIcon-titles text-green"></text>
-					<text class="text-xl text-bold">{{item.title}}</text>
-				</view>
-				<view class="action" v-if="item.items.length > 5">
-					<text :class="(item.fold?'cuIcon-right':'cuIcon-unfold') + ' text-green'"></text>
-				</view>
-			</view>
-			<view class="cu-list grid col-5 no-border text-green line-green" :class="[item.fold && 'fold']" style="padding: 0;">
-				<view @click="goPage(index, idx)" class="cu-item" v-for="(itm,idx) in item.items" :key="idx">
-					<text :class="'iconfont icon-' + itm.icon" style="color: #39B54A;font-size: 40upx;"></text>
-					<text>{{itm.name}}</text>
-				</view>
-				<block>
-					<view class="cu-item" v-for="(itm,idx) in item.items" :key="idx">
-						<text :class="'iconfont icon-' + itm.icon" style="color: #39B54A;font-size: 40upx;"></text>
-						<text>{{itm.name}}</text>
-					</view>
-				</block>
-			</view>
-		</view> -->
 		<block v-for="(item, index) in menuList" :key="index">
 			<menuGuide :title="item.title" :menuList="item.items"></menuGuide>
 		</block>
-		
 		
 
 		<view class="flex margin">
@@ -78,11 +53,6 @@
 	const backgroundImageUrl = 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp'
 	const waterWaveUrl = 'https://store2018.muapp.cn/images/weapp/water-wave.gif'
 	
-	function goPage (index, idx) {
-		// const page = menuList[index]['items'][idx]
-		// uni.navigateTo({ url: page.url })
-		// console.log(page)
-	}
 	function logout() {
 		uni.showModal({
 			title: '提示',
@@ -95,11 +65,6 @@
 				}
 			}
 		})
-	}
-	function foldMenu(e) {
-		// const index = e.currentTarget.dataset.index
-		// menuList[index].fold = !menuList[index].fold
-		// menuList = menuList
 	}
 	function shareApp() {
 		// #ifdef MP-WEIXIN
