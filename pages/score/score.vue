@@ -225,7 +225,7 @@
 	export default {
 		data() {
 			return {
-				foldOptionsArea: true,
+				foldOptionsArea: false,
 				semesterOptionsList: [],
 				natureOptionsList: [],
 				showOptionsList: [],

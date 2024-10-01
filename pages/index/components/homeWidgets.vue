@@ -39,7 +39,7 @@
 					<text class="block overflow-ellipsis-2">{{movieRef.mov_text}}</text>
 				</view>
 			</view>
-			<view v-if="famousSayingRef" class="flex flex-direction flex-1 box-card text-white padding-sm bg-img" :style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`">
+			<view v-if="famousSayingRef" class="flex flex-direction flex-1 box-card text-white padding-sm bg-img bg-mask" :style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`">
 				<text class="text-lg opacity-6">每日一言</text>
 				<view class="flex-1 flex align-center text-center margin-top-sm">
 					<text class="">{{famousSayingRef?.content}}</text>

@@ -2,13 +2,13 @@
 	<view>
 		<template v-if="showSearchArea">
 			<cu-custom bgColor="bg-gradual-blue" :isBack="true">
-				<view>班级课表</view>
+				<view>教师课表</view>
 			</cu-custom>
 			<view class="margin">
 				<view :class="'cu-list menu sm-border '+(foldOptionsArea?'round':'card-radius')">
 					<view class="cu-item press-class" @click="showOptionsArea">
 						<view class="content">
-							<text class="cuIcon-title text-green"></text> 班级课表查询筛选操作
+							<text class="cuIcon-title text-green"></text> 教师课表查询筛选操作
 						</view>
 						<view class="action text-right">
 							<text :class="'cuIcon-'+(foldOptionsArea?'right':'unfold')"></text>
@@ -54,38 +54,12 @@
 								</picker>
 							</view>
 						</view>
-						<view class="cu-item arrow">
-							<view class="content">
-								<text class="text-grey">上课年级</text>
-							</view>
-							<view class="action">
-								<picker @change="gradeChange" :value="gradeIndex" :range="gradeOption"
-									range-key="name">
-									<view class="picker">
-										{{gradeIndex>-1?gradeOption[gradeIndex].name:'请选择'}}
-									</view>
-								</picker>
-							</view>
-						</view>
-						<view class="cu-item arrow">
-							<view class="content">
-								<text class="text-grey">上课专业</text>
-							</view>
-							<view class="action">
-								<picker @change="professionChange" :value="professionIndex" :range="professionOption"
-									range-key="dmmc">
-									<view class="picker">
-										{{professionIndex>-1?professionOption[professionIndex].dmmc:'请选择'}}
-									</view>
-								</picker>
-							</view>
-						</view>
 						<view class="cu-item">
 							<view class="content">
-								<text class="text-grey">上课班级</text>
+								<text class="text-grey">授课教师</text>
 							</view>
 							<view class="action text-right">
-								<input placeholder="请输入班级名称" name="className" v-model="optionForm.className" />
+								<input placeholder="请输入教师名" name="teacherName" v-model="optionForm.teacherName" />
 							</view>
 						</view>
 						<view class="cu-item">
@@ -134,7 +108,7 @@
 							<view class="action">
 								<button @click="resetOptionsForm" class="cu-btn round bg-red shadow margin-lr"><text
 										class="cuIcon-refresh"></text> 重置</button>
-								<button @click="fetchClassCourse" class="cu-btn round bg-green shadow"><text
+								<button @click="fetchTeacherCourse" class="cu-btn round bg-green shadow"><text
 										class="cuIcon-search"></text> 查询</button>
 							</view>
 						</view>
@@ -143,20 +117,20 @@
 			</view>
 			
 			<view class="cu-list menu-avatar margin card-radius">
-			    <view class="cu-item" v-for="(classCourse, classIndex) in classCourses" :key="classIndex" @click="clickClassCourse(classIndex)">
-					<view class="cu-avatar lg round bg-gradual-green"><text class="text-sm">{{classCourse.className}}</text></view>
-			        <view class="content"><view class="padding-lr"><text class="text-xl">{{classCourse.className}}</text></view></view>
+			    <view class="cu-item" v-for="(teacherCourse, teacherIndex) in teacherCourses" :key="teacherIndex" @click="clickTeacherCourse(teacherIndex)">
+					<view class="cu-avatar lg round bg-gradual-green"><text class="text-sm">{{teacherCourse.teacherName}}</text></view>
+			        <view class="content"><view class="padding-lr"><text class="text-xl">{{teacherCourse.teacherName}}</text></view></view>
 			    </view>
 			</view>
 		</template>
 		
-		<view v-if="!showSearchArea && classCourse.className">
+		<view v-if="!showSearchArea && teacherCourse.teacherName">
 			<view class="cu-bar bg-gradual-blue fixed">
 			    <view class="action" @click="hideSearchArea"><text class="cuIcon-back text-white"></text></view>
-			    <view class="content text-bold">{{classCourse.className}} 班级课表</view>
+			    <view class="content text-bold">{{teacherCourse.teacherName}} 教师课表</view>
 			</view>
 			<view class="margin-tb-xl padding-top-xs"></view>
-			<courseTable :columnTitles="columnTitle" :table="classCourse.course" :tips="''"></courseTable>
+			<courseTable :columnTitles="columnTitle" :table="teacherCourse.course" :tips="''"></courseTable>
 		</view>
 		
 	</view>
@@ -174,14 +148,10 @@
 				foldOptionsArea: false,
 				collegeIndex: -1,
 				collegeOption: [],
-				gradeIndex: -1,
-				gradeOption: [],
 				semesterIndex: -1,
 				semesterOption: [],
 				timeModelIndex: -1,
 				timeModelOption: [],
-				professionIndex: -1,
-				professionOption: [],
 				weekStartIndex: -1,
 				weekEndIndex: -1,
 				dayOfWeekStartIndex: -1,
@@ -190,17 +160,15 @@
 					semester: '',
 					timeModel: '',
 					college: '',
-					grade: '',
-					profession: '',
-					className: '',
+					teacherName: '',
 					weekStart: '',
 					weekEnd: '',
 					dayOfWeekStart: '',
 					dayOfWeekEnd: ''
 				},
-				classIndex: 0,
-				classCourses: [],
-				classCourse: {},
+				teacherIndex: 0,
+				teacherCourses: [],
+				teacherCourse: {},
 				columnTitle: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
 				weekOption: [],
 				dayOfWeekOption: []
@@ -214,7 +182,6 @@
 			this.generateWeekOption()
 			this.generateDayOfWeekOption()
 			this.fetchOptions()
-			this.fetchProfessionOptions()
 		},
 		methods: {
 			generateWeekOption () {
@@ -237,17 +204,17 @@
 			showOptionsArea() {
 				this.foldOptionsArea = !this.foldOptionsArea
 			},
-			clickClassCourse (classIndex) {
-				console.log('clickClassCourse', this.classCourses[classIndex])
-				if (classIndex >= 0) {
-					this.classIndex = classIndex
-					this.classCourse = this.classCourses[classIndex]
+			clickTeacherCourse (teacherIndex) {
+				console.log('clickTeacherCourse', this.teacherCourses[teacherIndex])
+				if (teacherIndex >= 0) {
+					this.teacherIndex = teacherIndex
+					this.teacherCourse = this.teacherCourses[teacherIndex]
 					this.showSearchArea = false
 				}
 			},
-			fetchClassCourse () {
-				if (this.optionForm.className.length <= 0) {
-					uni.showToast({ title: '请输入上课班级名称', icon: 'none'})
+			fetchTeacherCourse () {
+				if (this.optionForm.teacherName.length <= 0) {
+					uni.showToast({ title: '请输入授课教师姓名', icon: 'none'})
 					return
 				}
 				if (this.optionForm.weekStart > this.optionForm.weekEnd) {
@@ -260,27 +227,25 @@
 				}
 				uni.showLoading({ title: '加载中...' })
 				console.log('optionForm', this.optionForm)
-				api.fetchClassCourse(
+				api.fetchTeacherCourse(
 					this.optionForm.semester,
 					this.optionForm.timeModel,
 					this.optionForm.college,
-					this.optionForm.grade,
-					this.optionForm.profession,
-					this.optionForm.className,
+					this.optionForm.teacherName,
 					this.optionForm.weekStart.toString(),
 					this.optionForm.weekEnd.toString(),
 					this.optionForm.dayOfWeekStart.toString(),
 					this.optionForm.dayOfWeekEnd.toString()
 				).then(res => {
 					// console.log('fetchClassCourse', res.data)
-					this.classCourses = res.data
+					this.teacherCourses = res.data
 					uni.hideLoading()
 				}).catch((res) => {
 					uni.showToast({ title: res.data.message, icon: 'none'})
 				})
 			},
 			fetchOptions () {
-				api.fetchClassCourseOptions().then(res => {
+				api.fetchTeacherCourseOptions().then(res => {
 					const { semester, timeModel, college, grade } = res.data
 					this.semesterOption = semester
 					const semesterIndex = semester.findIndex((value) => value.checked === true)
@@ -292,14 +257,7 @@
 					this.optionForm.timeModel = timeModel[timeModelIndex].value
 					this.collegeOption = college
 					this.collegeIndex = college.findIndex((value) => value.checked === true)
-					this.gradeOption = grade
-					this.gradeIndex = grade.findIndex((value) => value.checked === true)
 					uni.hideLoading()
-				})
-			},
-			fetchProfessionOptions (collegeCode = '', grade = '') {
-				api.fetchClassCourseProfessionOptions(collegeCode, grade).then(res => {
-					this.professionOption = res.data
 				})
 			},
 			semesterChange (e) {
@@ -316,18 +274,6 @@
 				const index = e.detail.value
 				this.collegeIndex = index
 				this.optionForm.college = this.collegeOption[index].value
-				this.fetchProfessionOptions(this.optionForm.college, this.optionForm.grade)
-			},
-			gradeChange (e) {
-				const index = e.detail.value
-				this.gradeIndex = index
-				this.optionForm.grade = this.gradeOption[index].value
-				this.fetchProfessionOptions(this.optionForm.college, this.optionForm.grade)
-			},
-			professionChange (e) {
-				const index = e.detail.value
-				this.professionIndex = index
-				this.optionForm.profession = this.professionOption[index].dm
 			},
 			weekStartChange (e) {
 				const index = e.detail.value
@@ -355,15 +301,12 @@
 					semester: '',
 					timeModel: '',
 					college: '',
-					grade: '',
-					profession: '',
-					className: '',
+					teacherName: '',
 					weekStart: '',
 					weekEnd: '',
 					dayOfWeekStart: '',
 					dayOfWeekEnd: ''
 				}
-				this.professionIndex = -1
 				this.weekStartIndex = -1
 				this.weekEndIndex = -1
 				this.dayOfWeekStartIndex = -1

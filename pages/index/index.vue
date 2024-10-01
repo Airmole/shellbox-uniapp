@@ -53,15 +53,12 @@
 				<button class="round bg-default">立即登录</button>
 			</navigator>
 		</block>
-		<block v-else>
-			<!-- <view class="padding margin text-xxl text-center">登录成功</view> -->
-		</block>
 		
 	</view>
 </template>
 
 <script setup>
-	import { ref, watch } from 'vue';
+	import { ref, watch } from 'vue'
 	import { onShow, onLoad } from '@dcloudio/uni-app'
 	import BoxHomeWidgets from './components/homeWidgets.vue'
 	import { getWeekNameByDayNumber } from '@/common/utils/tools.js'

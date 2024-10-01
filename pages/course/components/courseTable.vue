@@ -99,6 +99,15 @@
 											<view>{{detail.teacher}}</view>
 										</view>
 									</view>
+									<view class="cu-item" v-if="detail.className">
+										<view class="content">
+											<text class="cuIcon-people text-blue"></text><text
+												class="text-grey">上课班级</text>
+										</view>
+										<view class="action">
+											<view>{{detail.className}}</view>
+										</view>
+									</view>
 									<view class="cu-item" v-if="detail.startAt">
 										<view class="content">
 											<text class="cuIcon-remind text-blue"></text><text
@@ -227,6 +236,7 @@
 	
 	.course-name {
 		overflow-y: clip;
+		text-overflow: ellipsis;
 	}
 	
 	.place-name {

@@ -20,6 +20,12 @@
 		},
 		{
 			"path" : "pages/course/class"
+		},
+		{
+			"path" : "pages/course/teacher"
+		},
+		{
+			"path" : "pages/course/lesson"
 		}
 	],
 	"globalStyle": {

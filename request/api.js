@@ -5,6 +5,10 @@ export default {
 	uniLogin: (data) => {
 		return request('/weapp/login/code', 'POST', data)
 	},
+	// 获取菜单列表
+	fetchMenuList () {
+		return request(`/menu`, `GET`)
+	},
 	// 获取登录页背景图
 	getLoginBackground: () => {
 		return request('/login/image', 'GET')
@@ -109,5 +113,71 @@ export default {
 		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
 		const queryString = new URLSearchParams(query).toString()
 		return request(`/edusys/course/class/course?${queryString}`, `GET`)
+	},
+	// 教师课表筛选项
+	fetchTeacherCourseOptions () {
+		return request(`/edusys/course/teacher/options`, `GET`)
+	},
+	// 获取教师课表
+	fetchTeacherCourse (
+		semester = '',
+		timeModel = '',
+		college = '',
+		teacherName = '',
+		weekStart = '',
+		weekEnd = '',
+		dayOfWeekStart = '',
+		dayOfWeekEnd = '',
+		serialNoStart = '',
+		serialNoEnd = ''
+	) {
+		let query = {}
+		if (semester.length) query.semester = semester
+		if (timeModel.length) query.timeModel = timeModel
+		if (college.length) query.college = college
+		if (teacherName.length) query.teacherName = teacherName
+		if (weekStart.length) query.weekStart = weekStart
+		if (weekEnd.length) query.weekEnd = weekEnd
+		if (dayOfWeekStart.length) query.dayOfWeekStart = dayOfWeekStart
+		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
+		if (serialNoStart.length) query.serialNoStart = serialNoStart
+		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
+		const queryString = new URLSearchParams(query).toString()
+		return request(`/edusys/course/teacher/course?${queryString}`, `GET`)
+	},
+	// 课程课表筛选项
+	fetchLessonCourseOptions () {
+		return request(`/edusys/course/lesson/options`, `GET`)
+	},
+	// 获取课程课表
+	fetchLessonCourse (
+		semester = '',
+		timeModel = '',
+		studyCollege = '',
+		teachCollege = '',
+		courseNature = '',
+		courseName = '',
+		weekStart = '',
+		weekEnd = '',
+		dayOfWeekStart = '',
+		dayOfWeekEnd = '',
+		serialNoStart = '',
+		serialNoEnd = ''
+	) {
+		let query = {}
+		if (semester.length) query.semester = semester
+		if (timeModel.length) query.timeModel = timeModel
+		if (studyCollege.length) query.studyCollege = studyCollege
+		if (teachCollege.length) query.teachCollege = teachCollege
+		if (courseNature.length) query.courseNature = courseNature
+		if (courseName.length) query.courseName = courseName
+		if (weekStart.length) query.weekStart = weekStart
+		if (weekEnd.length) query.weekEnd = weekEnd
+		if (dayOfWeekStart.length) query.dayOfWeekStart = dayOfWeekStart
+		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
+		if (serialNoStart.length) query.serialNoStart = serialNoStart
+		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
+		const queryString = new URLSearchParams(query).toString()
+		return request(`/edusys/course/lesson/course?${queryString}`, `GET`)
 	}
 }

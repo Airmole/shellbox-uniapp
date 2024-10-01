@@ -21,7 +21,7 @@
 		</view>
 
 		<block v-for="(item, index) in menuList" :key="index">
-			<menuGuide :title="item.title" :menuList="item.items"></menuGuide>
+			<menuGuide :title="item.title" :menuList="item.children"></menuGuide>
 		</block>
 		
 
@@ -40,10 +40,11 @@
 </template>
 
 <script setup>
+	import { ref } from 'vue'
+	import { onShow, onLoad } from '@dcloudio/uni-app'
 	import api from '@/request/api.js'
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
-	import { menuList } from './feature.js'
 	import menuGuide from './components/menuGuide.vue'
 	
 	const app = getApp()
@@ -52,6 +53,23 @@
 	const defaultAvatar = 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
 	const backgroundImageUrl = 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp'
 	const waterWaveUrl = 'https://store2018.muapp.cn/images/weapp/water-wave.gif'
+	
+	const menuList = ref([])
+	
+	onLoad(() => {
+		uni.showLoading({ title: '加载中...' })
+		fetchMenuList()
+	})
+	
+	onShow(() => {
+	})
+	
+	function fetchMenuList () {
+		api.fetchMenuList().then((res) => {
+			menuList.value = res.data
+			uni.hideLoading()
+		})
+	}
 	
 	function logout() {
 		uni.showModal({
