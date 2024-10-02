@@ -12,7 +12,7 @@
 		onLaunch: function() {
 			var self = this
 
-			// #ifdef MP-WEIXIN
+			// #ifdef MP-WEIXIN || MP-QQ
 			const openid = this.getOpenId()
 			if (!openid) {
 				this.uniLogin()
@@ -55,6 +55,7 @@
 							}).then(loginRes => {
 								console.log('openid', loginRes.data)
 								self.setOpenId(loginRes.data.openid)
+								return loginRes.data.openid
 							})
 						}
 					}

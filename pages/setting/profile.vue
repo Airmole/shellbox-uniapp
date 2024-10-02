@@ -65,10 +65,10 @@
 					nickname: this.nickname
 				}
 				// #ifdef MP-WEIXIN
-				data.wx_open_id = app.getOpenId().openid
+				data.wx_open_id = app.getOpenId()
 				// #endif
 				// #ifdef MP-QQ
-				data.qq_open_id = app.getOpenId().openid
+				data.qq_open_id = app.getOpenId()
 				// #endif
 				api.updateProfile(data).then(res => {
 					if (res.statusCode) {

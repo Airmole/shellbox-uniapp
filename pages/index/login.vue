@@ -70,10 +70,17 @@
 	}
 	function submitLogin() {
 		// #ifdef MP-WEIXIN
-		loginForm.value.wx_open_id = app.getOpenId().openid
+		loginForm.value.wx_open_id = app.getOpenId()
+		if (!loginForm.value.wx_open_id) {
+			app.uniLogin()
+			loginForm.value.wx_open_id = app.getOpenId()
+		}
 		// #endif
 		// #ifdef MP-QQ
-		loginForm.value.qq_open_id = app.getOpenId().openid
+		loginForm.value.qq_open_id = app.getOpenId()
+		if (!loginForm.value.wx_open_id) {
+			loginForm.value.wx_open_id = app.uniLogin()
+		}
 		// #endif
 		if (loginForm.value.account.length == 0 || loginForm.value.password.length == 0) {
 			uni.showToast({ title: '请填写账号密码', icon: 'error' })
