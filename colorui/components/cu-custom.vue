@@ -15,7 +15,7 @@
 
 <script setup>
 	import menuBarInfo from '@/common/use/useMenuBarInfo.js'
-	import { computed, defineProps, ref } from "vue"
+	import { computed, ref } from "vue"
 	const { statusBarHeight, customBarHeight } = menuBarInfo
 
 	const props = defineProps({
@@ -44,10 +44,17 @@
 				delta: 1
 			});
 		} catch (e) {
-			const url = '/' + __wxConfig.pages[0]
-			return uni.redirectTo({
-				url
-			})
+			try{
+				const url = '/' + __wxConfig.pages[0]
+				return uni.redirectTo({
+					url
+				})
+			}catch(e){
+				const url = '/' + __wxConfig.pages[0]
+				return uni.switchTab({
+					url: url
+				})
+			}
 		}
 	}
 </script>

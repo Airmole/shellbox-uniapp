@@ -6,7 +6,7 @@
 
 		<view class="flex flex-wrap justify-center margin-xl">
 			<view class="avatar text-center shadow-wrap"> <button class="cu-avatar xxl border round bg-white"
-					open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar"
+					open-type="chooseAvatar" @chooseavatar="onChooseAvatar"
 					:style="{ backgroundImage: `url(${avatarUrl})` }">
 				</button></view>
 			<view class="text-center margin"><text>点击上方头像可授权修改</text></view>
@@ -30,7 +30,11 @@
 </template>
 
 <script>
+	import { request } from '../../request'
 	import api from '@/request/api.js'
+	import { onLoad } from '@dcloudio/uni-app'
+	import { useAppStore } from '@/stores/app.js'
+	const { setUserInfo } = useAppStore()
 	const app = getApp()
 	export default {
 		data() {
@@ -40,36 +44,50 @@
 			}
 		},
 		onLoad() {
+			uni.showLoading({ title: '加载中...'})
 			this.fetchProfile()
 		},
 		methods: {
 			fetchProfile () {
-				var _this = this
 				api.fetchProfile().then(res => {
-					_this.avatarUrl = res.data.avatar
-					_this.nickname = res.data.nickname
+					if (res.data.avatar !== '') this.avatarUrl = res.data.avatar
+					if (res.data.nickname !== '') this.nickname = res.data.nickname
+					setUserInfo({
+						avatar: res.data.avatar === '' ? app.globalData.defaultAvatar : res.data.avatar,
+						nickname: res.data.nickname === '' ? '' : res.data.nickname
+					})
+					uni.hideLoading()
 				})
 			},
 			updateProfile () {
-				var _this = this
 				let data = {
-					avatar: _this.avatarUrl,
-					nickname: _this.nickname
+					avatar: this.avatarUrl,
+					nickname: this.nickname
 				}
 				// #ifdef MP-WEIXIN
-				data.wx_open_id = app.getOpenId()
+				data.wx_open_id = app.getOpenId().openid
 				// #endif
 				// #ifdef MP-QQ
-				data.qq_open_id = app.getOpenId()
+				data.qq_open_id = app.getOpenId().openid
 				// #endif
 				api.updateProfile(data).then(res => {
 					if (res.statusCode) {
 						uni.showToast({ title: '保存成功~' })
-						_this.fetchProfile()
+						this.fetchProfile()
 					} else {
 						uni.showToast({ title: res.data.message, icon:'none' })
 						console.log('updateProfile错误：', res.data)
 					}
+				})
+			},
+			onChooseAvatar (e) {
+				uni.showLoading({ title: '上传中...'})
+				console.log('onChooseAvatar', e)
+				const avatarUrl = e.detail.avatarUrl
+				request('','', avatarUrl, true).then(res => {
+					console.log('upload request', res.data.url)
+					this.avatarUrl = JSON.parse(res.data).url
+					uni.hideLoading()
 				})
 			}
 		}

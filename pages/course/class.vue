@@ -82,10 +82,10 @@
 						</view>
 						<view class="cu-item">
 							<view class="content">
-								<text class="text-grey">上课班级</text>
+								<text class="text-red">*上课班级</text>
 							</view>
 							<view class="action text-right">
-								<input placeholder="请输入班级名称" name="className" v-model="optionForm.className" />
+								<input placeholder="输入班级名称，例：计" name="className" v-model="optionForm.className" />
 							</view>
 						</view>
 						<view class="cu-item">
@@ -147,15 +147,16 @@
 					<view class="cu-avatar lg round bg-gradual-green"><text class="text-sm">{{classCourse.className}}</text></view>
 			        <view class="content"><view class="padding-lr"><text class="text-xl">{{classCourse.className}}</text></view></view>
 			    </view>
+				<tips v-if="classCourses !== '' && classCourses.length === 0" :tips="'没有符合条件的数据，请进行筛选操作'"></tips>
 			</view>
 		</template>
 		
 		<view v-if="!showSearchArea && classCourse.className">
-			<view class="cu-bar bg-gradual-blue fixed">
+			<view class="padding-tb bg-gradual-blue"></view>
+			<view class="cu-bar bg-gradual-blue">
 			    <view class="action" @click="hideSearchArea"><text class="cuIcon-back text-white"></text></view>
 			    <view class="content text-bold">{{classCourse.className}} 班级课表</view>
 			</view>
-			<view class="margin-tb-xl padding-top-xs"></view>
 			<courseTable :columnTitles="columnTitle" :table="classCourse.course" :tips="''"></courseTable>
 		</view>
 		
@@ -199,8 +200,8 @@
 					dayOfWeekEnd: ''
 				},
 				classIndex: 0,
-				classCourses: [],
-				classCourse: {},
+				classCourses: '',
+				classCourse: { course:[] },
 				columnTitle: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
 				weekOption: [],
 				dayOfWeekOption: []

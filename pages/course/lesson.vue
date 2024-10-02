@@ -82,7 +82,7 @@
 						</view>
 						<view class="cu-item">
 							<view class="content">
-								<text class="text-grey">课程名称</text>
+								<text class="text-red">*课程名称</text>
 							</view>
 							<view class="action text-right">
 								<input placeholder="请输入课程名称" name="courseName" v-model="optionForm.courseName" />
@@ -147,15 +147,16 @@
 					<view class="cu-avatar lg round bg-gradual-green"><text class="text-xxl iconfont icon-kechengkebiao"></text></view>
 			        <view class="content"><view class="padding-lr"><text class="text-xl">{{lessonCourse.courseName}}</text></view></view>
 			    </view>
+				<tips v-if="lessonCourses !== '' && lessonCourses.length === 0" :tips="'没有符合条件的数据，请进行筛选操作'"></tips>
 			</view>
 		</template>
 		
 		<view v-if="!showSearchArea && lessonCourse.courseName">
-			<view class="cu-bar bg-gradual-blue fixed">
+			<view class="padding-tb bg-gradual-blue"></view>
+			<view class="cu-bar bg-gradual-blue">
 			    <view class="action" @click="hideSearchArea"><text class="cuIcon-back text-white"></text></view>
 			    <view class="content text-bold">{{lessonCourse.courseName}} 课程课表</view>
 			</view>
-			<view class="margin-tb-xl padding-top-xs"></view>
 			<courseTable :columnTitles="columnTitle" :table="lessonCourse.course" :tips="''"></courseTable>
 		</view>
 		
@@ -199,7 +200,7 @@
 					dayOfWeekEnd: ''
 				},
 				lessonIndex: 0,
-				lessonCourses: [],
+				lessonCourses: '',
 				lessonCourse: {},
 				columnTitle: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
 				weekOption: [],
@@ -326,6 +327,11 @@
 				const index = e.detail.value
 				this.teachCollegeIndex = index
 				this.optionForm.teachCollege = this.teachCollegeOption[index].value
+			},
+			courseNatureChange (e) {
+				const index = e.detail.value
+				this.courseNatureIndex = index
+				this.optionForm.courseNature = this.courseNatureOption[index].value
 			},
 			weekStartChange (e) {
 				const index = e.detail.value

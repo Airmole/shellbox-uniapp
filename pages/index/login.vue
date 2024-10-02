@@ -46,9 +46,9 @@
 
 <script setup>
 	import api from '@/request/api.js'
-	import { useAppStore } from '@/stores/app.js'
 	import { onMounted, reactive, ref, toRefs } from 'vue'
 	const app = getApp()
+	import { useAppStore } from '@/stores/app.js'
 	const { setAppAuth } = useAppStore()
 	const loadingUrl = 'https://store2018.muapp.cn/images/weapp/loading_cat.gif'
 	const logoUrl = app.globalData.logoImageUrl
@@ -70,10 +70,10 @@
 	}
 	function submitLogin() {
 		// #ifdef MP-WEIXIN
-		loginForm.value.wx_open_id = app.getOpenId()
+		loginForm.value.wx_open_id = app.getOpenId().openid
 		// #endif
 		// #ifdef MP-QQ
-		loginForm.value.qq_open_id = app.getOpenId()
+		loginForm.value.qq_open_id = app.getOpenId().openid
 		// #endif
 		if (loginForm.value.account.length == 0 || loginForm.value.password.length == 0) {
 			uni.showToast({ title: '请填写账号密码', icon: 'error' })
@@ -83,6 +83,7 @@
 		autoLogin(loginForm.value)
 	}
 	function autoLogin (formData) {
+		console.log('autoLogin (formData)', formData)
 		api.autoLogin(formData).then(res => {
 			setAppAuth(Object.assign({
 				account: formData.account,

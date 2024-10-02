@@ -2,9 +2,9 @@
 	<view>
 		<view class="padding-top bg-height bg-img bg-mask flex justify-center"
 			:style="{backgroundImage: `url(${backgroundImageUrl})`}">
+			<!-- #ifdef MP -->
 			<view class="padding-xl text-white radius bg-card">
-				<navigator :url="loginStatus?'/pages/setting/profile':'/pages/index/login'"
-					class="margin-top-xxl flex justify-center">
+				<navigator :url="loginStatus?'/pages/setting/profile':'/pages/index/login'" class="margin-top-xxl flex justify-center">
 					<image class="cu-avatar round avatar"
 						:src="(loginStatus&&userInfo?.avatar) ? userInfo.avatar : defaultAvatar" mode="scaleToFill">
 					</image>
@@ -17,6 +17,24 @@
 					<span>{{userInfo?.nickname}}({{edusysAccount.account}})</span>
 				</navigator>
 			</view>
+			<!-- #endif -->
+			<!-- #ifndef MP -->
+			<view class="padding-xl text-white radius bg-card">
+				<view @click="goProfileSettingPage()" class="margin-top-xxl flex justify-center">
+					<image class="cu-avatar round avatar"
+						:src="(loginStatus&&userInfo?.avatar) ? userInfo.avatar : defaultAvatar" mode="scaleToFill">
+					</image>
+				</view>
+				<navigator url="/pages/index/login" v-if="!loginStatus"
+					class="round bg-gray text-center margin-tb padding-xs">
+					<span>您尚未登录</span>
+				</navigator>
+				<view @click="goProfileSettingPage()" v-else class="round bg-gray text-center margin-tb padding-xs">
+					<span>{{userInfo?.nickname}}({{edusysAccount.account}})</span>
+				</view>
+			</view>
+			<!-- #endif -->
+			
 			<image class="gif-wave" :src="waterWaveUrl" mode="scaleToFill"></image>
 		</view>
 
@@ -32,7 +50,7 @@
 			<navigator v-if="!loginStatus" class="flex-sub margin-left-sm" url="/pages/index/login">
 				<button class="round bg-default">登录</button>
 			</navigator>
-			<button v-else @click="logout()" class="flex-sub margin-left-sm round bg-red">注销退出</button>
+			<button v-else @click="logout()" class="flex-sub margin-left-sm round bg-red">退出账号</button>
 		</view>
 
 		<view class="text-center padding"></view>
@@ -100,6 +118,9 @@
 		})
 	}
 	
+	function goProfileSettingPage () {
+		uni.showToast({ title: '暂仅支持在小程序端修改头像昵称', icon: 'none' })
+	}
 </script>
 
 <style>

@@ -7,6 +7,7 @@
 			screenHeight: 800,
 			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
 			loginPromise: null,
+			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
 		},
 		onLaunch: function() {
 			var self = this
@@ -92,6 +93,10 @@
 	@import "colorui/icon.css";
 	@import "static/css/icon.css";
 	@import "~@/common/css/index.scss";
+	
+	page {
+		background-color: #f1f1f1;
+	}
 
 	body {
 		background: #f1f1f1;

@@ -6,13 +6,13 @@
 		<!-- 教学周日期显示 -->
 		<block v-if="!!calendar">
 			<block v-if="calendar?.title">
-			  <view url="/pages/index/feature" class="padding-lr-sm bg-white margin radius padding-bottom flex justify-between">
+			  <view url="/pages/index/feature" class="padding-lr-sm bg-white margin card-radius padding-bottom flex justify-between">
 			    <view class="padding-top"><text class="cuIcon-title text-green"></text><text>{{ calendar.title }} </text></view>
 			    <view class="padding-top"><text>{{ courses.nowWeek }} / {{courses.endWeek}} </text></view>
 			  </view>
 			</block>
 			<block v-else>
-			  <view url="/pages/index/feature" class="padding-lr-sm bg-white margin radius padding-bottom">
+			  <view url="/pages/index/feature" class="padding-lr-sm bg-white margin card-radius padding-bottom">
 			    <view class="padding-top"><text class="cuIcon-titles text-green"></text>{{calendar.date}} {{getDayByDateStr(calendar.date)}}</view>
 			    <text class="text-black">{{praise}}</text>
 			  </view>

@@ -17,6 +17,7 @@ export const useAppStore = defineStore('app', () => {
 	})
 	
 	dataInit()
+	getUserInfo()
 	
 	function dataInit() {
 		app.globalData.loginPromise.then((res) => {
@@ -53,11 +54,30 @@ export const useAppStore = defineStore('app', () => {
 			console.log(store.calendar);
 		})
 	}
+	// 设置用户昵称头像信息
+	function setUserInfo (userInfo) {
+		store.userInfo = userInfo
+	}
+	
+	// 获取用户昵称头像信息
+	function getUserInfo () {
+		api.fetchProfile().then(res => {
+			let userInfo = {}
+			if (res.data.avatar) userInfo.avatar = res.data.avatar
+			if (res.data.nickname) userInfo.nickname = res.data.nickname
+			if (Object.keys(userInfo).length === 0) userInfo = undefined
+			setUserInfo(userInfo)
+		}).catch(error => {
+			setUserInfo(undefined)
+		})
+	}
 	
 	return {
 		getCourses,
 		dataInit,
 		setAppAuth,
+		setUserInfo,
+		getUserInfo,
 		...toRefs(store)
 	}
 })

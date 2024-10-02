@@ -7,3 +7,13 @@ const weekNameList = ['周日','周一','周二','周三','周四','周五','周
 export function getWeekNameByDayNumber(n) {
 	return weekNameList[n]
 }
+
+export function httpBuildQuery (object) {
+	let formBody = []
+	for (let key in object) {
+	  let encodedKey = encodeURIComponent(key)
+	  let encodedValue = encodeURIComponent(object[key])
+	  formBody.push(encodedKey + '=' + encodedValue)
+	}
+	return formBody.join('&')
+}

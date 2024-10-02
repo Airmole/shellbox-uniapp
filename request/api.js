@@ -1,4 +1,5 @@
 import { request } from './index.js'
+import { httpBuildQuery } from '../common/utils/tools.js'
 
 export default {
 	// 登录换取openID
@@ -80,7 +81,7 @@ export default {
 		let query = {}
 		if (collegeCode !== '') query.collegeCode = collegeCode
 		if (grade !== '') query.grade = grade
-		const queryString = new URLSearchParams(query).toString()
+		const queryString = httpBuildQuery(query)
 		return request(`/edusys/course/class/professionOptions?${queryString}`, `GET`)
 	},
 	// 获取班级课表
@@ -111,7 +112,7 @@ export default {
 		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
 		if (serialNoStart.length) query.serialNoStart = serialNoStart
 		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
-		const queryString = new URLSearchParams(query).toString()
+		const queryString = httpBuildQuery(query)
 		return request(`/edusys/course/class/course?${queryString}`, `GET`)
 	},
 	// 教师课表筛选项
@@ -142,7 +143,7 @@ export default {
 		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
 		if (serialNoStart.length) query.serialNoStart = serialNoStart
 		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
-		const queryString = new URLSearchParams(query).toString()
+		const queryString = httpBuildQuery(query)
 		return request(`/edusys/course/teacher/course?${queryString}`, `GET`)
 	},
 	// 课程课表筛选项
@@ -177,7 +178,7 @@ export default {
 		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
 		if (serialNoStart.length) query.serialNoStart = serialNoStart
 		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
-		const queryString = new URLSearchParams(query).toString()
+		const queryString = httpBuildQuery(query)
 		return request(`/edusys/course/lesson/course?${queryString}`, `GET`)
 	}
 }

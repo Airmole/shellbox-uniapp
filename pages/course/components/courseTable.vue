@@ -139,12 +139,12 @@
 
 <script setup>
 	import { ref } from 'vue'
-	import { onShow } from '@dcloudio/uni-app'
+	import { onLoad } from '@dcloudio/uni-app'
 
 	let screenWidth = ref(375)
 	let columnTitleWidth = ref(42)
-	let tableWidth = ref(0)
-	let tableHeight = ref(0)
+	let tableWidth = ref(500)
+	let tableHeight = ref(732)
 	let itemWidth = ref(64)
 	let itemHeight = ref(120)
 	const bgColors = ref(['red', 'orange', 'yellow', 'olive', 'green', 'cyan', 'blue', 'purple', 'mauve', 'pink', 'brown','grey'])
@@ -171,7 +171,7 @@
 		},
 	})
 	
-	onShow(() => {
+	onLoad(() => {
 		calcTableSize()
 	})
 	
