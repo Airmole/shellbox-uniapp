@@ -329,7 +329,9 @@
 			    })
 			  },
 			  sendPostRequest: function (data) {
+				uni.showLoading({ title: 'loading...'})
 				api.postRightsProtection(data).then(res => {
+					uni.hideLoading()
 				  if (res.statusCode == 200 && res.data.code == 200) {
 					uni.showToast({ title: '发布成功' })
 					// 1秒后跳转上页
@@ -338,7 +340,7 @@
 					uni.showToast({ title: (res.data.message || res.data.message), icon: 'none' })
 				  }
 				}).catch(res => {
-				console.log('--------------------->', res)
+					uni.hideLoading()
 					if (res.statusCode === 422) {
 						uni.showToast({ title: JSON.stringify(res.data.errors), icon: 'none' })
 					} else {

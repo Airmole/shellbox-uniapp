@@ -201,6 +201,7 @@
 			  },
 			  getDetailData: function (id, page = 1) {
 				api.fetchRightsProtectionDetail(id, page).then(res => {
+					uni.hideLoading()
 					const canReplay = this.isAdminer ? true : false
 					this.data = res.data.data
 					this.canReplay = canReplay
@@ -285,16 +286,20 @@
 					this.isAdminer = true
 					app.globalData.isBoardAdminer = true
 				  }
+				}).catch(res => {
+					console.log('不是权益管理员')
 				})
 			  },
 			  // 上一页
 			  lastPage: function () {
+				uni.showLoading({ title: 'loading...'})
 			    const current = this.data.pagination.current
 			    const targetPage = current > 1 ? Number(current) - 1 : 2
 			    this.getDetailData(this.id, targetPage)
 			  },
 			  // 下一页
 			  nextPage: function () {
+				  uni.showLoading({ title: 'loading...'})
 			    const current = this.datalist.pagination.current
 			    const last = this.datalist.pagination.last
 			    const targetPage = current < last ? Number(current) + 1 : last

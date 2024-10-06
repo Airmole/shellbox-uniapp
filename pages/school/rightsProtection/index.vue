@@ -230,6 +230,8 @@
 					  this.isAdminer = true
 					  app.globalData.isBoardAdminer = true
 					}
+				}).catch(res => {
+					console.log('不是权益管理员')
 				})
 			  },
 			  deleteConfirm: function(id) {
@@ -273,14 +275,16 @@
 			  },
 			  // 上一页
 			  lastPage: function () {
+				uni.showLoading({ title: 'loading...'})
 			    const current = this.datalist.pagination.current
 			    const targetPage = current > 1 ? Number(current) - 1 : 2
 			    this.getDatalist(targetPage)
 			  },
 			  // 下一页
 			  nextPage: function () {
+				uni.showLoading({ title: 'loading...'})
 			    const current = this.datalist.pagination.current
-			    const last = this.data.datalist.pagination.last
+			    const last = this.datalist.pagination.last
 			    const targetPage = current < last ? Number(current) + 1 : last
 			    this.getDatalist(targetPage)
 			}
