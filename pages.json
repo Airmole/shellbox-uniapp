@@ -26,6 +26,21 @@
 		},
 		{
 			"path" : "pages/course/lesson"
+		},
+		{
+			"path" : "pages/school/calendar"
+		},
+		{
+			"path" : "pages/school/rightsProtection/index"
+		},
+		{
+			"path" : "pages/school/rightsProtection/edit"
+		},
+		{
+			"path" : "pages/school/rightsProtection/detail"
+		},
+		{
+			"path" : "pages/school/rightsProtection/faq"
 		}
 	],
 	"globalStyle": {

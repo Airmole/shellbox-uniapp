@@ -4,6 +4,7 @@
 	
 	export default {
 		globalData: {
+			env: 'develop',
 			screenHeight: 800,
 			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
 			loginPromise: null,
@@ -23,6 +24,8 @@
 				})
 			}
 			uni.getSystemInfo({ success(e) { self.globalData.screenHeight = e.screenHeight} })
+			const accountInfo = uni.getAccountInfoSync()
+			self.globalData.env = accountInfo.miniProgram.envVersion
 			// #endif
 			this.clientLoginEdusys()
 		},

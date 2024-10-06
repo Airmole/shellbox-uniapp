@@ -72,6 +72,14 @@ export default {
 	fetchCalendar() {
 		return request(`/edusys/calendar`, `GET`)
 	},
+	// 获取校历筛选项
+	fetchCalendarOptions () {
+		return request(`/edusys/calendar/options`, `GET`)
+	},
+	// 获取校历图片
+	getSchoolCalendarImage (semester = '') {
+		return request(`/edusys/calendar/image?semester=${semester}`, `GET`)
+	},
 	// 班级课表筛选项
 	fetchClassCourseOptions () {
 		return request(`/edusys/course/class/options`, `GET`)
@@ -180,5 +188,25 @@ export default {
 		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
 		const queryString = httpBuildQuery(query)
 		return request(`/edusys/course/lesson/course?${queryString}`, `GET`)
+	},
+	// 权益保护相关
+	// 获取权益投诉帖
+	fetchRightsProtectionIndex (page = 1, tag = '[0,1,2,3,4]', hot = '[0,1]') {
+		return request(`/rightsProtection?page=${page}&tag=${tag}&hot=${hot}`, `GET`)
+	},
+	fetchRightsProtectionDetail (id, page = 1) {
+		return request(`/rightsProtection/${id}?page=${page}`, `GET`)
+	},
+	postRightsProtection (data) {
+		return request(`/rightsProtection`, `POST`, data)
+	},
+	updateRightsProtection (id, data) {
+		return request(`/rightsProtection/${id}`, `POST`, data)
+	},
+	removeRightsProtection (id) {
+		return request(`/rightsProtection/${id}`, `DELETE`)
+	},
+	fetchIsRightsProtectionAdminer (account) {
+		return request(`/rightsProtection/adminer/${account}`, `GET`)
 	}
 }

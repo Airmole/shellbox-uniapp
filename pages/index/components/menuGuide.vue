@@ -34,7 +34,7 @@
 		title: String
 	})
 	
-	const fold = ref(false)
+	const fold = ref(true)
 	const renderMenu = computed(() => {
 		if (fold.value) return props.menuList
 		return props.menuList.slice(0, 5)
