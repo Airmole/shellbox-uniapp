@@ -11,7 +11,7 @@
 		      <view class="cu-item shadow">
 		        <view class="cu-list menu-avatar">
 		          <view class="cu-item">
-		            <view class="cu-avatar round lg bg-cyan" style="background-image:url(https://upload-images.jianshu.io/upload_images/4697920-5a559d389ef75773.png);"></view>
+		            <view class="cu-avatar round lg bg-cyan" :style="`background-image:url(${defaultAvatar});`"></view>
 		            <view class="content flex-sub">
 		              <view class="text-cut text-df">用户{{data.content.nickname}}</view>
 		              <view class="text-gray text-sm flex justify-between">{{data.content.created_at}}</view>
@@ -56,7 +56,7 @@
 		      </view>
 		      <view class="cu-list menu-avatar no-padding margin-lr radius-bottom margin-bottom">
 		        <view class="cu-item">
-		          <view class="cu-avatar lg round bg-green" :style="`background-image:url(${data.content.avatar});`"></view>
+		          <view class="cu-avatar lg round bg-green" :style="`background-image:url(${data.content.avatar||defaultAvatar});`"></view>
 		          <view class="content">
 		            <view class="text-grey text-cut"><text>{{data.content.nickname}}</text> </view>
 		            <view class="text-gray text-sm">联系方式：{{data.content.mobile}}</view>
@@ -70,7 +70,7 @@
 		    <!-- 发表回复按钮 -->
 		    <view class="margin-lr margin-bottom" v-if="canReplay">
 		      <view class="cu-list grid col-4 radius">
-		        <view class="cu-item" bindtap="reply">
+		        <view class="cu-item" @tap="reply">
 		          <view class="cuIcon-message text-blue"></view>
 		          <text>评论回复</text>
 		        </view>
@@ -137,10 +137,10 @@
 		
 		    <!-- 分页器 -->
 		    <view class="flex margin-right-sm justify-end">
-		      <button @tap="lastPage" v-if="data.pagination.current > 1" class="cu-btn bg-black round shadow">上一页</button>
+		      <button @tap="lastPage()" v-if="data.pagination.current > 1" class="cu-btn bg-black round shadow">上一页</button>
 		      <view v-if="data.pagination.current > 0" class="text-black margin-sm">{{data.pagination.current}} /
 		        {{data.pagination.last}}</view>
-		      <button @tap="nextPage" v-if="data.pagination.current < data.pagination.last && data.pagination.current > 0"
+		      <button @tap="nextPage()" v-if="data.pagination.current < data.pagination.last && data.pagination.current > 0"
 		        class="cu-btn bg-black round shadow">下一页</button>
 		    </view>
 		
@@ -153,15 +153,13 @@
 
 <script>
 	const app = getApp()
-	import { useAppStore } from '@/stores/app.js'
-	import { storeToRefs } from 'pinia'
-	const appStore = useAppStore()
-	const { userInfo, edusysAccount } = storeToRefs(appStore)
 	import api from '@/request/api.js'
 	import { request } from '@/request/index.js'
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	export default {
 		data() {
 			return {
+				defaultAvatar: 'https://r2.airmole.net/images/upload/4697920-5a559d389ef75773.webp',
 				env: 'develop',
 				isLoading: true,
 				isAdminer: false,
@@ -170,7 +168,10 @@
 				id: '',
 				backpage: '',
 				tags: ['其他', '食堂', '宿舍', '教学楼', '老师'],
-				data: []
+				data: {
+					reply: [],
+					pagination: { current: 1, last: 1 }
+				}
 			}
 		},
 		onLoad: function (options) {
@@ -188,6 +189,7 @@
 			      // wx.switchTab({ url: '../../index/index' })
 			    }
 			    const id = options.id
+				const edusysAccount = getEdusysAccount()
 			    const uid = edusysAccount && edusysAccount.account ? edusysAccount.account : 0
 			    const backpage = options.backpage ? options.backpage : 1
 			    this.id = id
@@ -244,20 +246,22 @@
 			    const hot = e.currentTarget.dataset.hot ? e.currentTarget.dataset.hot : this.data.content.hot
 			    const resolve_status = e.currentTarget.dataset.resolve ? e.currentTarget.dataset.resolve : this.data.content.resolve_status
 			    const data = { hot: hot, resolve_status: resolve_status }
+				var _this = this
 			    uni.showModal({
 			      title: '注意',
 			      content: resolve_status == 1 ? '设置为已解决后将无法重新修改解决状态，确认【已解决】？' : '确定设为【常见问题】嘛？',
 			      success(res) {
 			        if (res.confirm) {
-						api.updateRightsProtection(id, data).then(res => {
-							if (res.statusCode == 200 && res.data.code == 200) {
+						api.updateRightsProtection(id, data).then(ress => {
+							if (ress.statusCode == 200 && ress.data.code == 200) {
 							  uni.showToast({ title: '操作成功' })
-							  this.getDetailData(this.id, 1)
+							  _this.getDetailData(_this.id, 1)
 							} else {
-							  uni.showToast({ title: res.data.message, icon: 'none' })
+							  uni.showToast({ title: ress.data.message, icon: 'none' })
 							}
-						}).catch(res => {
-							wx.showToast({ title: res.data.message, icon: 'none' })
+						}).catch(ress => {
+							console.log('ress', ress)
+							wx.showToast({ title: ress.data.message, icon: 'none' })
 						})
 			        } else if (res.cancel) {
 			          console.log('取消操作')

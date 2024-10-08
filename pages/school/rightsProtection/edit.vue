@@ -108,10 +108,7 @@
 
 <script>
 	const app = getApp()
-	import { useAppStore } from '@/stores/app.js'
-	import { storeToRefs } from 'pinia'
-	const appStore = useAppStore()
-	const { userInfo, edusysAccount } = storeToRefs(appStore)
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '@/request/api.js'
 	import { request } from '@/request/index.js'
 	export default {
@@ -152,8 +149,10 @@
 		methods: {
 			inital: function (options) {
 			    let openid = app.getOpenId()
-			    const nickname = userInfo.nickname ? userInfo.nickname : openid
-			    const avatar = userInfo?.avatar
+				if (typeof openid === 'object') openid = openid.openid
+			    const nickname = openid
+			    const avatar = 'https://r2.airmole.net/images/upload/4697920-5a559d389ef75773.webp'
+				const edusysAccount = getEdusysAccount()
 			    const uid = edusysAccount.account ? edusysAccount.account : 0
 			    const related = options.id ? options.id : ''
 			    const reditid = options.reditid ? options.reditid : ''
@@ -350,8 +349,8 @@
 			  },
 			  getDetailData: function (id, page = 1) {
 				api.fetchRightsProtectionDetail(id, page).then(res => {
-				  this.content = res.data.content.content
-				  this.imgList = res.data.content.images
+				  this.content = res.data.data.content.content
+				  this.imgList = res.data.data.content.images
 				}).catch(res => {
 					uni.showToast({ title: (res.data.errors || res.data.message), icon: 'none' })
 				})

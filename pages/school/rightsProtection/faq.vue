@@ -74,10 +74,7 @@
 
 <script>
 	const app = getApp()
-	import { useAppStore } from '@/stores/app.js'
-	import { storeToRefs } from 'pinia'
-	const appStore = useAppStore()
-	const { userInfo, edusysAccount } = storeToRefs(appStore)
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '@/request/api.js'
 	export default {
 		data() {
@@ -105,6 +102,7 @@
 		methods: {
 			inital: function () {
 			    this.getHotDatalist()
+				const edusysAccount = getEdusysAccount()
 			    const uid = edusysAccount && edusysAccount.account ? edusysAccount.account : 0
 			    this.uid = uid
 			    this.isAdminerMethod(uid)
