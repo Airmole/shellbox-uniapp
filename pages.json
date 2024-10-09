@@ -41,6 +41,9 @@
 		},
 		{
 			"path" : "pages/school/rightsProtection/faq"
+		},
+		{
+			"path" : "pages/school/contact"
 		}
 	],
 	"globalStyle": {

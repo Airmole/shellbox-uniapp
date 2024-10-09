@@ -189,6 +189,18 @@ export default {
 		const queryString = httpBuildQuery(query)
 		return request(`/edusys/course/lesson/course?${queryString}`, `GET`)
 	},
+	// 教师获取授课列表
+	fetchTeacherCourseList () {
+		return request(`/edusys/teacher/course/list`, `GET`)
+	},
+	// 教师获取授课课堂花名册
+	fetchTeacherCourseStudentList (code) {
+		return request(`/edusys/teacher/course/student/list?code=${code}`, `GET`)
+	},
+	// 学校系部联系电话
+	getSchoolContact () {
+		return request(`/school/contact`, `GET`)
+	},
 	// 权益保护相关
 	// 获取权益投诉帖
 	fetchRightsProtectionIndex (page = 1, tag = '[0,1,2,3,4]', hot = '[0,1]') {

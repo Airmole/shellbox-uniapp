@@ -4,7 +4,6 @@ import App from './App'
 import cuCustom from '@/colorui/components/cu-custom.vue'
 import tips from '@/colorui/components/tips.vue'
 
-
 export function createApp() {
     const app = createSSRApp(App)
 	app.use(Pinia.createPinia());

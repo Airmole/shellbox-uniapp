@@ -23,7 +23,11 @@
 					fail() { self.uniLogin() }
 				})
 			}
-			uni.getSystemInfo({ success(e) { self.globalData.screenHeight = e.screenHeight} })
+			uni.getSystemInfo({
+				success(e) {
+					self.globalData.screenHeight = e.screenHeight
+				}
+			})
 			const accountInfo = uni.getAccountInfoSync()
 			self.globalData.env = accountInfo.miniProgram.envVersion
 			// #endif
