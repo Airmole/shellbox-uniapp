@@ -28,7 +28,7 @@
 			</view>
 		</view>
 		<view class="flex margin-top-lg" style="gap: 40rpx;">
-			<view v-if="movieRef" class="box-card flex-1 text-white padding-sm bg-img bg-mask" :style="movieStyle" @click="goDoubanMovie()">
+			<view v-if="movieRef" class="box-card flex-1 text-white padding-sm bg-img bg-mask" :style="movieStyle" @tap="displayMovieModal">
 				<view class="text-right">
 					<text class="block text-xxl">{{nowYMD[0]}}</text>
 					<text class="text-lg opacity-9 ">{{nowYMD[1]}}月/{{calendarDate.ncWeek}}</text>
@@ -39,13 +39,69 @@
 					<text class="block overflow-ellipsis-2">{{movieRef.mov_text}}</text>
 				</view>
 			</view>
-			<view v-if="famousSayingRef" class="flex flex-direction flex-1 box-card text-white padding-sm bg-img bg-mask" :style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`">
+			<view v-if="famousSayingRef" @tap="displaySayingModal" class="flex flex-direction flex-1 box-card text-white padding-sm bg-img bg-mask" :style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`">
 				<text class="text-lg opacity-6">每日一言</text>
 				<view class="flex-1 flex align-center text-center margin-top-sm">
 					<text class="">{{famousSayingRef?.content}}</text>
 				</view>
 			</view>
 		</view>
+		
+		<view class="cu-modal" :class="showMovieModal?'show':''">
+			<view class="cu-dialog" v-if="movieRef">
+				<view class="bg-img bg-mask" :style="movieModalStyle"></view>
+				<view style="position: absolute;top: 0;left: 0;height: 800rpx;width: 680rpx;">
+					<view class="flex padding-tb padding-lr-sm">
+					    <view class="flex-sub">
+							<image :src="movieRef.mov_pic" mode="heightFix" style="height: 200rpx;"></image>
+						</view>
+					    <view class="flex-twice margin-sm text-left">
+							<view class="margin-tb-xs text-cut">
+								<text class="text-xxl title-color">《{{movieRef.mov_title}}》</text><text class="title-color text-sm">{{movieRef.mov_director}}</text>
+							</view>
+							<view class="margin-tb-xs text-cut">
+								<text class="title-color margin-left-sm">{{movieRef.mov_year}}年</text>
+								<text class="title-color margin-left-sm">{{movieRef.mov_area}}</text>
+							</view>
+							<view class="margin-tb-xs text-cut">
+								<text class="title-color margin-lr-sm">评分:{{movieRef.mov_rating}}</text>
+								<template v-for="(typeItem, typeIndex) in movieRef.mov_type" :key="typeIndex">
+									<text class="title-color">{{typeItem}}</text> <text class="title-color" v-if="typeIndex !== movieRef.mov_type.length-1">/</text>
+								</template>
+							</view>
+						</view>
+					</view>
+					<view class="text-left margin-left" style="width: 680rpx;">
+						<text class="text-xl title-color">"{{movieRef.mov_text}}"</text>
+					</view>
+					<view class="padding" style="height: 400rpx;width: 680rpx; overflow-y: scroll;">
+						<text class="text-sm content-color">{{movieRef.mov_intro}}</text>
+					</view>
+				</view>
+				<view class="cu-bar bg-white">
+					<view class="action margin-0 flex-sub solid-left" @tap="hideMovieModal">关闭</view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="cu-modal" :class="showSayingModal?'show':''">
+			<view class="cu-dialog" v-if="famousSayingRef">
+				<view class="bg-img bg-mask" :style="sayingModalStyle"></view>
+				<view style="position: absolute;top: 0;left: 0;" class="padding-top-xl flex justify-center align-center flex-direction">
+					<view class="flex padding-xl text-center">
+					  <text class="text-xl text-white">{{famousSayingRef.content}}</text>
+					</view>
+					<view class="text-center text-white" style="opacity: 0.4;">
+						—— {{famousSayingRef.from}} {{famousSayingRef.author}} ——
+					</view>
+				</view>
+				<view class="cu-bar bg-white">
+					<view class="action margin-0 flex-sub  solid-left" @tap="hideSayingModal">关闭</view>
+				</view>
+			</view>
+		</view>
+
+		
 	</view>
 	
 </template>
@@ -67,6 +123,9 @@
 	const holidaysRef = ref(null) // 节假日
 	const famousSayingRef = ref(null) // 每日一言
 	
+	const showMovieModal = ref(false)
+	const showSayingModal = ref(false)
+	
 	const movieStyle = computed(() => {
 		const style = {
 			'flex': 1, 
@@ -77,6 +136,32 @@
 		}
 		return style
 	})
+	
+	const movieModalStyle = computed(() => {
+		const style = {
+			'background': '#4c4c45',
+			'height': '800rpx',
+			'width': '680rpx',
+			'filter': 'blur(2px)'
+		}
+		if (movieRef.value?.mov_pic) {
+			style.background = `${movieRef.value.bgColor} url("${movieRef.value.mov_pic}") no-repeat center/cover`
+		}
+		return style
+	})
+	
+	 const sayingModalStyle = computed(() => {
+		 	const style = {
+		 		'background': '#4c4c45',
+		 		'height': '520rpx',
+				'width': '680rpx',
+		 		'filter': 'blur(2px)'
+		 	}
+		 	if (famousSayingRef.value?.thumb) {
+		 		style.background = `#201f18 url("${famousSayingRef.value.thumb}") no-repeat center/cover`
+		 	}
+		 	return style
+	 })
 	
 	
 	function getHolidayShowText(dateStr) {
@@ -101,7 +186,29 @@
 		// window.location.href = doubanUrl
 	}
 	
+	function hideMovieModal () {
+		showMovieModal.value = false
+	}
+	
+	function displayMovieModal () {
+		showMovieModal.value = true
+	}
+	
+	function displaySayingModal () {
+		showSayingModal.value = true
+	}
+	
+	function hideSayingModal () {
+		showSayingModal.value = false
+	}
+	
 </script>
 
-<style lang="scss">
+<style>
+	.title-color {
+		color: #f9d5ad;
+	}
+	.content-color {
+		color: rgb(209, 208, 208);
+	}
 </style>

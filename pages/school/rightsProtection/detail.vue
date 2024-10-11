@@ -1,6 +1,6 @@
 <template>
 	<view v-if="!isLoading">
-		<template v-if="env !== 'release'">
+		<template v-if="env === 'release'">
 		  <cu-custom bgColor="bg-cyan" :isBack="true">
 		    <view>投诉维权详情</view>
 		  </cu-custom>
@@ -186,7 +186,7 @@
 			inital: function (options) {
 			    const envVersion = app.globalData.env
 			    if (envVersion != 'release') {
-			      // wx.switchTab({ url: '../../index/index' })
+					uni.switchTab({ url: '../../index/index' })
 			    }
 			    const id = options.id
 				const edusysAccount = getEdusysAccount()

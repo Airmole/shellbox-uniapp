@@ -42,6 +42,12 @@
 			<menuGuide :title="item.title" :menuList="item.children"></menuGuide>
 		</block>
 		
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin">
+			<ad unit-id="adunit-62f52651dd5f4ff6"></ad>
+		</view>
+		<!-- #endif -->
+		
 
 		<view class="flex margin">
 			<view class="flex-sub margin-right-sm">

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<template v-if="env !== 'release'">
+		<template v-if="env === 'release'">
 		  <cu-custom bgColor="bg-cyan" :isBack="true">
 		    <view>投诉维权 - 常见问题</view>
 		  </cu-custom>
@@ -90,9 +90,9 @@
 		},
 		  onLoad: function (options) {
 		    this.env = app.globalData.env
-		    // if (app.globalData.env != 'release') {
-		    //   wx.switchTab({ url: '../../index/index' })
-		    // }
+		    if (app.globalData.env != 'release') {
+		      uni.switchTab({ url: '../../index/index' })
+		    }
 		    
 		    this.inital()
 		  },

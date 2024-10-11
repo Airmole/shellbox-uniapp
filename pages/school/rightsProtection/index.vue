@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<template v-if="env !== 'release'">
+		<template v-if="env === 'release'">
 		  <cu-custom bgColor="bg-cyan" :isBack="true">
 		    <view>投诉维权通道</view>
 		  </cu-custom>
@@ -180,12 +180,12 @@
 		},
 		onLoad() {
 			uni.showLoading({ title: 'loading...' })
-			// // #ifdef MP
-			// this.env = app.globalData.env
-			// if (app.globalData.env !== 'release') {
-			// 	uni.switchTab({ url: '../../index/index' })
-			// }
-			// // #endif
+			// #ifdef MP
+			this.env = app.globalData.env
+			if (app.globalData.env !== 'release') {
+				uni.switchTab({ url: '../../index/index' })
+			}
+			// #endif
 			this.inital()
 		},
 		onShow() {
