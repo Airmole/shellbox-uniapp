@@ -195,11 +195,94 @@ export default {
 	},
 	// 教师获取授课课堂花名册
 	fetchTeacherCourseStudentList (code) {
-		return request(`/edusys/teacher/course/student/list?code=${code}`, `GET`)
+		return request(`/edusys/teacher/course/list/student?code=${code}`, `GET`)
 	},
 	// 学校系部联系电话
 	getSchoolContact () {
 		return request(`/school/contact`, `GET`)
+	},
+	// 获取教学地点列表
+	fetchClassroomList (type = 'classroom', buildingId = '') {
+		let query = { type, buildingId }
+		const queryString = httpBuildQuery(query)
+		let url = `/edusys/classroom/list`
+		return request(`${url}?${queryString}`, `GET`)
+	},
+	// 教室状态查询筛选项
+	fetchClassroomOptions () {
+		let url = `/edusys/classroom/status/options`
+		// url = `https://apifoxmock.com/m1/3906316-3540911-default/wap/edusys/classroom/status/options`
+		return request(url, `GET`)
+	},
+	// 教室借用状态查询
+	fetchClassroomStatus (
+		semester,
+		timeModel,
+		schoolArea = '',
+		teachArea = '',
+		classroomType = '',
+		teachBuilding = '',
+		classroomCode = '',
+		peopleSign = '',
+		peopleNum = '',
+		classroomStatus = '',
+		borrowCollege = '',
+		classroomOwned = '',
+		weekStart = '',
+		weekEnd = '',
+		dayOfWeekStart = '',
+		dayOfWeekEnd = '',
+		serialNoStart = '',
+		serialNoEnd = ''
+	) {
+		let query = { semester, timeModel }
+		if (schoolArea.length) query.schoolArea = schoolArea
+		if (teachArea.length) query.teachArea = teachArea
+		if (classroomType.length) query.classroomType = classroomType
+		if (teachBuilding.length) query.teachBuilding = teachBuilding
+		if (classroomCode.length) query.classroomCode = classroomCode
+		if (peopleSign.length) query.peopleSign = peopleSign
+		if (peopleNum.length) query.peopleNum = peopleNum
+		if (classroomStatus.length) query.classroomStatus = classroomStatus
+		if (borrowCollege.length) query.borrowCollege = borrowCollege
+		if (classroomOwned.length) query.classroomOwned = classroomOwned
+		if (weekStart.length) query.weekStart = weekStart
+		if (weekEnd.length) query.weekEnd = weekEnd
+		if (dayOfWeekStart.length) query.dayOfWeekStart = dayOfWeekStart
+		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
+		if (serialNoStart.length) query.serialNoStart = serialNoStart
+		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
+		const queryString = httpBuildQuery(query)
+		let url = `/edusys/classroom/status`
+		return request(`${url}?${queryString}`, 'GET')
+	},
+	//教室借用详情
+	fetchClassroomDetail (
+		semester,
+		timeModel,
+		classroomCode,
+		serialValue,
+		dayOfWeek,
+		startAt,
+		endAt,
+		weekStart = '',
+		weekEnd = '',
+		dayOfWeekStart = '',
+		dayOfWeekEnd = '',
+		serialNoStart = '',
+		serialNoEnd = '',
+		classroomStatus = ''
+	) {
+		let query = { semester, timeModel, classroomCode, serialValue, dayOfWeek, startAt, endAt }
+		if (weekStart.length) query.weekStart = weekStart
+		if (weekEnd.length) query.weekEnd = weekEnd
+		if (dayOfWeekStart.length) query.dayOfWeekStart = dayOfWeekStart
+		if (dayOfWeekEnd.length) query.dayOfWeekEnd = dayOfWeekEnd
+		if (serialNoStart.length) query.serialNoStart = serialNoStart
+		if (serialNoEnd.length) query.serialNoEnd = serialNoEnd
+		const queryString = httpBuildQuery(query)
+		let url = `/edusys/classroom/detail`
+		return request(`${url}?${queryString}`, `GET`)
 	},
 	// 权益保护相关
 	// 获取权益投诉帖

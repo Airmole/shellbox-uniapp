@@ -53,11 +53,11 @@
 				<view style="position: absolute;top: 0;left: 0;height: 800rpx;width: 680rpx;">
 					<view class="flex padding-tb padding-lr-sm">
 					    <view class="flex-sub">
-							<image :src="movieRef.mov_pic" mode="heightFix" style="height: 200rpx;"></image>
+							<image :src="movieRef.poster_url" mode="widthFix" style="width: 160rpx;"></image>
 						</view>
 					    <view class="flex-twice margin-sm text-left">
 							<view class="margin-tb-xs text-cut">
-								<text class="text-xxl title-color">《{{movieRef.mov_title}}》</text><text class="title-color text-sm">{{movieRef.mov_director}}</text>
+								<text class="text-xxl title-color margin-right-sm">{{movieRef.mov_title}}</text><text class="title-color text-sm">({{movieRef.mov_director}})</text>
 							</view>
 							<view class="margin-tb-xs text-cut">
 								<text class="title-color margin-left-sm">{{movieRef.mov_year}}年</text>
@@ -71,7 +71,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="text-left margin-left" style="width: 680rpx;">
+					<view class="text-left margin-left" style="width: 660rpx;">
 						<text class="text-xl title-color">"{{movieRef.mov_text}}"</text>
 					</view>
 					<view class="padding" style="height: 400rpx;width: 680rpx; overflow-y: scroll;">

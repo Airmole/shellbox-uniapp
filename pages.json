@@ -44,6 +44,12 @@
 		},
 		{
 			"path" : "pages/school/contact"
+		},
+		{
+			"path" : "pages/course/stulist"
+		},
+		{
+			"path" : "pages/course/classroom"
 		}
 	],
 	"globalStyle": {

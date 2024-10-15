@@ -7,7 +7,9 @@
 		<block v-if="!!calendar">
 			<block v-if="calendar?.title">
 				<navigator url="/pages/school/calendar"
-					class="padding-lr-sm bg-white margin card-radius padding-bottom flex justify-between">
+					class="padding-lr-sm bg-white margin card-radius padding-bottom flex justify-between"
+					:render-link="false"
+				>
 					<view class="padding-top"><text class="cuIcon-title text-green"></text><text>{{ calendar.title }}
 						</text></view>
 					<view class="padding-top"><text>{{ courses.nowWeek }} / {{courses.endWeek}} </text></view>

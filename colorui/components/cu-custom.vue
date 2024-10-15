@@ -40,19 +40,23 @@
 					url
 				})
 			}
+			if (getCurrentPages().length === 1) {
+				return uni.switchTab({
+					url: '/pages/index/index'
+				})
+			}
 			uni.navigateBack({
 				delta: 1
 			});
 		} catch (e) {
 			try{
-				const url = '/' + __wxConfig.pages[0]
 				return uni.redirectTo({
-					url
+					url: '/pages/index/index'
 				})
 			}catch(e){
 				const url = '/' + __wxConfig.pages[0]
 				return uni.switchTab({
-					url: url
+					url: '/pages/index/index'
 				})
 			}
 		}
