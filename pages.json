@@ -50,6 +50,15 @@
 		},
 		{
 			"path" : "pages/course/classroom"
+		},
+		{
+			"path" : "pages/webview/webview"
+		},
+		{
+			"path" : "pages/webview/redpacket"
+		},
+		{
+			"path" : "pages/school/movie"
 		}
 	],
 	"globalStyle": {

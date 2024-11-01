@@ -15,71 +15,6 @@
 						</view>
 					</view>
 					<template v-if="!foldOptionsArea">
-						<view class="cu-item arrow">
-							<view class="content">
-								<text class="text-grey">学年学期</text>
-							</view>
-							<view class="action">
-								<picker @change="semesterChange" :value="semesterIndex" :range="semesterOption"
-									range-key="name">
-									<view class="picker">
-										{{semesterIndex>-1?semesterOption[semesterIndex].name:'选择学期'}}
-									</view>
-								</picker>
-							</view>
-						</view>
-						<view class="cu-item arrow">
-							<view class="content">
-								<text class="text-grey">时间模式</text>
-							</view>
-							<view class="action">
-								<picker @change="timeModelChange" :value="timeModelIndex" :range="timeModelOption"
-									range-key="name">
-									<view class="picker">
-										{{timeModelIndex>-1?timeModelOption[timeModelIndex].name:'节次模式'}}
-									</view>
-								</picker>
-							</view>
-						</view>
-						<view class="cu-item arrow">
-							<view class="content">
-								<text class="text-grey">上课院系</text>
-							</view>
-							<view class="action">
-								<picker @change="studyCollegeChange" :value="studyCollegeIndex" :range="studyCollegeOption"
-									range-key="name">
-									<view class="picker">
-										{{studyCollegeIndex>-1?studyCollegeOption[studyCollegeIndex].name:'请选择'}}
-									</view>
-								</picker>
-							</view>
-						</view>
-						<view class="cu-item arrow">
-							<view class="content">
-								<text class="text-grey">开课院系</text>
-							</view>
-							<view class="action">
-								<picker @change="teachCollegeChange" :value="teachCollegeIndex" :range="teachCollegeOption"
-									range-key="name">
-									<view class="picker">
-										{{teachCollegeIndex>-1?teachCollegeOption[teachCollegeIndex].name:'请选择'}}
-									</view>
-								</picker>
-							</view>
-						</view>
-						<view class="cu-item arrow">
-							<view class="content">
-								<text class="text-grey">课程属性</text>
-							</view>
-							<view class="action">
-								<picker @change="courseNatureChange" :value="courseNatureIndex" :range="courseNatureOption"
-									range-key="name">
-									<view class="picker">
-										{{courseNatureIndex>-1?courseNatureOption[courseNatureIndex].name:'请选择'}}
-									</view>
-								</picker>
-							</view>
-						</view>
 						<view class="cu-item">
 							<view class="content">
 								<text class="text-red">*课程名称</text>
@@ -88,45 +23,115 @@
 								<input placeholder="请输入课程名称" name="courseName" v-model="optionForm.courseName" />
 							</view>
 						</view>
-						<view class="cu-item">
-							<view class="content">
-								<text class="text-grey">上课周次</text>
+						<template v-if="showAllOption">
+							<view class="cu-item">
+								<view class="content">
+									<text class="text-grey">学年学期</text>
+								</view>
+								<view class="action">
+									<picker @change="semesterChange" :value="semesterIndex" :range="semesterOption"
+										range-key="name">
+										<view class="picker">
+											{{semesterIndex>-1?semesterOption[semesterIndex].name:'选择学期'}}
+										</view>
+									</picker>
+								</view>
 							</view>
-							<view class="action flex">
-								<picker @change="weekStartChange" :value="weekStartIndex" :range="weekOption"
-									range-key="name">
-									<view class="picker">
-										{{weekStartIndex>-1?weekOption[weekStartIndex].name:'开始周次'}} <text class="cuIcon-right"></text>
-									</view>
-								</picker>
-								<view class="margin-lr"><text>~</text></view>
-								<picker @change="weekEndChange" :value="weekEndIndex" :range="weekOption"
-									range-key="name">
-									<view class="picker">
-										{{weekEndIndex>-1?weekOption[weekEndIndex].name:'结束周次'}} <text class="cuIcon-right"></text>
-									</view>
-								</picker>
+							<view class="cu-item">
+								<view class="content">
+									<text class="text-grey">时间模式</text>
+								</view>
+								<view class="action">
+									<picker @change="timeModelChange" :value="timeModelIndex" :range="timeModelOption"
+										range-key="name">
+										<view class="picker">
+											{{timeModelIndex>-1?timeModelOption[timeModelIndex].name:'节次模式'}}
+										</view>
+									</picker>
+								</view>
 							</view>
-						</view>
-						<view class="cu-item">
-							<view class="content">
-								<text class="text-grey">上课星期</text>
+							<view class="cu-item">
+								<view class="content">
+									<text class="text-grey">上课院系</text>
+								</view>
+								<view class="action">
+									<picker @change="studyCollegeChange" :value="studyCollegeIndex" :range="studyCollegeOption"
+										range-key="name">
+										<view class="picker">
+											{{studyCollegeIndex>-1?studyCollegeOption[studyCollegeIndex].name:'请选择'}}
+										</view>
+									</picker>
+								</view>
 							</view>
-							<view class="action flex">
-								<picker @change="dayOfWeekStartChange" :value="dayOfWeekStartIndex" :range="dayOfWeekOption"
-									range-key="name">
-									<view class="picker">
-										{{dayOfWeekStartIndex>-1?dayOfWeekOption[dayOfWeekStartIndex].name:'开始星期'}} <text class="cuIcon-right"></text>
-									</view>
-								</picker>
-								<view class="margin-lr"><text>~</text></view>
-								<picker @change="dayOfWeekEndChange" :value="dayOfWeekEndIndex" :range="dayOfWeekOption"
-									range-key="name">
-									<view class="picker">
-										{{dayOfWeekEndIndex>-1?dayOfWeekOption[dayOfWeekEndIndex].name:'结束星期'}} <text class="cuIcon-right"></text>
-									</view>
-								</picker>
+							<view class="cu-item">
+								<view class="content">
+									<text class="text-grey">开课院系</text>
+								</view>
+								<view class="action">
+									<picker @change="teachCollegeChange" :value="teachCollegeIndex" :range="teachCollegeOption"
+										range-key="name">
+										<view class="picker">
+											{{teachCollegeIndex>-1?teachCollegeOption[teachCollegeIndex].name:'请选择'}}
+										</view>
+									</picker>
+								</view>
 							</view>
+							<view class="cu-item">
+								<view class="content">
+									<text class="text-grey">课程属性</text>
+								</view>
+								<view class="action">
+									<picker @change="courseNatureChange" :value="courseNatureIndex" :range="courseNatureOption"
+										range-key="name">
+										<view class="picker">
+											{{courseNatureIndex>-1?courseNatureOption[courseNatureIndex].name:'请选择'}}
+										</view>
+									</picker>
+								</view>
+							</view>
+							<view class="cu-item">
+								<view class="content">
+									<text class="text-grey">上课周次</text>
+								</view>
+								<view class="action flex">
+									<picker @change="weekStartChange" :value="weekStartIndex" :range="weekOption"
+										range-key="name">
+										<view class="picker">
+											{{weekStartIndex>-1?weekOption[weekStartIndex].name:'开始周次'}} <text class="cuIcon-right"></text>
+										</view>
+									</picker>
+									<view class="margin-lr"><text>~</text></view>
+									<picker @change="weekEndChange" :value="weekEndIndex" :range="weekOption"
+										range-key="name">
+										<view class="picker">
+											{{weekEndIndex>-1?weekOption[weekEndIndex].name:'结束周次'}} <text class="cuIcon-right"></text>
+										</view>
+									</picker>
+								</view>
+							</view>
+							<view class="cu-item">
+								<view class="content">
+									<text class="text-grey">上课星期</text>
+								</view>
+								<view class="action flex">
+									<picker @change="dayOfWeekStartChange" :value="dayOfWeekStartIndex" :range="dayOfWeekOption"
+										range-key="name">
+										<view class="picker">
+											{{dayOfWeekStartIndex>-1?dayOfWeekOption[dayOfWeekStartIndex].name:'开始星期'}} <text class="cuIcon-right"></text>
+										</view>
+									</picker>
+									<view class="margin-lr"><text>~</text></view>
+									<picker @change="dayOfWeekEndChange" :value="dayOfWeekEndIndex" :range="dayOfWeekOption"
+										range-key="name">
+										<view class="picker">
+											{{dayOfWeekEndIndex>-1?dayOfWeekOption[dayOfWeekEndIndex].name:'结束星期'}} <text class="cuIcon-right"></text>
+										</view>
+									</picker>
+								</view>
+							</view>
+						</template>
+						<view class="bg-white text-center padding-tb-sm" @click="foldAllOption">
+						  <text :class="`text-blue cuIcon-${showAllOption?'fold':'unfold'}`">{{showAllOption?'收起':'展示'}}更多筛选项</text>
 						</view>
 						<view class="cu-item">
 							<view class="content">
@@ -172,6 +177,7 @@
 		data() {
 			return {
 				showSearchArea: true,
+				showAllOption: false,
 				foldOptionsArea: false,
 				semesterIndex: -1,
 				semesterOption: [],
@@ -233,6 +239,9 @@
 			},
 			hideSearchArea () {
 				this.showSearchArea = true
+			},
+			foldAllOption () {
+				this.showAllOption = !this.showAllOption
 			},
 			showOptionsArea() {
 				this.foldOptionsArea = !this.foldOptionsArea

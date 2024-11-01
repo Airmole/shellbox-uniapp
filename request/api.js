@@ -303,5 +303,12 @@ export default {
 	},
 	fetchIsRightsProtectionAdminer (account) {
 		return request(`/rightsProtection/adminer/${account}`, `GET`)
+	},
+	// 电影放映
+	fetchMovieDay (date = '') {
+		return request(`/school/movie?date=${date}`, 'GET')
+	},
+	fetchMovieMonthList (month = '') {
+		return request(`/school/movie/month?month=${month}`, 'GET')
 	}
 }
