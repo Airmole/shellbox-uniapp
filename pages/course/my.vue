@@ -73,6 +73,8 @@
 					console.log('fetchCourseOptions', res.data)
 					this.weekOptions = res.data.week
 					this.semesterOptions = res.data.semester
+					const semesterIndex = res.data.semester.findIndex((value) => value.checked === true)
+					this.semesterIndex = semesterIndex
 				}).catch(error => {
 					console.log('获取学期课表筛选项失败', error)
 				})
