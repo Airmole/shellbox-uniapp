@@ -59,6 +59,12 @@
 		},
 		{
 			"path" : "pages/school/movie"
+		},
+		{
+			"path" : "pages/school/map",
+			"style": {
+				"disableScroll": true
+			}
 		}
 	],
 	"globalStyle": {

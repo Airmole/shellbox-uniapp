@@ -310,5 +310,8 @@ export default {
 	},
 	fetchMovieMonthList (month = '') {
 		return request(`/school/movie/month?month=${month}`, 'GET')
+	},
+	fetchMapAllPoi () {
+		return request(`/school/map/poi`, 'GET')
 	}
 }

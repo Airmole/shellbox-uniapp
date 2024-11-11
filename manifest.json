@@ -49,6 +49,9 @@
             "sdkConfigs" : {
                 "ad" : {}
             }
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     /* 快应用特有相关 */
@@ -61,24 +64,77 @@
         },
         "usingComponents" : true,
         "permission" : {},
-        "libVersion" : "3.3.0"
+        "libVersion" : "3.3.0",
+        "uniStatistics" : {
+            "enable" : true
+        }
     },
     "mp-alipay" : {
-        "usingComponents" : true
+        "usingComponents" : true,
+        "uniStatistics" : {
+            "enable" : true
+        }
     },
     "mp-baidu" : {
-        "usingComponents" : true
+        "usingComponents" : true,
+        "uniStatistics" : {
+            "enable" : true
+        }
     },
     "mp-toutiao" : {
-        "usingComponents" : true
+        "usingComponents" : true,
+        "uniStatistics" : {
+            "enable" : true
+        }
     },
     "uniStatistics" : {
-        "enable" : false
+        "enable" : true,
+        "version" : "2"
     },
     "vueVersion" : "3",
     "h5" : {
         "title" : "贝壳小盒子",
-        "template" : "clarity.html"
+        "template" : "clarity.html",
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    "key" : "JLHBZ-JQELU-I7HVD-B2XSN-5VU3Z-BZFDK"
+                }
+            }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        }
     },
-    "locale" : "zh-Hans"
+    "locale" : "zh-Hans",
+    "mp-jd" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-kuaishou" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-lark" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-qq" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "quickapp-webview-huawei" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "quickapp-webview-union" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    }
 }
