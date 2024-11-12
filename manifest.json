@@ -51,7 +51,7 @@
             }
         },
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     /* 快应用特有相关 */
@@ -66,29 +66,29 @@
         "permission" : {},
         "libVersion" : "3.3.0",
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "mp-alipay" : {
         "usingComponents" : true,
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "mp-baidu" : {
         "usingComponents" : true,
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "mp-toutiao" : {
         "usingComponents" : true,
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "uniStatistics" : {
-        "enable" : true,
+        "enable" : false,
         "version" : "2"
     },
     "vueVersion" : "3",
@@ -103,38 +103,38 @@
             }
         },
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "locale" : "zh-Hans",
     "mp-jd" : {
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "mp-kuaishou" : {
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "mp-lark" : {
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "mp-qq" : {
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "quickapp-webview-huawei" : {
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "quickapp-webview-union" : {
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     }
 }
