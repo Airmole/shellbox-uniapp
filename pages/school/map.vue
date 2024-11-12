@@ -47,8 +47,8 @@
 						<text :class="'cuIcon-'+(foldPoiCardArea?'right':'unfold')"></text>
 					</view>
 				</view>
-				<scroll-view v-if="!foldPoiCardArea" :scroll-top="scrollTop" scroll-y scroll-with-animation class="padding-tb-sm poi-card-content">
-					<view @tap="placeCheck(item)" :class="`flex padding-sm radius ${item.id==checkedPlaceId?'bg-blue light':''}`" v-for="(item, index) in currentTabPoi" :key="index">
+				<scroll-view v-if="!foldPoiCardArea" :scroll-into-view="scrollTop" scroll-y scroll-with-animation class="padding-tb-sm poi-card-content">
+					<view :id="`poi-${item.id}`" @tap="placeCheck(item)" :class="`flex padding-sm radius ${item.id==checkedPlaceId?'bg-blue light':''}`" v-for="(item, index) in currentTabPoi" :key="index">
 						<view class="flex-twice">
 							<view v-if="item.image" @tap.stop="previewImg(item.image)" class="cu-avatar lg radius" :style="`background-image:url(${item.image});`"></view>
 							<view v-else class="cu-avatar lg radius bg-gradual-blue text-cut"><text class="text-xs">{{item.title}}</text></view>
@@ -73,8 +73,8 @@
 				defaultCenter: [117.392825, 39.542733],
 				currentTab: 0,
 				scrollLeft: 0,
-				scrollTop: 0,
-				categories: [],
+				scrollTop: '0',
+				categories: ['全部'],
 				allPoi: [],
 				currentTabPoi: [],
 				foldPoiCardArea: true,
@@ -106,7 +106,6 @@
 						const currentTabPoi = []
 						const markers = []
 						for (let place of res.data.data) {
-							if (place.category !== categories[0]) continue
 							currentTabPoi.push(place)
 							markers.push({
 							  id: Number(place.id),
@@ -135,7 +134,7 @@
 				const markers = []
 				const points = []
 				for (let place of this.allPoi) {
-					if (place.category !== currentCategory) continue
+					if (place.category !== currentCategory && this.currentTab !== 0) continue
 					markers.push({
 					  id: Number(place.id),
 					  latitude: Number(place.latitude),
@@ -157,17 +156,17 @@
 				this.currentTabPoi = currentTabPoi
 				this.markers = markers
 				this.points = points
-				this.scrollTop = 0
+				this.scrollTop = `poi-${currentTabPoi[0].id}`
 			},
 			markerTap (e) {
 				this.checkedPlaceId = e.detail.markerId
 				const index = this.currentTabPoi.findIndex(place => Number(place.id) === Number(e.detail.markerId))
-				if (index >= 0) this.scrollTop = (index - 1) * 60
 				const place = this.currentTabPoi[index]
+				if (index >= 0) this.scrollTop = `poi-${place.id}`
 				const currentCategory = this.categories[this.currentTab]
 				const markers = []
 				for (let poi of this.allPoi) {
-					if (poi.category !== currentCategory) continue
+					if (poi.category !== currentCategory && this.currentTab !== 0) continue
 					let item = {
 					  id: Number(poi.id),
 					  latitude: Number(poi.latitude),
@@ -198,11 +197,11 @@
 			placeCheck (place) {
 				this.checkedPlaceId = Number(place.id)
 				const index = this.currentTabPoi.findIndex(item => Number(item.id) === Number(place.id))
-				if (index >= 0) this.scrollTop = (index - 1) * 60
+				if (index >= 0) this.scrollTop = `poi-${place.id}`
 				const currentCategory = this.categories[this.currentTab]
 				const markers = []
 				for (let poi of this.allPoi) {
-					if (poi.category !== currentCategory) continue
+					if (poi.category !== currentCategory && this.currentTab !== 0) continue
 					let item = {
 					  id: Number(poi.id),
 					  latitude: Number(poi.latitude),
