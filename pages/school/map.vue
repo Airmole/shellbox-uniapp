@@ -83,15 +83,15 @@
 				checkedPlaceId: 0
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			this.pageHeight = app.globalData.screenHeight
-			this.fetchPoi()
+			this.fetchPoi(option)
 		},
 		methods: {
 			showPoiCardArea () {
 				this.foldPoiCardArea = !this.foldPoiCardArea
 			},
-			fetchPoi () {
+			fetchPoi (option) {
 				uni.showLoading({ title: '加载中...'})
 				api.fetchMapAllPoi().then(res => {
 					uni.hideLoading()
@@ -123,6 +123,12 @@
 						this.currentTabPoi = currentTabPoi
 						this.markers = markers
 						this.foldPoiCardArea = false
+						
+						if (option.id) {
+							const placeIndex = markers.findIndex(item => item.id === Number(option.id))
+							const place = markers[placeIndex]
+							this.markerTap({ detail: { markerId: Number(place.id) } })
+						}
 					}
 				})
 			},
@@ -274,11 +280,37 @@
 				// #endif
 			}
 		},
-		onShareAppMessage(res) {
-			return {
-			  title: '校园地图 - 贝壳小盒子',
-			  path: '/pages/school/map'
+		onShareAppMessage() {
+			let text = '贝壳小盒子'
+			let place = ''
+			if (this.checkedPlaceId) {
+				const index = this.currentTabPoi.findIndex(place => Number(place.id) === Number(this.checkedPlaceId))
+				place = this.currentTabPoi[index]
+				text = place.title
 			}
+			let data = {
+			  title: `${text} - 校园地图`,
+			  path: `/pages/school/map`
+			}
+			if (this.checkedPlaceId) data.path = `${data.path}?id=${this.checkedPlaceId}`
+			if (this.checkedPlaceId && place.image) data.imageUrl = place.image
+			console.log(data)
+			return data
+		},
+		onShareTimeline() {
+			let text = '贝壳小盒子'
+			let place = ''
+			if (this.checkedPlaceId) {
+				const index = this.currentTabPoi.findIndex(place => Number(place.id) === Number(this.checkedPlaceId))
+				place = this.currentTabPoi[index]
+				text = place.title	
+			}
+			let data = {
+			  title: `${text} - 北科天院校园地图`,
+			}
+			if (this.checkedPlaceId) data.query = `id=${this.checkedPlaceId}`
+			if (this.checkedPlaceId && place.image) data.imageUrl = place.image
+			return data
 		}
 	}
 </script>
@@ -302,8 +334,8 @@
 		right: 10px;
 	}
 	.tool-icon {
-		width: 80upx;
-		height: 80upx;
+		width: 80rpx;
+		height: 80rpx;
 	}
 	.fullview-btn {
 		background-color: #4594D5 !important;

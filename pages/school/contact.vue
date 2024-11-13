@@ -1,7 +1,7 @@
 <template>
 	<cu-custom bgColor="bg-green" class="text-white" :isBack="true">
 		<block slot="backText">返回</block>
-		<view>贝壳小盒子 - 系部电话</view>
+		<view>联系电话 - 贝壳小盒子</view>
 	</cu-custom>
 
 	<view class="cu-bar bg-white search fixed" :style="`top:${CustomBar}px;`">
@@ -67,7 +67,7 @@
 				list: []
 			}
 		},
-		onLoad() {
+		onLoad(option) {
 			uni.showLoading({
 				title: '加载中...'
 			})
@@ -102,7 +102,7 @@
 					// #endif	
 				}
 			})
-			this.inital()
+			this.inital(option)
 		},
 		onReady() {
 			let _this = this
@@ -114,8 +114,8 @@
 			}).exec()
 		},
 		methods: {
-			inital() {
-				this.fetchContactList()
+			inital(option) {
+				this.fetchContactList(option)
 			},
 			//获取文字信息
 			getCur(e) {
@@ -204,13 +204,15 @@
 					duration: 1000
 				})
 			},
-			fetchContactList() {
+			fetchContactList(option) {
 				api.getSchoolContact().then(res => {
 					const lists = this.format2list(res.data.data)
-					console.log(lists)
 					this.backLists = lists
 					this.telLists = lists
 					uni.hideLoading()
+					if (option && option.keyword) {
+						this.searchInput({detail: { value: option.keyword }})
+					}
 				}).catch(res => {
 					uni.hideLoading()
 					uni.showToast({
@@ -230,13 +232,31 @@
 				})
 				return list
 			}
+		},
+		onShareAppMessage() {
+			let text = ``
+			if (this.keyword) text = `【${this.keyword}...】`
+			let data = {
+			  title: `${text}联系电话 - 贝壳小盒子`,
+			  path: `/pages/school/contact?keyword=${this.keyword}`
+			}
+			return data
+		},
+		onShareTimeline() {
+			let text = ``
+			if (this.keyword) text = `【${this.keyword}...】`
+			let data = {
+				title: `${text}联系电话 - 贝壳小盒子`,
+				query: `keyword=${this.keyword}`
+			}
+			return data
 		}
 	}
 </script>
 
 <style>
 	page {
-		padding-top: 100upx;
+		padding-top: 100rpx;
 	}
 
 	.indexes {
@@ -247,7 +267,7 @@
 		position: fixed;
 		right: 0px;
 		bottom: 0px;
-		padding: 20upx 20upx 20upx 60upx;
+		padding: 20rpx 20rpx 20rpx 60rpx;
 		display: flex;
 		align-items: center;
 	}

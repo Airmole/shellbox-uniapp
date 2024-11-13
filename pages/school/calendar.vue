@@ -4,7 +4,6 @@
 			<view>校历</view>
 		</cu-custom>
 		
-		<!-- 成绩筛选操作区 -->
 		<view class="margin">
 			<view class="cu-list menu sm-border round">
 					<view class="cu-item arrow">
@@ -29,7 +28,6 @@
 				<view>
 				<image @click="preview()" @load="imageLoaded()" :src="schoolCalendarImage" mode="widthFix"></image>
 				</view>
-				<!-- <view class="text-center"><text>点击可放大全屏浏览，长按可保存</text></view> -->
 			</template>
 			<template v-if="schoolCalendarImage === '' && semesterIndex > -1">
 				<tips :tips="`暂无${semesterOptionsList[semesterIndex]?.name}学年学期校历!`"></tips>
@@ -48,39 +46,36 @@
 				semesterIndex: -1,
 				semesterOptionsList: [],
 				schoolCalendarImage: '',
+				calendarList: ''
 			}
 		},
-		onLoad() {
-			this.fetchCalendarOptions()
-			this.getImage()
+		onLoad(options) {
+			const semester = (options && options.semester) ? options.semester : ''
+			this.fetchAllCalendar(semester)
 		},
 		methods: {
-			fetchCalendarOptions () {
-				api.fetchCalendarOptions().then(res => {
-					this.semesterOptionsList = res.data.semester
-					this.semesterIndex = 0
+			fetchAllCalendar (semester = '') {
+				uni.showLoading({ title: '加载中...'})
+				api.fetchAllSchoolCalendar().then(res => {
+					this.semesterOptionsList = res.data.map(item => {
+						return { name: item.semester, value: item.semester }
+					})
+					let semesterIndex = 0
+					if (semester) semesterIndex = res.data.findIndex(item => item.semester === semester)
+					console.log(res.data, semesterIndex)
+					this.schoolCalendarImage = res.data[semesterIndex].image
+					this.semesterIndex = semesterIndex
+					this.calendarList = res.data
+					uni.hideLoading()
 				})
 			},
 			semesterChange(e) {
-				const index = e.detail.value
-				this.semesterIndex = index
-				const semester = this.semesterOptionsList[index].value
-				console.log('semester', semester)
+				const index = Number(e.detail.value)
+				const semester = this.semesterOptionsList[index]
 				uni.showLoading({ title: '加载中...'})
-				this.getImage(semester)
-			},
-			getImage (semester = '') {
-				api.getSchoolCalendarImage(semester).then(res => {
-					if (res.data.length === 0) {
-						this.schoolCalendarImage = ''
-						uni.hideLoading()
-					} else {
-						this.schoolCalendarImage = res.data?.image
-					}
-				}).catch(error => {
-					this.schoolCalendarImage = ''
-					uni.hideLoading()
-				})
+				this.semesterIndex = index
+				if (this.schoolCalendarImage === this.calendarList[index].image) uni.hideLoading()
+				this.schoolCalendarImage = this.calendarList[index].image
 			},
 			preview () {
 				uni.previewImage({
@@ -90,6 +85,24 @@
 			imageLoaded () {
 				uni.hideLoading()
 			}
+		},
+		onShareAppMessage() {
+			const semester = this.semesterOptionsList[this.semesterIndex].value
+			let data = {
+			  title: `${this.semesterOptionsList[this.semesterIndex]?.name}校历 - 贝壳小盒子`,
+			  path: `/pages/school/calendar?semester=${semester}`
+			}
+			if (this.schoolCalendarImage) data.imageUrl = this.schoolCalendarImage
+			return data
+		},
+		onShareTimeline() {
+			const semester = this.semesterOptionsList[this.semesterIndex].value
+			let data = {
+				title: `${this.semesterOptionsList[this.semesterIndex]?.name}校历 - 贝壳小盒子`,
+				query: `semester=${semester}`
+			}
+			if (this.schoolCalendarImage) data.imageUrl = this.schoolCalendarImage
+			return data
 		}
 	}
 </script>

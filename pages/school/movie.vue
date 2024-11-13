@@ -5,7 +5,7 @@
 		</cu-custom>
 
 		<view>
-			<view class="padding-sm padding-tb-xs bg-white"><text class="text-green">*：日期下方小绿点表示当天有影片放映安排</text></view>
+			<view class="padding-sm padding-tb-xs bg-white text-center"><text class="text-green"> <text class="cuIcon-info"></text> 日期下方小绿点表示当天有影片放映安排</text></view>
 			<wu-calendar :date="checkedDate" :type="type" :mode="mode" :color="color" :insert="insert" :fold="fold"
 				:startWeek="startWeek" :slideSwitchMode="slideSwitchMode" :startDate="startDate" :selected="movieDays"
 				@change="calendarChange" @monthSwitch="monthChange"></wu-calendar>
@@ -75,9 +75,8 @@
 			}
 		},
 		onLoad(option) {
-			console.log('option', option)
 			if (option && option.date) {
-				this.checkedDate = option.date
+				this.checkedDate = option.date // 格式：2024-11-09
 			} else {
 				var date = new Date()
 				var year = date.getFullYear()
@@ -134,7 +133,7 @@
 			getDateMovie(date = '') {
 				api.fetchMovieDay(date).then(res => {
 					this.movieList = res.data
-					console.log('movieList', this.movieList)
+					if (date.length) this.checkedDate = date
 				})
 			},
 			getMonthMovie(month) {
@@ -158,6 +157,27 @@
 					}
 				})
 			}
+		},
+		onShareAppMessage() {
+			let text = ''
+			if (this.movieList.length && this.movieList[0].name) text = `《${this.movieList[0].name}》`
+			let data = {
+			  title: `${text}${this.checkedDate}电影放映`,
+			  path: `/pages/school/movie?date=${this.checkedDate}`
+			}
+			if (this.movieList.length && this.movieList[0].poster) data.imageUrl = this.movieList[0].poster
+			console.log(data)
+			return data
+		},
+		onShareTimeline() {
+			let text = ''
+			if (this.movieList.length && this.movieList[0].name) text = `《${this.movieList[0].name}》`
+			let data = {
+			  title: `${text}${this.checkedDate}电影放映`,
+				query: `date=${this.checkedDate}`
+			}
+			if (this.movieList.length && this.movieList[0].poster) data.imageUrl = this.movieList[0].poster
+			return data
 		}
 	}
 </script>

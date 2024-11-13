@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-list menu sm-border" style="margin-top: 0;">
-		<view class="cu-bar solid-bottom bg-white" style="min-height: 60upx;">
+		<view class="cu-bar solid-bottom bg-white" style="min-height: 60rpx;">
 			<view class="action">
 				<text class="cuIcon-titles text-green"></text>
 				<text class="text-xl text-bold">{{title}}</text>
@@ -13,7 +13,7 @@
 		<view class="cu-list grid col-5 no-border text-green line-green" :class="[fold && 'fold']" style="padding: 0;">
 			<template v-for="(item,idx) in renderMenu" :key="idx">
 				<view v-if="isShowIcon(item)" class="cu-item" @click="goPage(item)">
-					<text :class="'iconfont icon-' + item.icon" style="color: #39B54A;font-size: 40upx;"></text>
+					<text :class="'iconfont icon-' + item.icon" style="color: #39B54A;font-size: 40rpx;"></text>
 					<text>{{item.title}}</text>
 				</view>
 			</template>

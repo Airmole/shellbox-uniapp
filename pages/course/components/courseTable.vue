@@ -209,7 +209,7 @@
 
 <style>
 	.tb-head-x {
-		margin: 4upx;
+		margin: 4rpx;
 		text-align: center;
 	}
 	
@@ -222,7 +222,7 @@
 	}
 	
 	.course-item {
-		padding: 6upx;
+		padding: 6rpx;
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;

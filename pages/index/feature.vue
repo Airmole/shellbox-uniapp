@@ -65,7 +65,7 @@
 
 <script setup>
 	import { ref } from 'vue'
-	import { onShow, onLoad } from '@dcloudio/uni-app'
+	import { onShow, onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 	import api from '@/request/api.js'
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
@@ -127,16 +127,27 @@
 	function goProfileSettingPage () {
 		uni.showToast({ title: '暂仅支持在小程序端修改头像昵称', icon: 'none' })
 	}
+	
+	onShareAppMessage (() => {
+		return {
+		  title: '贝壳小盒子 - 贝壳田园小助手',
+		  path: '/pages/index/feature'
+		}
+	})
+	
+	onShareTimeline(() => {
+		return { title: '贝壳小盒子 - 贝壳田园小助手' }
+	})
 </script>
 
 <style>
 	.bg-height {
-		height: 480upx;
+		height: 480rpx;
 	}
 
 	.avatar {
-		height: 180upx;
-		width: 180upx;
+		height: 180rpx;
+		width: 180rpx;
 	}
 
 	.gif-wave {

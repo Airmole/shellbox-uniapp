@@ -7,7 +7,7 @@
 		<block v-if="!!calendar">
 			<block v-if="calendar?.title">
 				<navigator url="/pages/school/calendar"
-					class="padding-lr-sm bg-white margin card-radius padding-bottom flex justify-between"
+					class="padding-lr-sm bg-white margin round padding-bottom flex justify-between"
 					:render-link="false"
 				>
 					<view class="padding-top"><text class="cuIcon-title text-green"></text><text>{{ calendar.title }}
@@ -16,7 +16,7 @@
 				</navigator>
 			</block>
 			<block v-else>
-				<view class="padding-lr-sm bg-white margin card-radius padding-bottom">
+				<view class="padding-lr-sm bg-white margin round padding-bottom">
 					<view class="padding-top"><text class="cuIcon-titles text-green"></text>{{calendar.date}}
 						{{getDayByDateStr(calendar.date)}}</view>
 					<text class="text-black">{{praise}}</text>
@@ -67,7 +67,7 @@
 
 <script setup>
 	import { ref, watch } from 'vue'
-	import { onShow, onLoad } from '@dcloudio/uni-app'
+	import { onShow, onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 	import BoxHomeWidgets from './components/homeWidgets.vue'
 	import { getWeekNameByDayNumber } from '@/common/utils/tools.js'
 	import { useAppStore } from '@/stores/app';
@@ -110,6 +110,18 @@
 	function getDayByDateStr(str = '') {
 		return getWeekNameByDayNumber(new Date(str).getDay())
 	}
+	
+	
+	onShareAppMessage (() => {
+		return {
+		  title: '贝壳小盒子 - 贝壳田园校园生活小助手',
+		  path: '/pages/index/index'
+		}
+	})
+	
+	onShareTimeline(() => {
+		return { title: '贝壳小盒子 - 贝壳田园校园生活小助手' }
+	})
 </script>
 
 <style>

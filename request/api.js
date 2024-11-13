@@ -68,17 +68,21 @@ export default {
 		const paramsStr = widgetNameList.join(',')
 		return request(`/widget/batch?widgets=${paramsStr}`, 'GET')
 	},
-	// 校历查询
+	// 教务日历查询
 	fetchCalendar() {
 		return request(`/edusys/calendar`, `GET`)
 	},
-	// 获取校历筛选项
+	// 获取教务日历筛选项
 	fetchCalendarOptions () {
 		return request(`/edusys/calendar/options`, `GET`)
 	},
 	// 获取校历图片
 	getSchoolCalendarImage (semester = '') {
 		return request(`/edusys/calendar/image?semester=${semester}`, `GET`)
+	},
+	// 获取所有校历
+	fetchAllSchoolCalendar () {
+		return request(`/school/calendar`, `GET`)
 	},
 	// 班级课表筛选项
 	fetchClassCourseOptions () {

@@ -113,6 +113,6 @@
 		background: rgb(230, 230, 230);
 	}
 	.card-radius {
-		border-radius: 30upx;
+		border-radius: 30rpx;
 	}
 </style>

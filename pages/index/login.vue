@@ -1,12 +1,12 @@
 <template>
 	<view class="height-screen">
-		<view class="bg-img bg-mask height-full" :style="{ backgroundImage: `url(${bgImgUrl})`, height: pageHeight + 'px' }">
+		<view class="bg-img bg-mask height-full" :style="{ backgroundImage: `url(${bgImgUrl})` }">
 			<cu-custom bgColor="#ffffff" :isBack="true">
 				<block slot="content"><span class="text-white">登录</span></block>
 			</cu-custom>
 			<view class="margin-top-xxl padding margin radius">
 				<view class="text-center margin">
-					<image class='cu-avatar round' style="height: 180upx;width: 180upx;;" :src="logoUrl"
+					<image class='cu-avatar round' style="height: 180rpx;width: 180rpx;" :src="logoUrl"
 						mode="aspectFit"></image>
 				</view>
 				<form>
