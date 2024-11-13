@@ -12,7 +12,7 @@
 		
 		<view class="cu-list grid col-5 no-border text-green line-green" :class="[fold && 'fold']" style="padding: 0;">
 			<template v-for="(item,idx) in renderMenu" :key="idx">
-				<view class="cu-item"  @click="goPage(item)" v-if="!item.logined || (item.logined === true && loginStatus) &&  (item.teacher === isTeacher || item.student === isStudent)">
+				<view v-if="isShowIcon(item)" class="cu-item" @click="goPage(item)">
 					<text :class="'iconfont icon-' + item.icon" style="color: #39B54A;font-size: 40upx;"></text>
 					<text>{{item.title}}</text>
 				</view>
@@ -50,6 +50,34 @@
 		return !isTeacher
 	})
 	
+	const isShowIcon = computed(() => {
+		let platform = 'weapp'
+		// #ifdef H5
+		platform = 'h5'
+		// #endif
+		// #ifdef MP
+		platform = 'weapp'
+		// #endif
+		// #ifdef APP
+		const sysInfo = uni.getSystemInfoSync()
+		platform =sysInfo.osName
+		// #endif
+		
+		return function (icon) {
+		    // 如果icon.logined为true，则需要检查loginStatus是否也为true
+		    if (icon.logined && !loginStatus) return false;
+		    
+		    // 如果icon.teacher为true，则需要检查isTeacher是否也为true
+		    if (icon.teacher && !isTeacher) return false;
+		    
+		    // 如果icon.student为true，则需要检查isStudent是否也为true
+		    if (icon.student && !isStudent) return false;
+
+		    // 如果icon.platform包含platform，则返回true，否则返回false
+		    return icon.platform.includes(platform);
+		}
+	})
+	
 	function goPage(menu) {
 		if (menu.need_login === true && (getEdusysAccount() === false || !loginStatus)) {
 			uni.showToast({ title: '此功能需要登录', icon: 'none' })
@@ -65,6 +93,7 @@
 			uni.navigateTo({ url: menu.weapp_path })
 		}
 		// #endif
+		
 		// #ifdef H5
 		if (menu.url.indexOf('http://') === 0 || menu.url.indexOf('https://') === 0) {
 			window.location.href = menu.url
