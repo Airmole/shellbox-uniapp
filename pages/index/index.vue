@@ -26,7 +26,12 @@
 
 		<!-- 首页小组件 -->
 		<box-home-widgets></box-home-widgets>
-
+		
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin-lr margin-tb-sm radius">
+			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+		</view>
+		<!-- #endif -->
 
 		<navigator url="/pages/course/my" class="cu-list menu sm-border card-menu" v-if="todayCourses.length">
 			<view class="cu-bar bg-white">

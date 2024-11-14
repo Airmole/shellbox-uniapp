@@ -25,6 +25,13 @@
 		<view class="margin-xl flex flex-direction">
 			<button class="cu-btn round bg-default lg" @click="updateProfile()">确认保存</button>
 		</view>
+		
+
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin-sm bg-white">
+			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+		</view>
+		<!-- #endif -->
 
 	</view>
 </template>

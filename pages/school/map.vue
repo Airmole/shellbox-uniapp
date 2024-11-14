@@ -66,6 +66,7 @@
 <script>
 	import api from '@/request/api.js'
 	const app = getApp()
+	let interstitialAd = null
 	export default {
 		data() {
 			return {
@@ -84,8 +85,14 @@
 			}
 		},
 		onLoad(option) {
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
 			this.pageHeight = app.globalData.screenHeight
 			this.fetchPoi(option)
+		},
+		onShow () {
+			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			showPoiCardArea () {

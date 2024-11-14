@@ -3,6 +3,12 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>成绩查询</view>
 		</cu-custom>
+		
+		<view class="margin">
+			<view class="text-left text bg-white padding-sm text-red card-radius">
+				<text><text class="cuIcon-info margin-lr-xs"></text>本应用算术平均分及加权平均分由程序自动计算得来，结果仅供参考！具体准确加权分和GPA绩点建议咨询导员或学校教务处。</text>
+			</view>
+		</view>
 
 		<!-- 成绩筛选操作区 -->
 		<view class="margin">
@@ -76,6 +82,12 @@
 			</view>
 		</view>
 
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin margin-tb-xl radius">
+			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+		</view>
+		<!-- #endif -->
+
 		<!-- 成绩展示区域 -->
 		<view class="cu-list menu sm-border card-menu" v-for="(semester, semesterIdx) in score.data" :key="semesterIdx">
 		    <view class="cu-item press-class" @click="foldSemesterScore(semesterIdx)">
@@ -87,23 +99,30 @@
 		    	</view>
 		    </view>
 			<template v-if="!semester.fold">
-				<view @click="showDetail(semesterIdx, index)" class="cu-item press-class" v-for="(record, index) in semester.items" :key="index">
-					<view class="content padding-tb-sm text-cut">
-						<view class="text-title">
-							<text class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
+				<template v-for="(record, index) in semester.items" :key="index">
+					<view @click="showDetail(semesterIdx, index)" class="cu-item press-class">
+						<view class="content padding-tb-sm text-cut">
+							<view class="text-title">
+								<text class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
+							</view>
+							<view class="text-gray text-sm">
+								<text class="margin-right-xs">{{record.examNature}}</text>
+								<text class="margin-lr-xs">{{record.period}}学时</text>
+								<text class="margin-lr-xs">{{record.credit}}学分</text>
+							</view>
 						</view>
-						<view class="text-gray text-sm">
-							<text class="margin-right-xs">{{record.examNature}}</text>
-							<text class="margin-lr-xs">{{record.period}}学时</text>
-							<text class="margin-lr-xs">{{record.credit}}学分</text>
+						<view class="action text-bold">
+							<text v-if="record.score >= 90" class="text-lg text-blue">{{record.score}}</text>
+							<text v-else-if="record.score < 60" class="text-lg text-red">{{record.score}}</text>
+							<text v-else class="text-lg text-black">{{record.score}}</text>
 						</view>
 					</view>
-					<view class="action text-bold">
-						<text v-if="record.score >= 90" class="text-lg text-blue">{{record.score}}</text>
-						<text v-else-if="record.score < 60" class="text-lg text-red">{{record.score}}</text>
-						<text v-else class="text-lg text-black">{{record.score}}</text>
+					<!-- #ifdef MP-WEIXIN -->
+					<view v-if="index !== 0 && index % 10 === 0" class="bg-white">
+						<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 					</view>
-				</view>
+					<!-- #endif -->
+				</template>
 			</template>
 			<view class="cu-item">
 				<view class="content text-left">
@@ -222,6 +241,7 @@
 <script>
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	let interstitialAd = null
 	export default {
 		data() {
 			return {
@@ -250,8 +270,14 @@
 				})
 				return
 			}
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
 			this.fetchOptions()
 			this.fetchScore()
+		},
+		onShow() {
+			if (interstitialAd) interstitialAd.show()	
 		},
 		methods: {
 			showDetail (semesterIndex, index) {

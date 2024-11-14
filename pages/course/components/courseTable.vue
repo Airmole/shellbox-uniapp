@@ -14,16 +14,16 @@
 						{{rowTitles[rowIdx][0]}}<br />~<br />{{rowTitles[rowIdx][1]}}</view>
 				</view>
 				<view v-for="(day, dayIdx) in columnTitles"
-					:class="(table[dayIdx].items[rowIdx].length>0?`shadow-warp bg-${bgColors[table[dayIdx].items[rowIdx][0].courseName.length%bgColors.length]}`:'') + ' text-white course-item radius tb-head-x tb-height justify-center align-center'"
+					:class="(table[dayIdx] && table[dayIdx].items[rowIdx].length>0?`shadow-warp bg-${bgColors[table[dayIdx].items[rowIdx][0].courseName.length%bgColors.length]}`:'') + ' text-white course-item radius tb-head-x tb-height justify-center align-center'"
 					:style="{width: `${itemWidth}px`,height: `${itemHeight}px`}" :key="dayIdx" :data-dayidx="dayIdx"
 					:data-rowidx="rowIdx" @click="showDetail">
-					<template v-if="table[dayIdx].items[rowIdx].length == 1">
+					<template v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1">
 						<view class="margin-tb-xs place-name">{{table[dayIdx].items[rowIdx][0].place}}</view>
 						<view class="margin-tb-xs course-name" :style="{height: `${itemHeight-50}px`}">
 							{{table[dayIdx].items[rowIdx][0].courseName}}
 						</view>
 					</template>
-					<template v-else-if="table[dayIdx].items[rowIdx].length > 1">
+					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 1">
 						{{`${table[dayIdx].items[rowIdx].length}门课程`}}
 					</template>
 					<template v-else></template>
@@ -131,7 +131,12 @@
 						</swiper-item>
 					</block>
 				</swiper>
-				<view  v-if="details.length>1" class="padding-sm text-center"><text>左右滑动可切换</text></view>
+				<view v-if="details.length>1" class="padding-sm text-center"><text>左右滑动可切换课程</text></view>
+				<!-- #ifdef MP-WEIXIN -->
+				<view v-if="displayDetailModal" class="margin-sm bg-white">
+					<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+				</view>
+				<!-- #endif -->
 			</view>
 		</view>
 	</view>

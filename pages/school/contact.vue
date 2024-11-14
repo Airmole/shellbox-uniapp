@@ -21,24 +21,28 @@
 			<view :class="`padding indexItem-${telLists[index]}`" v-if="telLists[index].length>0"
 				:id="`indexes-${index}`" :data-index="`${index}`">{{index}}</view>
 			<view class="cu-list menu-avatar no-padding">
-				<view class="cu-item" v-for="(tel, sub) in item" :key="sub" :data-tel="tel.tel" @longtap="copyTel">
-					<view class="cu-avatar lg round bg-green">
-						<text class="avatar-text">{{tel.name}}</text>
-					</view>
-					<view class="content">
-						<view class="text-grey">
-							<text class="text-abc">{{tel.name}}</text>
+				<template v-for="(tel, sub) in item" :key="sub">
+					<view class="cu-item" :data-tel="tel.tel" @longtap="copyTel">
+						<view class="cu-avatar lg round bg-green">
+							<text class="avatar-text">{{tel.name}}</text>
 						</view>
-						<view class="text-gray text-sm">
-							022-{{tel.tel}}
+						<view class="content">
+							<view class="text-grey">
+								<text class="text-abc">{{tel.name}}</text>
+							</view>
+							<view class="text-gray text-sm">
+								022-{{tel.tel}}
+							</view>
 						</view>
+						<view :data-tel='tel.tel' @tap='callPhone' class="action text-xxl margin-right-xl padding-right-xl">
+							<text class="cuIcon-phone text-green"></text></view>
 					</view>
-					<view :data-tel='tel.tel' @tap='callPhone' class="action text-xxl margin-right-xl padding-right-xl">
-						<text class="cuIcon-phone text-green"></text></view>
-				</view>
+				</template>
 			</view>
 		</template>
+		<view class="margin-tb-xl padding-tb-xl"></view>
 	</scroll-view>
+	
 	<view class="indexBar" :style="[{height:'calc(100vh - ' + CustomBar + 'px - 50px)'}]">
 		<view class="indexBar-box" @touchstart="tStart" @touchend="tEnd" @touchmove.stop="tMove">
 			<view class="indexBar-item" v-for="(item, index) in list" :key="index" :id="index" @touchstart="getCur"
@@ -54,6 +58,7 @@
 <script>
 	import { getCurrentInstance } from "vue"
 	import api from '@/request/api.js'
+	let interstitialAd = null
 	export default {
 		data() {
 			return {
@@ -68,6 +73,9 @@
 			}
 		},
 		onLoad(option) {
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
 			uni.showLoading({
 				title: '加载中...'
 			})
@@ -112,6 +120,7 @@
 			uni.createSelectorQuery().select('.indexes').boundingClientRect(function(res) {
 				_this.barTop = res.top
 			}).exec()
+			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			inital(option) {

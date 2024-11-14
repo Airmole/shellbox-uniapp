@@ -147,11 +147,24 @@
 				</view>
 			</view>
 			
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="margin margin-tb-xl radius">
+				<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+			</view>
+			<!-- #endif -->
+			
 			<view class="cu-list menu-avatar margin card-radius">
-			    <view class="cu-item" v-for="(lessonCourse, lessonIndex) in lessonCourses" :key="lessonIndex" @click="clickLessonCourse(lessonIndex)">
-					<view class="cu-avatar lg round bg-gradual-green"><text class="text-xxl iconfont icon-kechengkebiao"></text></view>
-			        <view class="content"><view class="padding-lr"><text class="text-xl">{{lessonCourse.courseName}}</text></view></view>
-			    </view>
+				<template v-for="(lessonCourse, lessonIndex) in lessonCourses" :key="lessonIndex">
+					<view class="cu-item" @click="clickLessonCourse(lessonIndex)">
+						<view class="cu-avatar lg round bg-gradual-green"><text class="iconfont icon-kechengkebiao text-xl text-blod" style="font-size: 60rpx;"></text></view>
+						<view class="content text-cut"><view class="padding-lr"><text class="text-xl">{{lessonCourse.courseName}}</text></view></view>
+					</view>
+					<!-- #ifdef MP-WEIXIN -->
+					<view v-if="lessonIndex !== 0 && lessonIndex % 12 === 0" class="bg-white">
+						<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+					</view>
+					<!-- #endif -->
+				</template>
 				<tips v-if="lessonCourses !== '' && lessonCourses.length === 0" :tips="'没有符合条件的数据，请进行筛选操作'"></tips>
 			</view>
 		</template>
@@ -172,6 +185,7 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
+	let interstitialAd = null
 	export default {
 		components: { courseTable },
 		data() {
@@ -218,9 +232,15 @@
 				uni.redirectTo({ url: '/pages/index/login' })
 				return
 			}
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
 			this.generateWeekOption()
 			this.generateDayOfWeekOption()
 			this.fetchOptions()
+		},
+		onShow() {
+			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			generateWeekOption () {
@@ -387,4 +407,8 @@
 </script>
 
 <style>
+	.content {
+		width: calc(100% - 96rpx - 60rpx - 20rpx) !important;
+		line-height: 1.6em;
+	}
 </style>

@@ -34,6 +34,12 @@
 			</template>
 		</view>
 		
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin bg-white card-radius">
+			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+		</view>
+		<!-- #endif -->
+		
 		
 </template>
 

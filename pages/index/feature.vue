@@ -43,11 +43,10 @@
 		</block>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin">
-			<ad unit-id="adunit-62f52651dd5f4ff6"></ad>
+		<view class="margin-lr margin-tb-sm radius">
+			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
-		
 
 		<view class="flex margin">
 			<view class="flex-sub margin-right-sm">

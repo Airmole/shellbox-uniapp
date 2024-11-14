@@ -52,11 +52,20 @@
 				<tips :tips="`${checkedDate} 暂无放映计划安排`"></tips>
 			</view>
 		</view>
+		
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin margin-tb-xl radius">
+			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+		</view>
+		<!-- #endif -->
+		
+		<view class="margin-tb-xl padding-tb-xl"></view>
 
 	</view>
 </template>
 <script>
 	import api from '@/request/api.js'
+	let interstitialAd = null
 	export default {
 		data() {
 			return {
@@ -75,6 +84,9 @@
 			}
 		},
 		onLoad(option) {
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
 			if (option && option.date) {
 				this.checkedDate = option.date // 格式：2024-11-09
 			} else {
@@ -86,6 +98,9 @@
 			}
 			this.getDateMovie(this.checkedDate)
 			this.getMonthMovie(this.checkedDate)
+		},
+		onShow() {
+			if (interstitialAd) interstitialAd.show()	
 		},
 		methods: {
 			goOfficalArticle(e) {

@@ -30,7 +30,6 @@
 			</view>
 		</view>
 
-
 		<view class="cu-modal" :class="isLoading?'show':''">
 			<view class="cu-dialog" style="width: 120px; height: 120px;">
 				<view class="bg-img" :style="{ backgroundImage: `url(${loadingUrl})`, height: '120px' }"></view>

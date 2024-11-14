@@ -117,7 +117,6 @@
 		    <tips :tips="'这里是空的，还没有人发内容呢~'"></tips>
 		  </view>
 		
-		
 		    <!-- 分页器 -->
 		    <view class="flex margin-right-sm justify-end">
 		      <button @click="lastPage" v-if="datalist.pagination.current > 1"

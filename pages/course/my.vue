@@ -26,7 +26,7 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
-	
+	let interstitialAd = null
 	export default {
 		components: {
 			courseTable
@@ -48,8 +48,14 @@
 				})
 				return
 			}
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
 			this.fetchCourseOptions()
 			this.fetchCourse()
+		},
+		onShow() {
+			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			semesterChange(e) {
@@ -57,7 +63,6 @@
 				const semester = this.semesterOptions[index].value
 				this.semesterIndex = index
 				const week = this.weekOptions[this.weekIndex].value
-				console.log(semester, week)
 				this.fetchCourse(semester, week)
 			},
 			weekChange(e) {
@@ -65,7 +70,6 @@
 				const week = this.weekOptions[index].value
 				this.weekIndex = index
 				const semester = this.semesterOptions[this.semesterIndex].value
-				console.log(semester, week)
 				this.fetchCourse(semester, week)
 			},
 			fetchCourseOptions() {
@@ -90,6 +94,7 @@
 				}).catch(error => {
 					uni.hideLoading()
 					console.log('获取学期课表失败', error)
+					uni.showToast({ title: '获取失败，建议重新登录' })
 					/* if (error.data.message === '账号未登录') {
 						window.location.reload()
 					} */

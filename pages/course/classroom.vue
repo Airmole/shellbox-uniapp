@@ -195,6 +195,12 @@
 			</view>
 		</view>
 		
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin margin-tb-xl radius">
+			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+		</view>
+		<!-- #endif -->
+		
 		<view v-if="classrooms !== ''" class="margin padding-sm bg-white card-radius">
 			<view class="text-center margin-tb-xs">
 				<text class="text-xl">教室占用符号说明</text>
@@ -212,40 +218,47 @@
 			</view>
 		</view>
 		
-		<view class="margin bg-white padding-tb-sm card-radius" v-for="(room, roomIndex) in classrooms" :key="roomIndex">
-			<view class="text-center text-bold">
-				<text class="text-xl">{{room.classroom}}</text>
-			</view>
-			<view class="margin-xs padding-lr-xs" v-for="(day, dayIndex) in room.items" :key="dayIndex">
-				<view class="text-center margin-tb-xs">
-					<text>{{day.title}}</text>
+		<template v-for="(room, roomIndex) in classrooms" :key="roomIndex">
+			<view class="margin bg-white padding-tb-sm card-radius">
+				<view class="text-center text-bold">
+					<text class="text-xl">{{room.classroom}}</text>
 				</view>
-				<view class="flex justify-center align-start">
-					<view class="text-center justify-start bg-gray align-center" style="width: 100rpx;" v-for="(item, index) in day.items">
-						<view :class="`flex align-start cell ${item.content.length === 0?'bg-green':'bg-gray'}`" @tap="roomDetail(roomIndex, dayIndex, index)">
-							<view class="room-item flex-sub border-bottom">
-								<text>{{serialArray[index]}}</text>
-							</view>
-							<view class="room-item flex-sub">
-								<template v-for="(text, tindex) in item.content" :key="tindex">
-									<text v-if="text === 'M'" class="text-red">{{text}}</text>
-									<text v-else-if="text === 'Ｌ'" class="text-brown">{{text}}</text>
-									<text v-else-if="text === 'Ｇ'" class="text-blue">{{text}}</text>
-									<text v-else-if="text === 'Κ'" class="text-red">{{text}}</text>
-									<text v-else-if="text === 'Ｘ'" class="text-red">{{text}}</text>
-									<text v-else-if="text === 'Ｊ'" class="text-red">{{text}}</text>
-									<text v-else-if="text === '◆'">{{text}}</text>
-									<text v-else>{{text}}</text>
-								</template>
-								<template v-if="item.content.length === 0">
-									<text class="text-white">{{'空闲'}}</text>
-								</template>
+				<view class="margin-xs padding-lr-xs" v-for="(day, dayIndex) in room.items" :key="dayIndex">
+					<view class="text-center margin-tb-xs">
+						<text>{{day.title}}</text>
+					</view>
+					<view class="flex justify-center align-start">
+						<view class="text-center justify-start bg-gray align-center" style="width: 100rpx;" v-for="(item, index) in day.items">
+							<view :class="`flex align-start cell ${item.content.length === 0?'bg-green':'bg-gray'}`" @tap="roomDetail(roomIndex, dayIndex, index)">
+								<view class="room-item flex-sub border-bottom">
+									<text>{{serialArray[index]}}</text>
+								</view>
+								<view class="room-item flex-sub">
+									<template v-for="(text, tindex) in item.content" :key="tindex">
+										<text v-if="text === 'M'" class="text-red">{{text}}</text>
+										<text v-else-if="text === 'Ｌ'" class="text-brown">{{text}}</text>
+										<text v-else-if="text === 'Ｇ'" class="text-blue">{{text}}</text>
+										<text v-else-if="text === 'Κ'" class="text-red">{{text}}</text>
+										<text v-else-if="text === 'Ｘ'" class="text-red">{{text}}</text>
+										<text v-else-if="text === 'Ｊ'" class="text-red">{{text}}</text>
+										<text v-else-if="text === '◆'">{{text}}</text>
+										<text v-else>{{text}}</text>
+									</template>
+									<template v-if="item.content.length === 0">
+										<text class="text-white">{{'空闲'}}</text>
+									</template>
+								</view>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-		</view>
+			<!-- #ifdef MP-WEIXIN -->
+			<view v-if="roomIndex !== 0 && roomIndex % 3 === 0" class="margin-lr bg-white">
+				<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+			</view>
+			<!-- #endif -->
+		</template>
 		
 		<tips v-if="classrooms !== '' && classrooms.length === 0" :tips="'没找到符合条件的结果，调整筛选项试试？'"></tips>
 		
@@ -299,6 +312,7 @@
 
 <script>
 	import api from '@/request/api.js'
+	let interstitialAd = null
 	export default {
 		data() {
 			return {
@@ -356,11 +370,17 @@
 			}
 		},
 		onLoad() {
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
 			this.generateWeekOption()
 			this.generateDayOfWeekOption()
 			this.fetchOptions()
 			this.fetchClassroomList('building')
 			this.fetchClassroomList('classroom')
+		},
+		onShow() {
+			if (interstitialAd) interstitialAd.show()	
 		},
 		methods: {
 			fetchOptions () {

@@ -6,7 +6,6 @@
 		  </cu-custom>
 		
 		  <view class="page margin-bottom" v-if="!isLoading">
-		
 		    <template v-for="(item, index) in datalist.data" :key="index">
 		      <navigator :url="`./detail?id=${item.id}`" class="cu-card dynamic">
 		        <view class="cu-item shadow">
