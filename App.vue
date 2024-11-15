@@ -76,8 +76,15 @@
 						resolve(res.data)
 					} catch(err) {
 						if (err?.statusCode == 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
-							const edusysAccount = getEdusysAccount()
+							let edusysAccount = getEdusysAccount()
 							if (edusysAccount == false) return
+							// #ifdef MP-WEIXIN
+							edusysAccount.wx_open_id = self.getOpenId()
+							// #endif
+							
+							// #ifdef MP-QQ
+							edusysAccount.qq_open_id = self.getOpenId()
+							// #endif
 							await api.autoLogin(edusysAccount).then(loginRes => {
 								resolve(Object.assign({
 									...edusysAccount
