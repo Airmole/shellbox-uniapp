@@ -63,7 +63,11 @@
             "urlCheck" : false
         },
         "usingComponents" : true,
-        "permission" : {},
+        "permission" : {
+			"scope.addPhoneCalendar": {
+			  "desc": "用于添加上课日历事件提醒"
+			}
+		},
         "libVersion" : "3.3.0",
         "uniStatistics" : {
             "enable" : false

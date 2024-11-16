@@ -27,7 +27,7 @@
 				</view>
 			</view>
 			<template v-if="checkedDateCourses" v-for="(item, index) in checkedDateCourses.items" :key="index">
-				<view @tap="addPhoneCalendar(item)" class="padding-xs border-radius solids-bottom" v-if="item && item.courseName">
+				<view @tap="checkAddCalendarPermisson(item)" class="padding-xs border-radius solids-bottom" v-if="item && item.courseName">
 					<view class="flex radius">
 						<view class="basis-xl padding-xs margin-tb-xs text-cut flex flex-direction">
 							<view class="margin-tb-xs text-cut" style="height: 1.2rem;"><text
@@ -46,7 +46,7 @@
 				</view>
 			</template>
 			<template v-if="!checkedDateCourses || (checkedDateCourses && checkedDateCourses.items && checkedDateCourses.items.filter(course => !Array.isArray(course)).length === 0)">
-				<tips :tips="`${checkedDate} 没有课程安排😄`" image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"></tips>
+				<tips :tips="`${checkedDate} 没有课程安排 😄`" image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"></tips>
 			</template>
 			<template v-else>
 				<!-- #ifdef MP -->
@@ -152,23 +152,45 @@
 			monthChange (e) {
 				this.fetchMonthCourses(`${e.fullDate}-1`, true)
 			},
+			checkAddCalendarPermisson (course) {
+				var _this = this
+				// #ifdef MP
+				uni.getSetting({
+				  success (settingRes) {
+					if (!settingRes.authSetting['scope.addPhoneCalendar']) {
+						uni.authorize({
+						    scope: 'scope.addPhoneCalendar',
+						    success() {
+								_this.addPhoneCalendar(course)
+						    },
+							fail() {
+								uni.openSetting()
+							}
+						})
+					} else {
+						_this.addPhoneCalendar(course)
+					}
+				  }
+				})
+				// #endif
+			},
 			addPhoneCalendar (course) {
-				console.log('addPhoneCalendar', course)
+				var _this = this
 				// #ifdef MP
 				uni.showModal({
 					title: '提示',
 					content: '你要将这节课添加到手机日程，上课前20分钟提醒吗？',
 					success: function (res) {
 						if (!res.confirm) return
-						uni.addPhoneCalendar({
+						wx.addPhoneCalendar({
 							title: course.courseName,
-							startTime: (new Date(`${this.checkedDate}T${course.startAt}:00`)).valueOf(),
+							startTime: new Date(`${_this.checkedDate}T${course.startAt}:00`).getTime().toString().slice(0, -3),
 							description: `${course.teachTime} | ${course.courseName} | 地点：${course.place}`,
 							location: course.place,
-							endTime: (new Date(`${this.checkedDate}T${course.endAt}:00`)).valueOf(),
+							endTime: new Date(`${_this.checkedDate}T${course.endAt}:00`).getTime().toString().slice(0, -3),
 							alarmOffset: 60 * 20, // 提前20分钟提醒
-							success () {
-								uni.showToast({ title: '已添加到手机日程', icon: 'none' })
+							fail (error) {
+								console.log(error)
 							}
 						})
 					}
