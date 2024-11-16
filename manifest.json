@@ -64,10 +64,10 @@
         },
         "usingComponents" : true,
         "permission" : {
-			"scope.addPhoneCalendar": {
-			  "desc": "用于添加上课日历事件提醒"
-			}
-		},
+            "scope.addPhoneCalendar" : {
+                "desc" : "用于添加上课日历事件提醒"
+            }
+        },
         "libVersion" : "3.3.0",
         "uniStatistics" : {
             "enable" : false
