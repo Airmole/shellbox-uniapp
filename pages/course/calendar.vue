@@ -69,7 +69,6 @@
 </template> 
 <script>
 	import api from '@/request/api.js'
-	import { getEdusysAccount } from '@/common/utils/auth.js'
 	let interstitialAd = null
 	export default {
 		data() {
@@ -90,12 +89,6 @@
 			}
 		},
 		onLoad() {
-			if (getEdusysAccount() === false) {
-				uni.redirectTo({
-					url: '/pages/index/login'
-				})
-				return
-			}
 			this.fetchMonthCourses()
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
