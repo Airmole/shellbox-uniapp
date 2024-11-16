@@ -65,6 +65,9 @@
 			"style": {
 				"disableScroll": true
 			}
+		},
+		{
+			"path" : "pages/course/calendar"
 		}
 	],
 	"globalStyle": {

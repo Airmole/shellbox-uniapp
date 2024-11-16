@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'iconfont';  /* Project id 2595220 */
-  src: url('https://at.alicdn.com/t/c/font_2595220_ptqgqrf9cda.woff2?t=1731405758582') format('woff2'),
-	   url('https://at.alicdn.com/t/c/font_2595220_ptqgqrf9cda.woff?t=1731405758582') format('woff'),
-	   url('https://at.alicdn.com/t/c/font_2595220_ptqgqrf9cda.ttf?t=1731405758582') format('truetype');
+  src: url('https://at.alicdn.com/t/c/font_2595220_yok7glnj4ts.woff2?t=1731745889236') format('woff2'),
+         url('https://at.alicdn.com/t/c/font_2595220_yok7glnj4ts.woff?t=1731745889236') format('woff'),
+         url('https://at.alicdn.com/t/c/font_2595220_yok7glnj4ts.ttf?t=1731745889236') format('truetype');
 }
 
 .iconfont {
@@ -139,4 +139,8 @@
 
 .icon-fullview:before {
   content: "\e60c";
+}
+
+.icon-coursecalendar:before {
+  content: "\e6b8";
 }

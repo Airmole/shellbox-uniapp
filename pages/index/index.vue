@@ -40,25 +40,25 @@
 					<text class="bg-grey" style="width:2rem"></text>
 				</view>
 			</view>
-			<block v-for="(item, index) in todayCourses">
+			<template v-for="(item, index) in todayCourses">
 				<view class="padding-xs bg-white border-radius solids-bottom" v-if="item && item.courseName">
 					<view class="flex radius">
-						<view class="basis-xl padding-xs margin-tb-xs">
-							<view class="margin-bottom-xs"><text
-									class="cuIcon-calendar text-blue margin-right-xs"></text>{{item.teachTime}}</view>
-							<view class="text-cut" style="height: 1rem;"><text
+						<view class="basis-xl padding-xs margin-tb-xs text-cut flex flex-direction">
+							<view class="margin-tb-xs text-cut" style="height: 1.2rem;"><text
+									class="cuIcon-calendar text-blue margin-right-xs"></text><text>{{item.teachTime}}</text></view>
+							<view class="text-cut"  style="height: 1.2rem;"><text
 									class="cuIcon-activity text-blue margin-right-xs"></text><text>{{item.courseName}}</text>
 							</view>
 						</view>
-						<view class="basis-xs text-xl margin-tb-xs padding-xs text-center">
-							<view class="text-sm">
+						<view class="basis-xs text-lg margin-tb-xs padding-xs text-center">
+							<view class="margin-tb-xs">
 								{{item.startAt}}~{{item.endAt}}
 							</view>
 							<view>{{item.place}}</view>
 						</view>
 					</view>
 				</view>
-			</block>
+			</template>
 		</navigator>
 
 		<block v-if="!loginStatus">
