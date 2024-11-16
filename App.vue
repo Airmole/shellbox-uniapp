@@ -69,6 +69,7 @@
 				})
 			},
 			clientLoginEdusys () {
+				const self = this
 				this.globalData.loginPromise = new Promise(async (resolve, reject) => {
 					try {
 						const res = await api.fetchProfile()
