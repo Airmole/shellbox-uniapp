@@ -28,15 +28,15 @@
 		<!-- 首页小组件 -->
 		<box-home-widgets></box-home-widgets>
 		
-		<block v-if="!loginStatus">
+		<view v-if="!loginStatus">
 			<tips
-				tips="哎呀,还没登录嘛？"
+				tips="哎呀~还没登录嘛？"
 				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
 				:showButton="true"
-				buttonText="现在登录"
+				buttonText="立即登录"
 				path="/pages/index/login"
 			></tips>
-		</block>
+		</view>
 		
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="margin-lr margin-tb-sm radius">
@@ -101,7 +101,6 @@
 	watch(courses, (newValue) => {
 		const dayIndex = (new Date()).getDay() > 0 ? ((new Date()).getDay() - 1) : (newValue.table.length - 1)
 		todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
-		console.log('todayCourses', todayCourses)
 	})
 
 	onLoad(() => {

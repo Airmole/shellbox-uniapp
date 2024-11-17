@@ -134,8 +134,7 @@
 						  <text :class="`text-blue cuIcon-${showAllOption?'fold':'unfold'}`">{{showAllOption?'收起':'展示'}}更多筛选项</text>
 						</view>
 						<view class="cu-item">
-							<view class="content">
-							</view>
+							<view class="content"></view>
 							<view class="action">
 								<button @click="resetOptionsForm" class="cu-btn round bg-red shadow margin-lr"><text
 										class="cuIcon-refresh"></text> 重置</button>
@@ -226,13 +225,19 @@
 				dayOfWeekOption: []
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
+			
+			if (options && options.keyword) {
+				uni.showLoading({ title: '加载中...' })
+				this.optionForm.className = options.keyword
+			}
+			
 			this.generateWeekOption()
 			this.generateDayOfWeekOption()
-			this.fetchOptions()
+			this.fetchOptions(options.keyword)
 			this.fetchProfessionOptions()
 		},
 		onShow() {
@@ -267,7 +272,6 @@
 				this.foldOptionsArea = !this.foldOptionsArea
 			},
 			clickClassCourse (classIndex) {
-				console.log('clickClassCourse', this.classCourses[classIndex])
 				if (classIndex >= 0) {
 					this.classIndex = classIndex
 					this.classCourse = this.classCourses[classIndex]
@@ -301,14 +305,13 @@
 					this.optionForm.dayOfWeekStart.toString(),
 					this.optionForm.dayOfWeekEnd.toString()
 				).then(res => {
-					// console.log('fetchClassCourse', res.data)
 					this.classCourses = res.data
 					uni.hideLoading()
 				}).catch((res) => {
 					uni.showToast({ title: res.data.message, icon: 'none'})
 				})
 			},
-			fetchOptions () {
+			fetchOptions (keyword = null) {
 				api.fetchClassCourseOptions().then(res => {
 					const { semester, timeModel, college, grade } = res.data
 					this.semesterOption = semester
@@ -324,6 +327,7 @@
 					this.gradeOption = grade
 					this.gradeIndex = grade.findIndex((value) => value.checked === true)
 					uni.hideLoading()
+					if (keyword !== null) this.fetchClassCourse()
 				})
 			},
 			fetchProfessionOptions (collegeCode = '', grade = '') {
@@ -399,6 +403,33 @@
 				this.dayOfWeekEndIndex = -1
 				this.fetchOptions()
 			}
+		},
+		onShareAppMessage() {
+			let text = ''
+			let query = ''
+			if (this.optionForm.className) {
+				text = `【${this.optionForm.className}...】相关`
+				query = `?keyword=${this.optionForm.className}`
+			}
+			
+			let data = {
+			  title: `${text}班级课表 - 贝壳小盒子`,
+			  path: `/pages/course/class${query}`
+			}
+			return data
+		},
+		onShareTimeline() {
+			let text = ''
+			let query = ''
+			if (this.optionForm.className) {
+				text = `【${this.optionForm.className}...】相关`
+				query = `keyword=${this.optionForm.className}`
+			}
+			let data = {
+				title: `${text}班级课表 - 贝壳小盒子`,
+				query: query
+			}
+			return data
 		}
 	}
 </script>

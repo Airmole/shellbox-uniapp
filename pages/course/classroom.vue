@@ -15,7 +15,7 @@
 					</view>
 				</view>
 				<template v-if="!foldOptionsArea">
-					<view class="cu-item arrow">
+					<view class="cu-item">
 						<view class="content">
 							<text class="text-red">*教学楼</text>
 						</view>
@@ -28,7 +28,7 @@
 							</picker>
 						</view>
 					</view>
-					<view class="cu-item arrow">
+					<view class="cu-item">
 						<view class="content">
 							<text class="text-red">*教室</text>
 						</view>
@@ -42,7 +42,7 @@
 						</view>
 					</view>
 					<template v-if="!foldOptionForm">
-						<view class="cu-item arrow">
+						<view class="cu-item">
 							<view class="content">
 								<text class="text-grey">学年学期</text>
 							</view>
@@ -55,7 +55,7 @@
 								</picker>
 							</view>
 						</view>
-						<view class="cu-item arrow">
+						<view class="cu-item">
 							<view class="content">
 								<text class="text-grey">时间模式</text>
 							</view>
@@ -68,7 +68,7 @@
 								</picker>
 							</view>
 						</view>
-						<view class="cu-item arrow">
+						<view class="cu-item">
 							<view class="content">
 								<text class="text-grey">教室类型</text>
 							</view>
@@ -96,7 +96,7 @@
 								<input placeholder="输入比较人数" name="peopleNum" style="width: 200rpx;" v-model="optionForm.peopleNum" />
 							</view>
 						</view>
-						<view class="cu-item arrow">
+						<view class="cu-item">
 							<view class="content">
 								<text class="text-grey">教室状态</text>
 							</view>
@@ -109,7 +109,7 @@
 								</picker>
 							</view>
 						</view>
-						<view class="cu-item arrow">
+						<view class="cu-item">
 							<view class="content">
 								<text class="text-grey">借用院系</text>
 							</view>
@@ -122,7 +122,7 @@
 								</picker>
 							</view>
 						</view>
-						<view class="cu-item arrow">
+						<view class="cu-item">
 							<view class="content">
 								<text class="text-grey">教室所属单位</text>
 							</view>
@@ -377,7 +377,7 @@
 			this.generateDayOfWeekOption()
 			this.fetchOptions()
 			this.fetchClassroomList('building')
-			this.fetchClassroomList('classroom')
+			// this.fetchClassroomList('classroom')
 		},
 		onShow() {
 			if (interstitialAd) interstitialAd.show()	

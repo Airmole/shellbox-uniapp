@@ -24,16 +24,16 @@
 								mode="widthFix" />
 						</view>
 						<view class="padding-lr-xs flex flex-wrap">
-							<view class="padding-bottom-sm solid-bottom text-xl text-cut"><text
+							<view class="solid-bottom text-xl text-cut"><text
 									class="cuIcon-videofill text-red margin-right-xs"></text><text
 									class="text-bold">{{item.name}}</text><text class="text-gray"
 									v-if="item.year">（{{item.year}}）</text>
 							</view>
-							<view class="margin-tb-xs" catchtap="setRemind" :data-index="index">
+							<view @tap.stop="addCalendar(item)" class="margin-tb-xs">
 								<text class="cuIcon-remind text-orange margin-right-xs"></text><text
 									class="text-df">{{ item.play_at }}</text>
 							</view>
-							<view class="margin-bottom-xs">
+							<view @tap.stop="goPlace(item.place)" class="margin-bottom-xs">
 								<text class="cuIcon-locationfill text-blue margin-right-xs"></text><text
 									class="text-df">{{item.place}}</text>
 							</view>
@@ -171,6 +171,55 @@
 						})
 					}
 				})
+			},
+			goPlace (place = '') {
+				if (!place.includes('社科')) return
+				uni.navigateTo({ url: '/pages/school/map?id=14' })
+			},
+			addCalendar (movie) {
+				const _this = this
+				// #ifdef MP
+				uni.getSetting({
+				  success (settingRes) {
+					if (!settingRes.authSetting['scope.addPhoneCalendar']) {
+						uni.authorize({
+							scope: 'scope.addPhoneCalendar',
+							success() {
+								_this.addPhoneCalendar(movie)
+							},
+							fail() {
+								uni.openSetting()
+							}
+						})
+					} else {
+						_this.addPhoneCalendar(movie)
+					}
+				  }
+				})
+				// #endif
+			},
+			addPhoneCalendar (movie) {
+				// #ifdef MP
+				const duration = /\d{1,3}/.exec(movie.duration) // 影片时长分钟数
+				uni.showModal({
+					title: '提示',
+					content: '你要将此影片放映添加到手机日程，放映前20分钟提醒吗？',
+					success: function (res) {
+						if (!res.confirm) return
+						wx.addPhoneCalendar({
+							title: `观看影片《${movie.name}》`,
+							startTime: new Date(`${movie.play_at}`).getTime().toString().slice(0, -3),
+							endTime: Number(new Date(`${movie.play_at}`).getTime().toString().slice(0, -3)) + (duration  * 60),
+							description: `${movie.name} | 主演：${movie.actor} | 地点：${movie.place}`,
+							location: movie.place,
+							alarmOffset: 60 * 20, // 提前20分钟提醒
+							fail (error) {
+								console.log(error)
+							}
+						})
+					}
+				})
+				// #endif
 			}
 		},
 		onShareAppMessage() {
