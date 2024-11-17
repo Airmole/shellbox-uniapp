@@ -19,7 +19,7 @@
 			@monthSwitch="monthChange"
 		></wu-calendar>
 		
-		<view id="dayCourse" class="margin-sm bg-white card-radius">
+		<view v-if="isLogined" id="dayCourse" class="margin-sm bg-white card-radius">
 			<view class="cu-bar bg-white card-radius">
 				<view class="action border-title">
 					<text class="text-xl text-bold">{{checkedDate}} 当日课表</text>
@@ -56,6 +56,15 @@
 				<!-- #endif -->
 			</template>
 		</view>
+		<template v-else>
+			<tips
+				tips="查询您的个人课表需登录账号"
+				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				:showButton="true"
+				buttonText="现在登录"
+				path="/pages/index/login"
+			></tips>
+		</template>
 		
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="margin-lr margin-tb-sm radius">
@@ -69,19 +78,13 @@
 </template> 
 <script>
 	import api from '@/request/api.js'
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
-				selected:[{
-					date: "2024-11-17",
-					badge: true,
-					badgeSize: "12rpx",
-					badgePosition: "bottom-center",
-					badgeColor: '#3D88EC',
-					topInfo: '',
-					topInfoColor: '#3D88EC'
-				}],
+				isLogined: true,
+				selected:[],
 				monthCourses: [],
 				checkedDate: '',
 				checkedDateIndex: null,
@@ -89,16 +92,27 @@
 			}
 		},
 		onLoad() {
-			this.fetchMonthCourses()
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
+			
+			if (getEdusysAccount() === false) {
+				this.isLogined = false
+				return
+			}
+			
+			this.fetchMonthCourses()
 		},
 		onShow() {
 			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			fetchMonthCourses (date = '', isMonthChange = false) {
+				if (!this.isLogined) {
+					uni.showToast({ title: '请登录后查看', icon: 'none' })
+					return
+				}
+				
 				uni.showLoading({ title: '拼命加载中...' })
 				api.fetchMonthCourse(date).then(res => {
 					this.monthCourses = res.data
@@ -136,6 +150,11 @@
 				return selected
 			},
 			calendarChange(e) {
+				if (!this.isLogined) {
+					uni.showToast({ title: '请登录后查看当天课程安排', icon: 'none' })
+					return
+				}
+				
 				const checkedDateIndex = e.date - 1
 				const dayCourse = this.monthCourses[checkedDateIndex]
 				this.checkedDate = e.fulldate
@@ -143,6 +162,10 @@
 				this.checkedDateCourses = this.monthCourses[checkedDateIndex]
 			},
 			monthChange (e) {
+				if (!this.isLogined) {
+					uni.showToast({ title: '请登录后查看课程安排', icon: 'none' })
+					return
+				}
 				this.fetchMonthCourses(`${e.fullDate}-1`, true)
 			},
 			checkAddCalendarPermisson (course) {

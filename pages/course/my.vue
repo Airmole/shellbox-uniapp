@@ -17,7 +17,22 @@
 				</view>
 			</picker>
 		</view>
-		<courseTable :columnTitles="courseData.columnTitle" :table="courseData.table" :tips="courseData.tips"></courseTable>
+		
+		<courseTable v-if="isLogined" :columnTitles="courseData.columnTitle" :table="courseData.table" :tips="courseData.tips"></courseTable>
+		<template v-else>
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="margin margin-tb-xl radius">
+				<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+			</view>
+			<!-- #endif -->
+			<tips
+				tips="查询您的个人课表需登录账号"
+				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				:showButton="true"
+				buttonText="现在登录"
+				path="/pages/index/login"
+			></tips>
+		</template>
 		
 	</view>
 </template>
@@ -33,24 +48,24 @@
 		},
 		data() {
 			return {
+				isLogined: true,
 				courseData: '',
 				semesterIndex: 0,
 				semesterOptions: [],
 				weekIndex: 0,
 				weekOptions: [],
-				
 			}
 		},
 		onLoad() {
-			if (getEdusysAccount() === false) {
-				uni.redirectTo({
-					url: '/pages/index/login'
-				})
-				return
-			}
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
+			
+			if (getEdusysAccount() === false) {
+				this.isLogined = false
+				return
+			}
+			
 			this.fetchCourseOptions()
 			this.fetchCourse()
 		},

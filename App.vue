@@ -30,7 +30,9 @@
 			})
 			const accountInfo = uni.getAccountInfoSync()
 			self.globalData.env = accountInfo.miniProgram.envVersion
+			self.mpappUpdate()
 			// #endif
+			
 			this.clientLoginEdusys()
 		},
 		onShow: function() {
@@ -98,6 +100,30 @@
 							})
 						}
 					}
+				})
+			},
+			mpappUpdate (from) {
+				const updateManager = uni.getUpdateManager()
+				updateManager.onCheckForUpdate(function (res) {
+				  if (from == 'userclick') {
+					uni.showToast({ title: '已是最新版', icon: 'none' })
+				  }
+				})
+			
+				updateManager.onUpdateReady(function () {
+				  wx.showModal({
+					title: '小盒子求更新',
+					content: "小盒子有版本功能更新啦，建议各位小可爱重启应用体验新版本(●'◡'●)",
+					success: function (res) {
+					  if (res.confirm) {
+						updateManager.applyUpdate()
+					  }
+					}
+				  })
+				})
+			
+				updateManager.onUpdateFailed(function () {
+				  wx.showToast({ title: '555更新失败了。可能网络不好' });
 				})
 			}
 		}

@@ -11,11 +11,11 @@
 				@change="calendarChange" @monthSwitch="monthChange"></wu-calendar>
 		</view>
 
-		<view class="margin bg-white radius">
+		<view class="margin bg-white card-radius">
 			<view class="padding solid-bottom">
 				<text class="cuIcon-title text-green"></text>{{checkedDate}} 当天放映
 			</view>
-			<view class="cu-list menu" v-if="movieList.length > 0">
+			<view class="cu-list menu card-radius" v-if="movieList.length > 0">
 				<template v-for="(item, index) in movieList" :key="index">
 					<view class="cu-item padding-tb radius" @tap="goDouban" :data-index="index">
 						<view class="padding-xs">
