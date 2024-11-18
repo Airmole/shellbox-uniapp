@@ -244,6 +244,7 @@
 				}
 			},
 			fetchTeacherCourse () {
+				this.optionForm.teacherName = this.optionForm.teacherName.replace(/\s/g, "")
 				if (this.optionForm.teacherName.length <= 0) {
 					uni.showToast({ title: '请输入授课教师姓名', icon: 'none'})
 					return

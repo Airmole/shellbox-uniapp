@@ -276,6 +276,7 @@
 				}
 			},
 			fetchLessonCourse () {
+				this.optionForm.courseName = this.optionForm.courseName.replace(/\s/g, "")
 				if (this.optionForm.courseName.length <= 0) {
 					uni.showToast({ title: '请输入课程名称', icon: 'none'})
 					return

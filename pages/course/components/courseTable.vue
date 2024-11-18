@@ -18,33 +18,68 @@
 					:class="`${table[dayIdx] && table[dayIdx].items[rowIdx].length > 0 ? `bg-${bgColors[table[dayIdx].items[rowIdx][0].courseName.length%bgColors.length]} shadow-warp` : ``} text-white course-item radius tb-head-x tb-height flex justify-center align-center`"
 					:style="{width: `${itemWidth}px`,height: `${itemHeight}px`}" :key="dayIdx" :data-dayidx="dayIdx"
 					:data-rowidx="rowIdx" @click="showDetail">
-					<view v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1">
+					<template v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 0">
+					</template>
+					<!-- 一节一门课程 -->
+					<view :style="{width: `${itemWidth}px`}" v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1">
 						<view class="margin-tb-xs place-name">{{table[dayIdx].items[rowIdx][0].place}}</view>
 						<view class="margin-tb-xs course-name" :style="{height: `${itemHeight-50}px`}">
 							{{table[dayIdx].items[rowIdx][0].courseName}}
 						</view>
 					</view>
+					<!-- 一节三门以下课程 -->
 					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 1 && table[dayIdx].items[rowIdx].length <= 3">
 						<view
 							v-for="(itm, idx) in table[dayIdx].items[rowIdx]"
 							:key="idx"
 							:style="{
 								height: `${(itemHeight)/table[dayIdx].items[rowIdx].length}px`,
+								width: `${itemWidth}px`,
 								margin: '1px 0',
 								overflow: 'clip',
 								borderBottom: idx === table[dayIdx].items[rowIdx].length - 1 ? '' : '1px solid white'
 							}"
 						>
-							<view class="place-name" style="height: 1.1rem;">{{itm.place}}</view>
+							<view class="place-name text-cut" style="height: 1.1rem;">{{itm.place}}</view>
 							<view class="course-name">
 								{{itm.courseName}}
 							</view>
 						</view>
 					</template>
-					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 3">
-						{{`${table[dayIdx].items[rowIdx].length}门课程`}}
+					<!-- 一节三门以上五门以下课程 -->
+					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 3 && table[dayIdx].items[rowIdx].length <= 5">
+						<view
+							v-for="(itm, idx) in table[dayIdx].items[rowIdx]"
+							:key="idx"
+							:style="{
+								height: `${(itemHeight)/table[dayIdx].items[rowIdx].length}px`,
+								width: `${itemWidth}px`,
+								margin: '1px 0',
+								overflow: 'clip',
+								borderBottom: idx === table[dayIdx].items[rowIdx].length - 1 ? '' : '1px solid white'
+							}"
+						>
+							<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
+						</view>
 					</template>
-					<template v-else></template>
+					<!-- 一节五门以上课程 -->
+					<template v-else>
+						<template v-for="(itm, idx) in table[dayIdx].items[rowIdx]" :key="idx">
+							<view
+								v-if="idx < 5"
+								:style="{
+									height: `${(itemHeight)/5}px`,
+									width: `${itemWidth}px`,
+									margin: '1px 0',
+									overflow: 'clip',
+									borderBottom:idc === 4 ? '' : '1px solid white'
+								}"
+							>
+								<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
+							</view>
+						</template>
+						<view class="text-sm">...共{{table[dayIdx].items[rowIdx].length}}门</view>
+					</template>
 				</view>
 			</view>
 			

@@ -41,7 +41,6 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
-	let interstitialAd = null
 	export default {
 		components: {
 			courseTable
@@ -57,10 +56,6 @@
 			}
 		},
 		onLoad() {
-			// #ifdef MP-WEIXIN
-			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
-			// #endif
-			
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
@@ -68,9 +63,6 @@
 			
 			this.fetchCourseOptions()
 			this.fetchCourse()
-		},
-		onShow() {
-			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			semesterChange(e) {

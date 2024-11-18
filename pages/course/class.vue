@@ -279,6 +279,7 @@
 				}
 			},
 			fetchClassCourse () {
+				this.optionForm.className = this.optionForm.className.replace(/\s/g, "")
 				if (this.optionForm.className.length <= 0) {
 					uni.showToast({ title: '请输入上课班级名称', icon: 'none'})
 					return

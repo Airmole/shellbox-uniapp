@@ -87,6 +87,10 @@
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
+		
+		<template v-if="score !== '' && score.data.length === 0">
+			<tips tips="没有查询到符合条件的成绩" image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"></tips>
+		</template>
 	
 		<!-- 成绩展示区域 -->
 		<template v-if="isLogined">
