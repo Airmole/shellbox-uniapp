@@ -3,6 +3,7 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="false">
 			<view>贝壳小盒子</view>
 		</cu-custom>
+
 		<!-- 教学周日期显示 -->
 		<block v-if="!!calendar">
 			<block v-if="calendar?.title">
@@ -27,45 +28,50 @@
 		<!-- 首页小组件 -->
 		<box-home-widgets></box-home-widgets>
 		
+		<view v-if="!loginStatus">
+			<tips
+				tips="哎呀~还没登录嘛？"
+				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				:showButton="true"
+				buttonText="立即登录"
+				path="/pages/index/login"
+			></tips>
+		</view>
+		
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
 
-		<navigator url="/pages/course/my" class="cu-list menu sm-border card-menu" v-if="todayCourses.length">
+		<!-- 今日课程列表 -->
+		<navigator url="/pages/course/calendar" class="cu-list menu sm-border card-menu" v-if="todayCourses.length">
 			<view class="cu-bar bg-white">
 				<view class="action border-title">
 					<text class="text-title">今日课程</text>
 					<text class="bg-grey" style="width:2rem"></text>
 				</view>
 			</view>
-			<block v-for="(item, index) in todayCourses">
+			<template v-for="(item, index) in todayCourses" :key="index">
 				<view class="padding-xs bg-white border-radius solids-bottom" v-if="item && item.courseName">
 					<view class="flex radius">
-						<view class="basis-xl padding-xs margin-tb-xs">
-							<view class="margin-bottom-xs"><text
-									class="cuIcon-calendar text-blue margin-right-xs"></text>{{item.teachTime}}</view>
-							<view class="text-cut" style="height: 1rem;"><text
+						<view class="basis-xl padding-xs margin-tb-xs text-cut flex flex-direction">
+							<view class="margin-tb-xs text-cut" style="height: 1.2rem;"><text
+									class="cuIcon-calendar text-blue margin-right-xs"></text><text>{{item.teachTime}}</text></view>
+							<view class="text-cut"  style="height: 1.2rem;"><text
 									class="cuIcon-activity text-blue margin-right-xs"></text><text>{{item.courseName}}</text>
 							</view>
 						</view>
-						<view class="basis-xs text-xl margin-tb-xs padding-xs text-center">
-							<view class="text-sm">
+						<view class="basis-xs text-lg margin-tb-xs padding-xs text-center">
+							<view class="margin-tb-xs">
 								{{item.startAt}}~{{item.endAt}}
 							</view>
 							<view>{{item.place}}</view>
 						</view>
 					</view>
 				</view>
-			</block>
+			</template>
 		</navigator>
-
-		<block v-if="!loginStatus">
-			<navigator class="flex-sub margin" url="/pages/index/login">
-				<button class="round bg-default">立即登录</button>
-			</navigator>
-		</block>
 
 	</view>
 </template>
@@ -95,7 +101,6 @@
 	watch(courses, (newValue) => {
 		const dayIndex = (new Date()).getDay() > 0 ? ((new Date()).getDay() - 1) : (newValue.table.length - 1)
 		todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
-		console.log('todayCourses', todayCourses)
 	})
 
 	onLoad(() => {

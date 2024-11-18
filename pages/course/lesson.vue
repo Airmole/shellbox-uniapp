@@ -183,7 +183,6 @@
 
 <script>
 	import api from '@/request/api.js'
-	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
 	let interstitialAd = null
 	export default {
@@ -227,17 +226,19 @@
 				dayOfWeekOption: []
 			}
 		},
-		onLoad() {
-			if (getEdusysAccount() === false) {
-				uni.redirectTo({ url: '/pages/index/login' })
-				return
-			}
+		onLoad(options) {
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
+			
+			if (options && options.keyword) {
+				uni.showLoading({ title: '加载中...' })
+				this.optionForm.courseName = options.keyword
+			}
+			
 			this.generateWeekOption()
 			this.generateDayOfWeekOption()
-			this.fetchOptions()
+			this.fetchOptions(options.keyword)
 		},
 		onShow() {
 			if (interstitialAd) interstitialAd.show()
@@ -275,6 +276,7 @@
 				}
 			},
 			fetchLessonCourse () {
+				this.optionForm.courseName = this.optionForm.courseName.replace(/\s/g, "")
 				if (this.optionForm.courseName.length <= 0) {
 					uni.showToast({ title: '请输入课程名称', icon: 'none'})
 					return
@@ -306,7 +308,7 @@
 					uni.hideLoading()
 				})
 			},
-			fetchOptions () {
+			fetchOptions (courseName = null) {
 				api.fetchLessonCourseOptions().then(res => {
 					const { semester, timeModel, studyCollege, teachCollege, courseNature } = res.data
 					this.semesterOption = semester
@@ -333,8 +335,8 @@
 					const courseNatureIndex = courseNature.findIndex((value) => value.checked === true)
 					this.courseNatureIndex = courseNatureIndex
 					this.optionForm.courseNature = courseNature[courseNatureIndex].value
-					
 					uni.hideLoading()
+					if (courseName !== null) this.fetchLessonCourse()
 				})
 			},
 			semesterChange (e) {
@@ -402,6 +404,32 @@
 				this.dayOfWeekEndIndex = -1
 				this.fetchOptions()
 			}
+		},
+		onShareAppMessage() {
+			let text = ''
+			let query = ''
+			if (this.optionForm.courseName) {
+				text = `【${this.optionForm.courseName}...】相关`
+				query = `?keyword=${this.optionForm.courseName}`
+			}
+			let data = {
+			  title: `${text}课程课表 - 贝壳小盒子`,
+			  path: `/pages/course/lesson${query}`
+			}
+			return data
+		},
+		onShareTimeline() {
+			let text = ''
+			let query = ''
+			if (this.optionForm.courseName) {
+				text = `【${this.optionForm.courseName}...】相关`
+				query = `keyword=${this.optionForm.courseName}`
+			}
+			let data = {
+				title: `${text}课程课表 - 贝壳小盒子`,
+				query: query
+			}
+			return data
 		}
 	}
 </script>

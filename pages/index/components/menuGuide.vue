@@ -79,7 +79,7 @@
 	})
 	
 	function goPage(menu) {
-		if (menu.need_login === true && (getEdusysAccount() === false || !loginStatus)) {
+		if (menu.need_login && (getEdusysAccount() === false || !loginStatus)) {
 			uni.showToast({ title: '此功能需要登录', icon: 'none' })
 			return
 		}

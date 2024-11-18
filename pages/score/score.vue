@@ -4,7 +4,7 @@
 			<view>成绩查询</view>
 		</cu-custom>
 		
-		<view class="margin">
+		<view class="margin" v-if="isLogined">
 			<view class="text-left text bg-white padding-sm text-red card-radius">
 				<text><text class="cuIcon-info margin-lr-xs"></text>本应用算术平均分及加权平均分由程序自动计算得来，结果仅供参考！具体准确加权分和GPA绩点建议咨询导员或学校教务处。</text>
 			</view>
@@ -87,52 +87,67 @@
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
-
+		
+		<template v-if="score !== '' && score.data.length === 0">
+			<tips tips="没有查询到符合条件的成绩" image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"></tips>
+		</template>
+	
 		<!-- 成绩展示区域 -->
-		<view class="cu-list menu sm-border card-menu" v-for="(semester, semesterIdx) in score.data" :key="semesterIdx">
-		    <view class="cu-item press-class" @click="foldSemesterScore(semesterIdx)">
-		    	<view class="content">
-		    		<text class="cuIcon-medal text-blue"></text> {{semester.semester}} 学期
-		    	</view>
-		    	<view class="action text-right">
-		    		<text :class="'text-bold cuIcon-'+(semester.fold?'right':'unfold')"></text>
-		    	</view>
-		    </view>
-			<template v-if="!semester.fold">
-				<template v-for="(record, index) in semester.items" :key="index">
-					<view @click="showDetail(semesterIdx, index)" class="cu-item press-class">
-						<view class="content padding-tb-sm text-cut">
-							<view class="text-title">
-								<text class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
+		<template v-if="isLogined">
+			<view class="cu-list menu sm-border card-menu" v-for="(semester, semesterIdx) in score.data" :key="semesterIdx">
+			    <view class="cu-item press-class" @click="foldSemesterScore(semesterIdx)">
+			    	<view class="content">
+			    		<text class="cuIcon-medal text-blue"></text> {{semester.semester}} 学期
+			    	</view>
+			    	<view class="action text-right">
+			    		<text :class="'text-bold cuIcon-'+(semester.fold?'right':'unfold')"></text>
+			    	</view>
+			    </view>
+				<template v-if="!semester.fold">
+					<template v-for="(record, index) in semester.items" :key="index">
+						<view @click="showDetail(semesterIdx, index)" class="cu-item press-class">
+							<view class="content padding-tb-sm text-cut">
+								<view class="text-title">
+									<text class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
+								</view>
+								<view class="text-gray text-sm">
+									<text class="margin-right-xs">{{record.examNature}}</text>
+									<text class="margin-lr-xs">{{record.period}}学时</text>
+									<text class="margin-lr-xs">{{record.credit}}学分</text>
+								</view>
 							</view>
-							<view class="text-gray text-sm">
-								<text class="margin-right-xs">{{record.examNature}}</text>
-								<text class="margin-lr-xs">{{record.period}}学时</text>
-								<text class="margin-lr-xs">{{record.credit}}学分</text>
+							<view class="action text-bold">
+								<text v-if="record.score >= 90" class="text-lg text-blue">{{record.score}}</text>
+								<text v-else-if="record.score < 60" class="text-lg text-red">{{record.score}}</text>
+								<text v-else class="text-lg text-black">{{record.score}}</text>
 							</view>
 						</view>
-						<view class="action text-bold">
-							<text v-if="record.score >= 90" class="text-lg text-blue">{{record.score}}</text>
-							<text v-else-if="record.score < 60" class="text-lg text-red">{{record.score}}</text>
-							<text v-else class="text-lg text-black">{{record.score}}</text>
+						<!-- #ifdef MP-WEIXIN -->
+						<view v-if="index !== 0 && index % 10 === 0" class="bg-white">
+							<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 						</view>
-					</view>
-					<!-- #ifdef MP-WEIXIN -->
-					<view v-if="index !== 0 && index % 10 === 0" class="bg-white">
-						<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
-					</view>
-					<!-- #endif -->
+						<!-- #endif -->
+					</template>
 				</template>
-			</template>
-			<view class="cu-item">
-				<view class="content text-left">
-					算术平均分：<text class="text-bold">{{semester.avg}}</text>
-				</view>
-				<view class="content text-right">
-					加权平均分：<text class="text-bold">{{semester.gpa}}</text>
+				<view class="cu-item">
+					<view class="content text-left">
+						算术平均分：<text class="text-bold">{{semester.avg}}</text>
+					</view>
+					<view class="content text-right">
+						加权平均分：<text class="text-bold">{{semester.gpa}}</text>
+					</view>
 				</view>
 			</view>
-		</view>
+		</template>
+		<template v-else>
+			<tips
+				tips="查询您的成绩分数需登录账号"
+				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				:showButton="true"
+				buttonText="现在登录"
+				path="/pages/index/login"
+			></tips>
+		</template>
 		
 		<view class="padding-xl"></view>
 		
@@ -234,7 +249,6 @@
 			</view>
 		</view>
 
-
 	</view>
 </template>
 
@@ -245,6 +259,7 @@
 	export default {
 		data() {
 			return {
+				isLogined: true,
 				foldOptionsArea: false,
 				semesterOptionsList: [],
 				natureOptionsList: [],
@@ -264,15 +279,15 @@
 			}
 		},
 		onLoad() {
-			if (getEdusysAccount() === false) {
-				uni.redirectTo({
-					url: '/pages/index/login'
-				})
-				return
-			}
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
+			
+			if (getEdusysAccount() === false) {
+				this.isLogined = false
+				return
+			}
+			
 			this.fetchOptions()
 			this.fetchScore()
 		},
@@ -309,6 +324,11 @@
 				this.optionForm.show = this.showOptionsList[index].value
 			},
 			fetchOptions() {
+				if (!this.isLogined) {
+					uni.showToast({ title: '需要登录后才能查询您的成绩～', icon: 'none' })
+					return
+				}
+				
 				api.fetchScoreOptions().then(res => {
 					console.log('获取成绩筛选项', res.data)
 					this.semesterOptionsList = res.data.time
@@ -317,7 +337,11 @@
 				})
 			},
 			fetchScore() {
-				console.log(this.optionForm)
+				if (!this.isLogined) {
+					uni.showToast({ title: '需要登录后才能查询您的成绩～', icon: 'none' })
+					return
+				}
+				
 				uni.showLoading({ title: '查询中...' })
 				api.fetchScore(
 					this.optionForm.semester,

@@ -68,16 +68,21 @@
 	
 	}
 	function submitLogin() {
+		let openid = null
 		// #ifdef MP-WEIXIN
-		let openid = app.getOpenId()
-		if (!openid) {
-			app.uniLogin()
-			openid = app.getOpenId()
-		}
+		openid = app.getOpenId()
 		if (typeof openid === 'object') openid = openid.openid
 		if (typeof openid === 'string') openid = openid
+		// #endif
+		
+		// #ifdef MP-WEIXIN
 		loginForm.value.wx_open_id = openid
 		// #endif
+		
+		// #ifdef MP-QQ
+		loginForm.value.qq_open_id = openid
+		// #endif
+		
 		if (loginForm.value.account.length == 0 || loginForm.value.password.length == 0) {
 			uni.showToast({ title: '请填写账号密码', icon: 'error' })
 			return

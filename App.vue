@@ -30,7 +30,9 @@
 			})
 			const accountInfo = uni.getAccountInfoSync()
 			self.globalData.env = accountInfo.miniProgram.envVersion
+			self.mpappUpdate()
 			// #endif
+			
 			this.clientLoginEdusys()
 		},
 		onShow: function() {
@@ -69,6 +71,7 @@
 				})
 			},
 			clientLoginEdusys () {
+				const self = this
 				this.globalData.loginPromise = new Promise(async (resolve, reject) => {
 					try {
 						const res = await api.fetchProfile()
@@ -76,8 +79,15 @@
 						resolve(res.data)
 					} catch(err) {
 						if (err?.statusCode == 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
-							const edusysAccount = getEdusysAccount()
+							let edusysAccount = getEdusysAccount()
 							if (edusysAccount == false) return
+							// #ifdef MP-WEIXIN
+							edusysAccount.wx_open_id = self.getOpenId()
+							// #endif
+							
+							// #ifdef MP-QQ
+							edusysAccount.qq_open_id = self.getOpenId()
+							// #endif
 							await api.autoLogin(edusysAccount).then(loginRes => {
 								resolve(Object.assign({
 									...edusysAccount
@@ -90,6 +100,30 @@
 							})
 						}
 					}
+				})
+			},
+			mpappUpdate (from) {
+				const updateManager = uni.getUpdateManager()
+				updateManager.onCheckForUpdate(function (res) {
+				  if (from == 'userclick') {
+					uni.showToast({ title: '已是最新版', icon: 'none' })
+				  }
+				})
+			
+				updateManager.onUpdateReady(function () {
+				  wx.showModal({
+					title: '小盒子求更新',
+					content: "小盒子有版本功能更新啦，建议各位小可爱重启应用体验新版本(●'◡'●)",
+					success: function (res) {
+					  if (res.confirm) {
+						updateManager.applyUpdate()
+					  }
+					}
+				  })
+				})
+			
+				updateManager.onUpdateFailed(function () {
+				  wx.showToast({ title: '555更新失败了。可能网络不好' });
 				})
 			}
 		}

@@ -38,6 +38,10 @@ export default {
 	fetchDateCourse: (date = '') => {
 		return request(`/edusys/course/date?date=${date}`, 'GET')
 	},
+	// 个人整月课表
+	fetchMonthCourse: (date = '') => {
+		return request(`/edusys/course/month?date=${date}`, 'GET')
+	},
 	// 成绩查询筛选项
 	fetchScoreOptions: () => {
 		return request(`/edusys/score/options`, 'GET')

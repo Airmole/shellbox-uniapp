@@ -18,7 +18,7 @@
 					<view class="cu-item margin-tb card-radius" style="height: 180rpx; max-height: 200rpx;" v-for="(item, index) in courseList"
 						:key="index" @tap="showStulistDetail(index)">
 						<view class="cu-avatar lg round bg-gradual-blue"><text
-								class="text-xxl iconfont icon-kechengkebiao"></text></view>
+								class="iconfont icon-kechengkebiao" style="font-size: 60rpx;"></text></view>
 						<view class="content">
 							<view class="text-black margin-tb-xs padding-lr-xs text-sm">{{item.title}}</view>
 							<view class="padding-lr-xs margin-tb-xs">
@@ -31,7 +31,7 @@
 			</template>
 			<template v-else>
 				<view class="margin padding round text-center bg-white">
-					<text>{{stulistTitle}}</text>
+					<text class="text-bold">{{stulistTitle}}</text>
 				</view>
 				<view class="cu-list menu-avatar margin card-radius">
 					<view class="cu-item" style="height: 220rpx;" v-for="(item, index) in stulist"
@@ -43,10 +43,10 @@
 								<text style="opacity: 0.7;">{{item.gender}} | 学号：{{item.usercode}}</text>
 							</view>
 							<view class="padding-lr-xs">
-								<text style="opacity: 0.7;">{{item.grade}}级 | {{item.major}} | {{item.className}}</text>
+								<text style="opacity: 0.7;">{{item.grade}}级{{item.major}} | {{item.className}}</text>
 							</view>
 							<view class="padding-lr-xs">
-								<text style="opacity: 0.7;">{{item.profession}}</text>
+								<text style="opacity: 0.7;">专业：{{item.profession}}</text>
 							</view>
 						</view>
 					</view>
@@ -114,5 +114,8 @@
 </script>
 
 <style>
-
+	.content {
+		width: calc(100% - 96rpx - 60rpx - 20rpx) !important;
+		line-height: 1.6em;
+	}
 </style>

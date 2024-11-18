@@ -157,7 +157,6 @@
 
 <script>
 	import api from '@/request/api.js'
-	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
 	let interstitialAd = null
 	export default {
@@ -195,17 +194,19 @@
 				dayOfWeekOption: []
 			}
 		},
-		onLoad() {
-			if (getEdusysAccount() === false) {
-				uni.redirectTo({ url: '/pages/index/login' })
-				return
-			}
+		onLoad(options) {
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
+			
+			if (options && options.keyword) {
+				uni.showLoading({ title: '加载中...' })
+				this.optionForm.teacherName = options.keyword
+			}
+			
 			this.generateWeekOption()
 			this.generateDayOfWeekOption()
-			this.fetchOptions()
+			this.fetchOptions(options.keyword)
 		},
 		onShow() {
 			if (interstitialAd) interstitialAd.show()	
@@ -243,6 +244,7 @@
 				}
 			},
 			fetchTeacherCourse () {
+				this.optionForm.teacherName = this.optionForm.teacherName.replace(/\s/g, "")
 				if (this.optionForm.teacherName.length <= 0) {
 					uni.showToast({ title: '请输入授课教师姓名', icon: 'none'})
 					return
@@ -274,7 +276,7 @@
 					uni.showToast({ title: res.data.message, icon: 'none'})
 				})
 			},
-			fetchOptions () {
+			fetchOptions (teacherName = null) {
 				api.fetchTeacherCourseOptions().then(res => {
 					const { semester, timeModel, college, grade } = res.data
 					this.semesterOption = semester
@@ -288,6 +290,7 @@
 					this.collegeOption = college
 					this.collegeIndex = college.findIndex((value) => value.checked === true)
 					uni.hideLoading()
+					if (teacherName !== null) this.fetchTeacherCourse()
 				})
 			},
 			semesterChange (e) {
@@ -343,6 +346,32 @@
 				this.dayOfWeekEndIndex = -1
 				this.fetchOptions()
 			}
+		},
+		onShareAppMessage() {
+			let text = ''
+			let query = ''
+			if (this.optionForm.teacherName) {
+				text = `【${this.optionForm.teacherName}...】相关`
+				query = `?keyword=${this.optionForm.teacherName}`
+			}
+			let data = {
+			  title: `${text}教师课表 - 贝壳小盒子`,
+			  path: `/pages/course/teacher${query}`
+			}
+			return data
+		},
+		onShareTimeline() {
+			let text = ''
+			let query = ''
+			if (this.optionForm.teacherName) {
+				text = `【${this.optionForm.teacherName}...】相关`
+				query = `keyword=${this.optionForm.teacherName}`
+			}
+			let data = {
+				title: `${text}教师课表 - 贝壳小盒子`,
+				query: query
+			}
+			return data
 		}
 	}
 </script>
