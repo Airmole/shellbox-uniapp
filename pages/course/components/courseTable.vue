@@ -13,17 +13,35 @@
 					<view class="text-gray">
 						{{rowTitles[rowIdx][0]}}<br />~<br />{{rowTitles[rowIdx][1]}}</view>
 				</view>
-				<view v-for="(day, dayIdx) in columnTitles"
-					:class="(table[dayIdx] && table[dayIdx].items[rowIdx].length>0?`shadow-warp bg-${bgColors[table[dayIdx].items[rowIdx][0].courseName.length%bgColors.length]}`:'') + ' text-white course-item radius tb-head-x tb-height justify-center align-center'"
+				<view
+					v-for="(day, dayIdx) in columnTitles"
+					:class="`${table[dayIdx] && table[dayIdx].items[rowIdx].length > 0 ? `bg-${bgColors[table[dayIdx].items[rowIdx][0].courseName.length%bgColors.length]} shadow-warp` : ``} text-white course-item radius tb-head-x tb-height flex justify-center align-center`"
 					:style="{width: `${itemWidth}px`,height: `${itemHeight}px`}" :key="dayIdx" :data-dayidx="dayIdx"
 					:data-rowidx="rowIdx" @click="showDetail">
-					<template v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1">
+					<view v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1">
 						<view class="margin-tb-xs place-name">{{table[dayIdx].items[rowIdx][0].place}}</view>
 						<view class="margin-tb-xs course-name" :style="{height: `${itemHeight-50}px`}">
 							{{table[dayIdx].items[rowIdx][0].courseName}}
 						</view>
+					</view>
+					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 1 && table[dayIdx].items[rowIdx].length <= 3">
+						<view
+							v-for="(itm, idx) in table[dayIdx].items[rowIdx]"
+							:key="idx"
+							:style="{
+								height: `${(itemHeight)/table[dayIdx].items[rowIdx].length}px`,
+								margin: '1px 0',
+								overflow: 'clip',
+								borderBottom: idx === table[dayIdx].items[rowIdx].length - 1 ? '' : '1px solid white'
+							}"
+						>
+							<view class="place-name" style="height: 1.1rem;">{{itm.place}}</view>
+							<view class="course-name">
+								{{itm.courseName}}
+							</view>
+						</view>
 					</template>
-					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 1">
+					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 3">
 						{{`${table[dayIdx].items[rowIdx].length}门课程`}}
 					</template>
 					<template v-else></template>
@@ -54,7 +72,7 @@
 						<swiper-item>
 							<view class="swiper-item">
 								<view class="cu-list menu sm-border">
-									<navigator :url="`/pages/course/lesson?keyword=${detail.courseName}`" class="cu-item arrow">
+									<navigator :url="`/pages/course/lesson?keyword=${detail.courseName}`" :render-link="false" class="cu-item arrow">
 										<view class="content">
 											<text class="cuIcon-activity text-blue"></text><text
 												class="text-grey">课程名称</text>
@@ -90,7 +108,7 @@
 											<view>{{detail.place || '教务系统没写'}}</view>
 										</view>
 									</view>
-									<navigator :url="`/pages/course/teacher?keyword=${detail.teacher}`" class="cu-item arrow" v-if="detail.teacher">
+									<navigator :url="`/pages/course/teacher?keyword=${detail.teacher}`" :render-link="false" class="cu-item arrow" v-if="detail.teacher">
 										<view class="content">
 											<text class="cuIcon-people text-blue"></text><text
 												class="text-grey">教师</text>
@@ -99,7 +117,7 @@
 											<view>{{detail.teacher}}</view>
 										</view>
 									</navigator>
-									<navigator @tap="goClassNameSearchPage(detail.className)" class="cu-item arrow" v-if="detail.className">
+									<navigator @tap="goClassNameSearchPage(detail.className)" class="cu-item arrow" :render-link="false" v-if="detail.className">
 										<view class="content">
 											<text class="cuIcon-people text-blue"></text><text
 												class="text-grey">上课班级</text>
