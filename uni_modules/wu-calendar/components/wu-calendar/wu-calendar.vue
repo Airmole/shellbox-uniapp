@@ -907,6 +907,14 @@
 	.wu-calendar__content {
 		background-color: #fff;
 	}
+	
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		.wu-calendar__content {
+			background-color: #000;
+		}
+		/* DarkMode 下的样式 end */
+	}
 
 	.wu-calendar__header {
 		position: relative;
@@ -954,6 +962,29 @@
 		&.vertical {
 			top: 38rpx;
 		}
+	}
+	
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		.wu-calendar__backtoday {
+			position: absolute;
+			right: 0;
+			top: 25rpx;
+			padding: 0 10rpx;
+			padding-left: 20rpx;
+			height: 50rpx;
+			line-height: 50rpx;
+			font-size: 24rpx;
+			border-top-left-radius: 50rpx;
+			border-bottom-left-radius: 50rpx;
+			color: #888;
+			background-color: #000000;
+		
+			&.vertical {
+				top: 38rpx;
+			}
+		}
+		/* DarkMode 下的样式 end */
 	}
 
 	.wu-calendar__header-text {

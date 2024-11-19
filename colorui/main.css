@@ -17,6 +17,17 @@ body {
 	font-family: Helvetica Neue, Helvetica, sans-serif;
 }
 
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	body {
+		background-color: #1b1b1b;
+		font-size: 28upx;
+		color: #cacaca;
+		font-family: Helvetica Neue, Helvetica, sans-serif;
+	}
+	/* DarkMode 下的样式 end */
+}
+
 view,
 scroll-view,
 swiper,
@@ -1224,6 +1235,20 @@ button.cuIcon.lg {
 	align-items: center
 }
 
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.cu-list.menu-avatar>.cu-item {
+		position: relative;
+		display: flex;
+		padding-right: 10upx;
+		height: 140upx;
+		background-color: #000000;
+		justify-content: flex-end;
+		align-items: center
+	}
+	/* DarkMode 下的样式 end */
+}
+
 .cu-list.menu-avatar>.cu-item>.cu-avatar {
 	position: absolute;
 	left: 30upx
@@ -1291,6 +1316,20 @@ button.cuIcon.lg {
 	background-color: #ffffff;
 	justify-content: space-between;
 	align-items: center
+}
+
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.cu-list.menu>.cu-item {
+		position: relative;
+		display: flex;
+		padding: 0 30upx;
+		min-height: 100upx;
+		background-color: #000000;
+		justify-content: space-between;
+		align-items: center
+	}
+	/* DarkMode 下的样式 end */
 }
 
 .cu-list.menu>.cu-item:last-child:after {
@@ -1453,6 +1492,15 @@ button.cuIcon.lg {
 .cu-list.grid {
 	background-color: #ffffff;
 	text-align: center
+}
+
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.cu-list.grid {
+		background-color: #000000;
+		text-align: center
+	}
+	/* DarkMode 下的样式 end */
 }
 
 .cu-list.grid.no-border>.cu-item {
@@ -1639,6 +1687,22 @@ button.cuIcon.lg {
 	display: flex;
 	align-items: center;
 	margin: 0 30upx;
+}
+
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.cu-bar .search-form {
+		background-color: #111111;
+		line-height: 64upx;
+		height: 64upx;
+		font-size: 24upx;
+		color: #888888;
+		flex: 1;
+		display: flex;
+		align-items: center;
+		margin: 0 30upx;
+	}
+	/* DarkMode 下的样式 end */
 }
 
 .cu-bar .search-form+.action {
@@ -2328,6 +2392,19 @@ button.cuIcon.lg {
 	align-items: center;
 	min-height: 100upx;
 	justify-content: space-between;
+}
+
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.cu-form-group {
+		background-color: #000000;
+		padding: 1upx 30upx;
+		display: flex;
+		align-items: center;
+		min-height: 100upx;
+		justify-content: space-between;
+	}
+	/* DarkMode 下的样式 end */
 }
 
 .cu-form-group+.cu-form-group {
@@ -3543,6 +3620,15 @@ scroll-view.cu-steps .cu-item {
 	color: #333333;
 }
 
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.bg-gray {
+		background-color: #1f1f1f;
+		color: #888;
+	}
+	/* DarkMode 下的样式 end */
+}
+
 .bg-black {
 	background-color: #333333;
 	color: #ffffff;
@@ -3551,6 +3637,15 @@ scroll-view.cu-steps .cu-item {
 .bg-white {
 	background-color: #ffffff;
 	color: #666666;
+}
+
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.bg-white {
+		background-color: #000000;
+		color: #eee;
+	}
+	/* DarkMode 下的样式 end */
 }
 
 .bg-shadeTop {
@@ -3978,6 +4073,16 @@ scroll-view.cu-steps .cu-item {
 .line-black,
 .lines-black {
 	color: #333333;
+}
+
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.text-black,
+	.line-black,
+	.lines-black {
+		color: #dddddd;
+	}
+	/* DarkMode 下的样式 end */
 }
 
 .text-white,

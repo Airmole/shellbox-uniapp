@@ -64,7 +64,7 @@
 					</template>
 					<!-- 一节五门以上课程 -->
 					<template v-else>
-						<template v-for="(itm, idx) in table[dayIdx].items[rowIdx]" :key="idx">
+						<template v-for="(itm, idx) in (table[dayIdx] && table[dayIdx].items[rowIdx])" :key="idx">
 							<view
 								v-if="idx < 5"
 								:style="{
@@ -78,7 +78,7 @@
 								<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
 							</view>
 						</template>
-						<view class="text-sm">...共{{table[dayIdx].items[rowIdx].length}}门</view>
+						<view class="text-sm">...共{{table[dayIdx] && table[dayIdx].items[rowIdx].length}}门</view>
 					</template>
 				</view>
 			</view>
@@ -94,15 +94,15 @@
 	</view>
 	
 	<view class="cu-modal" :class="displayDetailModal?'show':''">
-		<view class="cu-dialog">
-			<view class="cu-bar bg-white justify-end">
+		<view class="cu-dialog bg-gray">
+			<view class="cu-bar justify-end">
 				<view class="content">课程详情（{{details.length}}节）</view>
 				<view class="action" @tap="hideModal">
 					<text class="cuIcon-close text-red text-bold"></text>
 				</view>
 			</view>
-			<view class="text-left">
-				<swiper :indicator-dots="true" :autoplay="false" style="height: 720rpx;">
+			<view class="text-left padding-lr-xs">
+				<swiper :indicator-dots="true" :autoplay="false" style="height: 720rpx;" class="bg-gray">
 					<block v-for="(detail, index) in details" :key="index">
 						<swiper-item>
 							<view class="swiper-item">
@@ -184,7 +184,7 @@
 						</swiper-item>
 					</block>
 				</swiper>
-				<view v-if="details.length>1" class="padding-sm text-center"><text>左右滑动可切换课程</text></view>
+				<view v-if="details.length>1" class="padding-sm text-center bg-gray"><text>左右滑动可切换课程</text></view>
 				<!-- #ifdef MP-WEIXIN -->
 				<view v-if="displayDetailModal" class="margin-sm bg-white">
 					<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
@@ -248,7 +248,7 @@
 	}
 	
 	function calcTableSize() {
-		const res = wx.getSystemInfoSync()
+		const res = uni.getSystemInfoSync()
 		// console.log(res)
 		const scrWidth = res.screenWidth
 		const screenHeight = res.screenHeight

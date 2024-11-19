@@ -153,24 +153,24 @@
 		
 		<!-- 成绩详情模态框 -->
 		<view class="cu-modal" :class="displayDetailModal?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white justify-end">
+			<view class="cu-dialog bg-gray">
+				<view class="cu-bar justify-end">
 					<view class="content">{{detail.courseName}}</view>
 					<view class="action" @tap="hideModal">
 						<text class="cuIcon-close text-red text-bold"></text>
 					</view>
 				</view>
-				<view class="text-left">
+				<view class="text-left padding-xs">
 					<view class="swiper-item">
 						<view class="cu-list menu sm-border">
-							<view class="cu-item">
+							<navigator :url="`/pages/course/lesson?keyword=${detail.courseName}`" :render-link="false" class="cu-item arrow">
 								<view class="content">
 									<text class="text-grey">课程名称</text>
 								</view>
 								<view class="content">
 									<view>{{detail.courseName}}</view>
 								</view>
-							</view>
+							</navigator>
 							<view class="cu-item">
 								<view class="content">
 									<text class="text-grey">课程编号</text>

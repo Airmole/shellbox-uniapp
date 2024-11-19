@@ -101,7 +101,7 @@
 				}).catch(error => {
 					uni.hideLoading()
 					console.log('获取学期课表失败', error)
-					uni.showToast({ title: '获取失败，建议重新登录' })
+					uni.showToast({ title: '获取失败，建议重新登录', icon: 'none' })
 					/* if (error.data.message === '账号未登录') {
 						window.location.reload()
 					} */

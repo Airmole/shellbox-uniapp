@@ -72,15 +72,15 @@
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "@navigationBarTextStyle",
 		"navigationBarTitleText": "贝壳小盒子",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"navigationBarBackgroundColor": "@navigationBarBackgroundColor",
+		"backgroundColor": "@backgroundColor"
 	},
 	"tabBar": {
-	    "selectedColor": "#84BD54",
-	    "color": "#333",
-	    "backgroundColor": "#fff",
+		"color": "@tabBarColor",
+		"selectedColor": "@tabBarSelectedColor",
+		"backgroundColor": "@tabBarBackgroundColor",
 	    "position": "bottom",
 	    "list": [
 	      {

@@ -1,0 +1,36 @@
+{
+	"light": {
+		"navigationBarTextStyle": "black",
+		"navigationBarBackgroundColor": "#F7F7F7",
+		"backgroundColor": "#F7F7F7",
+
+		"tabBarColor": "#333",
+		"tabBarSelectedColor": "#8DCCA8",
+		"tabBarBorderStyle": "black",
+		"tabBarBackgroundColor": "#fff",
+
+		"iconPathIndex": "/static/icon_API.png",
+		"selectedIconPathIndex": "/static/icon_API_HL.png",
+		"iconPathText": "/static/icon_cloud.png",
+		"selectedIconPathText": "/static/icon_cloud_HL.png",
+		
+		"midButtonImage": "/static/logo.png"
+	},
+	"dark": {
+		"navigationBarTextStyle": "white",
+		"navigationBarBackgroundColor": "#1F1F1F",
+		"backgroundColor": "#1F1F1F",
+
+		"tabBarColor": "#cacaca",
+		"tabBarSelectedColor": "#8DCCA8",
+		"tabBarBorderStyle": "white",
+		"tabBarBackgroundColor": "#1F1F1F",
+
+		"iconPathIndex": "/static/icon_API_dark.png",
+		"selectedIconPathIndex": "/static/icon_API_HL.png",
+		"iconPathText": "/static/icon_cloud_dark.png",
+		"selectedIconPathText": "/static/icon_cloud_HL.png",
+		
+		"midButtonImage": "/static/uni.png"
+	}
+}
