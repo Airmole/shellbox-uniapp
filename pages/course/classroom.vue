@@ -228,7 +228,7 @@
 						<text>{{day.title}}</text>
 					</view>
 					<view class="flex justify-center align-start">
-						<view class="text-center justify-start bg-gray align-center" style="width: 100rpx;" v-for="(item, index) in day.items">
+						<view class="text-center justify-start bg-gray align-center" style="width: 100rpx;" v-for="(item, index) in day.items" :key="index">
 							<view :class="`flex align-start cell ${item.content.length === 0?'bg-green':'bg-gray'}`" @tap="roomDetail(roomIndex, dayIndex, index)">
 								<view class="room-item flex-sub border-bottom">
 									<text>{{serialArray[index]}}</text>
@@ -263,28 +263,46 @@
 		<tips v-if="classrooms !== '' && classrooms.length === 0" :tips="'没找到符合条件的结果，调整筛选项试试？'"></tips>
 		
 		<view class="cu-modal" :class="showDetailModal?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white justify-end">
+			<view class="cu-dialog bg-gray">
+				<view class="cu-bar bg-gray justify-end">
 					<view class="content">教室占用详情</view>
 					<view class="action" @tap="hideDetailModal">
 						<text class="cuIcon-close text-red"></text>
 					</view> 
 				</view>
 				<view class="text-left" v-if="classroomDetail.length">
-					<swiper :indicator-dots="true" :autoplay="false" style="height: 960rpx;">
+					<swiper :indicator-dots="true" :autoplay="false" style="height: 960rpx;" class="bg-gray padding-lr-xs">
 						<block v-for="(detail, detailIndex) in classroomDetail" :key="detailIndex">
 							<swiper-item>
 								<view class="swiper-item">
 									<view class="cu-list menu sm-border">
 										<template v-for="(item, index) in detail" :key="index">
-											<view class="cu-item" v-if="item.value">
-												<view class="content">
-													<text class="text-grey">{{item.label}}</text>
+											<template v-if="item.value">
+												<navigator v-if="item.label === '课程：'" :url="`/pages/course/lesson?keyword=${item.value}`" :render-link="false" class="cu-item arrow">
+													<view class="content" style="min-width: 30%;">
+														<text class="text-grey">{{item.label}}</text>
+													</view>
+													<view class="action">
+														<view>{{item.value}}</view>
+													</view>
+												</navigator>
+												<navigator v-else-if="item.label === '任课教师：'" :url="`/pages/course/teacher?keyword=${item.value}`" :render-link="false" class="cu-item arrow">
+													<view class="content" style="min-width: 30%;">
+														<text class="text-grey">{{item.label}}</text>
+													</view>
+													<view class="action" style="max-width: 500rpx;">
+														<view>{{item.value}}</view>
+													</view>
+												</navigator>
+												<view v-else class="cu-item">
+													<view class="content" style="min-width: 30%;">
+														<text class="text-grey">{{item.label}}</text>
+													</view>
+													<view class="action" style="max-width: 500rpx;">
+														<view>{{item.value}}</view>
+													</view>
 												</view>
-												<view class="action" style="max-width: 500rpx;">
-													<view>{{item.value}}</view>
-												</view>
-											</view>
+											</template>
 										</template>
 									</view>
 								</view>

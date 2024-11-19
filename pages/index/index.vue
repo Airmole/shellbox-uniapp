@@ -138,4 +138,11 @@
 	.index-page {
 		background: #f1f1f1;
 	}
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		.index-page {
+			background: #1b1b1b;
+		}
+		/* DarkMode 下的样式 end */
+	}
 </style>

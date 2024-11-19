@@ -39,7 +39,7 @@
 			</view>
 			
 			<view :class="`padding-lr-sm poi-card cu-list menu sm-border ${foldPoiCardArea?'round':'card-radius'}`" :style="foldPoiCardArea?'':'height: 40vh;'">
-				<view class="cu-item press-class" @click="showPoiCardArea">
+				<view class="cu-item press-class" @click="showPoiCardArea" style="background-color: transparent;">
 					<view class="content">
 						<text class="cuIcon-title text-green"></text> 共{{currentTabPoi.length}}个{{categories[currentTab]}}地点
 					</view>
@@ -331,6 +331,16 @@
 		bottom: 20px;
 		width: 90vw;
 		background-color: #ffffffdd;
+	}
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		.poi-card {
+			position: absolute;
+			bottom: 20px;
+			width: 90vw;
+			background-color: #000000dd;
+		}
+		/* DarkMode 下的样式 end */
 	}
 	.poi-card-content {
 		height: 35vh;

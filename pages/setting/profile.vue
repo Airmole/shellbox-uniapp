@@ -106,6 +106,14 @@
 	  background: #eee;
 	}
 	
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		page {
+		  background: #1b1b1b;
+		}
+		/* DarkMode 下的样式 end */
+	}
+	
 	.avatar {
 	  width: 100%;
 	}

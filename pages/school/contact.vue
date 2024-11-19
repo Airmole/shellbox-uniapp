@@ -14,7 +14,7 @@
 		</view>
 	</view>
 
-	<scroll-view scroll-y class="indexes" :scroll-into-view="'indexes-'+ listCurID"
+	<scroll-view scroll-y class="indexes" :scroll-into-view="`indexes-${listCurID}`"
 		:style="[{height:'calc(100vh - '+ CustomBar + 'px - 50px)'}]" :scroll-with-animation="true"
 		:enable-back-to-top="true">
 		<template v-for="(item,index) in telLists" :key="index">
@@ -23,8 +23,8 @@
 			<view class="cu-list menu-avatar no-padding">
 				<template v-for="(tel, sub) in item" :key="sub">
 					<view class="cu-item" :data-tel="tel.tel" @longtap="copyTel">
-						<view class="cu-avatar lg round bg-green">
-							<text class="avatar-text">{{tel.name}}</text>
+						<view class="cu-avatar lg round bg-green text-cut">
+							<text class="avatar-text">{{tel.name.slice(0, 4)}}</text>
 						</view>
 						<view class="content">
 							<view class="text-grey">
@@ -107,7 +107,7 @@
 					} else {
 						_this.CustomBar = e.statusBarHeight + 50;
 					}
-					// #endif	
+					// #endif
 				}
 			})
 			this.inital(option)
@@ -224,10 +224,7 @@
 					}
 				}).catch(res => {
 					uni.hideLoading()
-					uni.showToast({
-						title: res.data.message,
-						icon: 'none'
-					})
+					uni.showToast({ title: res.data.message, icon: 'none' })
 				})
 			},
 			format2list(array) {
@@ -289,6 +286,20 @@
 		flex-direction: column;
 		box-shadow: 0 0 20upx rgba(0, 0, 0, 0.1);
 		border-radius: 10upx;
+	}
+	
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		.indexBar .indexBar-box {
+			width: 40upx;
+			height: auto;
+			background: #111111;
+			display: flex;
+			flex-direction: column;
+			box-shadow: 0 0 20upx rgba(0, 0, 0, 0.1);
+			border-radius: 10upx;
+		}
+		/* DarkMode 下的样式 end */
 	}
 
 	.indexBar-item {

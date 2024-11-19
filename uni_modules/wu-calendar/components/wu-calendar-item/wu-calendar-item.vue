@@ -66,6 +66,13 @@
 						backgroundColor: 'rgba(249, 249, 249, 0.3)',
 						color: '#c0c0c0'
 					}
+					const sysInfo = uni.getSystemInfoSync()
+					if (sysInfo.theme === 'dark') {
+						style = {
+							backgroundColor: 'rgba(200, 200, 200, 0.1)',
+							color: '#c0c0c0'
+						}
+					}
 				}
 				return style;
 			},
@@ -186,6 +193,15 @@
 	.wu-calendar-item__weeks-box-text {
 		font-size: $wu-font-size-base;
 		color: $wu-text-color;
+	}
+	
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		.wu-calendar-item__weeks-box-text {
+			font-size: $wu-font-size-base;
+			color: #888;
+		}
+		/* DarkMode 下的样式 end */
 	}
 
 	.wu-calendar-item__weeks-lunar-text {

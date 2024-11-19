@@ -75,10 +75,10 @@
 				this.globalData.loginPromise = new Promise(async (resolve, reject) => {
 					try {
 						const res = await api.fetchProfile()
-						console.log('登录成功11:》》', res);
+						console.log('登录成功11:》》', res)
 						resolve(res.data)
 					} catch(err) {
-						if (err?.statusCode == 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
+						if ((err?.statusCode === 401) && ['请先登录', '账号未登录'].includes(err.data.message)) {
 							let edusysAccount = getEdusysAccount()
 							if (edusysAccount == false) return
 							// #ifdef MP-WEIXIN
@@ -143,6 +143,18 @@
 	body {
 		background: #f1f1f1;
 	}
+	
+	@media (prefers-color-scheme: dark) {
+		/* DarkMode 下的样式 start */
+		page {
+			background-color: #1b1b1b;
+		}
+		body {
+			background: #1b1b1b;
+		}
+		/* DarkMode 下的样式 end */
+	}
+	
 	.press-class {
 		background: rgb(230, 230, 230);
 	}
