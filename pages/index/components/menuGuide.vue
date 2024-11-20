@@ -27,7 +27,7 @@
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
 	const appStore = useAppStore()
-	const { loginStatus, userInfo, edusysAccount } = storeToRefs(appStore)
+	const { loginStatus, userInfo, edusysAccount, courses } = storeToRefs(appStore)
 	
 	const props = defineProps({
 		menuList: Object,
@@ -83,26 +83,40 @@
 			uni.showToast({ title: '此功能需要登录', icon: 'none' })
 			return
 		}
+		
+		let query = ''
+		if (menu.menu_id === 'myCourse') {
+			// 正则匹配出本周是第几周
+			let nowWeek = ''
+			const courseWeekText =  '' || (courses && courses.value.nowWeek)
+			const nowWeekRegexp = /\d{1,2}/
+			const nowWeekRegexpResult = Number(nowWeekRegexp.exec(courseWeekText))
+			if (nowWeekRegexp.test(courseWeekText) && nowWeekRegexpResult > 0 && nowWeekRegexpResult < 30) {
+				nowWeek = nowWeekRegexpResult
+				query = `?week=${nowWeek}`
+			}
+		}
+		
 		// #ifdef MP
 		if (menu.weapp_id) {
 			uni.navigateToMiniProgram({
 				appId: menu.weapp_id,
-				path: menu.weapp_path
+				path: `${menu.weapp_path}${query}`
 			})
 		} else {
-			uni.navigateTo({ url: menu.weapp_path })
+			uni.navigateTo({ url: `${menu.weapp_path}${query}` })
 		}
 		// #endif
 		
 		// #ifdef H5
 		if (menu.url.indexOf('http://') === 0 || menu.url.indexOf('https://') === 0) {
-			window.location.href = menu.url
+			window.location.href = `${menu.url}${query}`
 			return
 		} else if (menu.url.indexOf('/') === 0) {
-			uni.navigateTo({ url: menu.url })
+			uni.navigateTo({ url: `${menu.url}${query}` })
 			return
 		} else {
-			uni.navigateTo({ url: menu.url })
+			uni.navigateTo({ url: `${menu.url}${query}` })
 		}
 		// #endif
 	}
