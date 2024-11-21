@@ -55,14 +55,19 @@
 				weekOptions: [],
 			}
 		},
-		onLoad() {
+		onLoad (options) {
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
 			}
 			
-			this.fetchCourseOptions()
-			this.fetchCourse()
+			let semester = ''
+			let week = ''
+			if (options && options.semester) semester = options.semester
+			if (options && options.week) week = options.week
+			
+			this.fetchCourseOptions(semester, week)
+			this.fetchCourse(semester, week)
 		},
 		methods: {
 			semesterChange(e) {
@@ -79,13 +84,14 @@
 				const semester = this.semesterOptions[this.semesterIndex].value
 				this.fetchCourse(semester, week)
 			},
-			fetchCourseOptions() {
+			fetchCourseOptions(semester = '', week = '') {
 				api.fetchSemesterCourseOptions().then(res => {
-					console.log('fetchCourseOptions', res.data)
 					this.weekOptions = res.data.week
 					this.semesterOptions = res.data.semester
-					const semesterIndex = res.data.semester.findIndex((value) => value.checked === true)
+					let semesterIndex = res.data.semester.findIndex((value) => value.checked === true)
+					if (semester.length) semesterIndex = res.data.semester.findIndex((value) => value.value === semester)
 					this.semesterIndex = semesterIndex
+					if (week.length) this.weekIndex = res.data.week.findIndex((item) => Number(item.value) === Number(week))
 				}).catch(error => {
 					console.log('获取学期课表筛选项失败', error)
 				})

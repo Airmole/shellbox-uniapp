@@ -78,7 +78,7 @@
 								<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
 							</view>
 						</template>
-						<view class="text-sm">...共{{table[dayIdx] && table[dayIdx].items[rowIdx].length}}门</view>
+						<view class="text-sm" v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length">...共{{table[dayIdx] && table[dayIdx].items[rowIdx].length}}门</view>
 					</template>
 				</view>
 			</view>
