@@ -7,7 +7,7 @@
 		
 		  <view class="page margin-bottom">
 		    <!-- 介绍说明 -->
-		    <view class="margin radius bg-white padding-lr padding-bottom">
+		    <view class="margin radius bg-white padding-lr padding-tb">
 		      <text decode="true">
 		      &nbsp;&nbsp;&nbsp;&nbsp;如果您在学校遇到了以下问题，可以向“北科天院权益中心”发起投诉维权：\n</text>
 		      <template v-if="!showMoreDesc">
@@ -45,7 +45,7 @@
 		      <view class='action'></view>
 		    </view>
 		    <view :class="'cu-list menu no-padding margin-lr ' + (hotDatalist.pagination.last > 1 ? '' : 'margin-bottom radius-bottom')">
-		      <navigator :url="`./detail?id=${item.id}`" class="faq-item cu-item arrow" v-for="(item, index) in hotDatalist.data" :key="index">
+		      <navigator :url="`./detail?id=${item.id}`" :render-link="false" class="faq-item cu-item arrow" v-for="(item, index) in hotDatalist.data" :key="index">
 		        <view class="content text-cut">
 		          <text class="cuIcon-tagfill text-red"></text>
 		          <text class="text-grey">{{item.content}}</text>
