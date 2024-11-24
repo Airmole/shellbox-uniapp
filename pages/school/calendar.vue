@@ -14,7 +14,7 @@
 							<picker @change="semesterChange" :value="semesterIndex" :range="semesterOptionsList"
 								range-key="name">
 								<view class="picker">
-									{{semesterIndex>-1?semesterOptionsList[semesterIndex]?.name:''}}
+									{{semesterIndex > -1 ? semesterOptionsList[semesterIndex].name : ''}}
 								</view>
 							</picker>
 						</view>
@@ -30,7 +30,7 @@
 				</view>
 			</template>
 			<template v-if="schoolCalendarImage === '' && semesterIndex > -1">
-				<tips :tips="`暂无${semesterOptionsList[semesterIndex]?.name}学年学期校历!`"></tips>
+				<tips :tips="`暂无${semesterOptionsList[semesterIndex].name}学年学期校历!`"></tips>
 			</template>
 		</view>
 		
@@ -95,7 +95,7 @@
 		onShareAppMessage() {
 			const semester = this.semesterOptionsList[this.semesterIndex].value
 			let data = {
-			  title: `${this.semesterOptionsList[this.semesterIndex]?.name}校历 - 贝壳小盒子`,
+			  title: `${this.semesterOptionsList[this.semesterIndex].name}校历 - 贝壳小盒子`,
 			  path: `/pages/school/calendar?semester=${semester}`
 			}
 			if (this.schoolCalendarImage) data.imageUrl = this.schoolCalendarImage
@@ -104,7 +104,7 @@
 		onShareTimeline() {
 			const semester = this.semesterOptionsList[this.semesterIndex].value
 			let data = {
-				title: `${this.semesterOptionsList[this.semesterIndex]?.name}校历 - 贝壳小盒子`,
+				title: `${this.semesterOptionsList[this.semesterIndex].name}校历 - 贝壳小盒子`,
 				query: `semester=${semester}`
 			}
 			if (this.schoolCalendarImage) data.imageUrl = this.schoolCalendarImage
