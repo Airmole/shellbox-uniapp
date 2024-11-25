@@ -283,7 +283,7 @@
 				// #endif
 				
 				// #ifdef H5
-				window.location.href = url
+				window.open(url)
 				// #endif
 			}
 		},
