@@ -6,7 +6,7 @@
 			<view class="padding-xl text-white radius bg-card">
 				<navigator :url="loginStatus?'/pages/setting/profile':'/pages/index/login'" class="margin-top-xxl flex justify-center">
 					<image class="cu-avatar round avatar"
-						:src="(loginStatus&&userInfo?.avatar) ? userInfo.avatar : defaultAvatar" mode="scaleToFill">
+						:src="(loginStatus && userInfo && userInfo.avatar) ? userInfo.avatar : defaultAvatar" mode="scaleToFill">
 					</image>
 				</navigator>
 				<navigator url="/pages/index/login" v-if="!loginStatus"
@@ -14,7 +14,7 @@
 					<span>您尚未登录</span>
 				</navigator>
 				<navigator url="/pages/setting/profile" v-else class="round bg-gray text-center margin-tb padding-xs">
-					<span>{{userInfo?.nickname}}({{edusysAccount.account}})</span>
+					<span>{{userInfo && userInfo.nickname}}({{edusysAccount.account}})</span>
 				</navigator>
 			</view>
 			<!-- #endif -->
@@ -22,7 +22,7 @@
 			<view class="padding-xl text-white radius bg-card">
 				<view @click="goProfileSettingPage()" class="margin-top-xxl flex justify-center">
 					<image class="cu-avatar round avatar"
-						:src="(loginStatus&&userInfo?.avatar) ? userInfo.avatar : defaultAvatar" mode="scaleToFill">
+						:src="(loginStatus && userInfo && userInfo.avatar) ? userInfo.avatar : defaultAvatar" mode="scaleToFill">
 					</image>
 				</view>
 				<navigator url="/pages/index/login" v-if="!loginStatus"
@@ -30,7 +30,7 @@
 					<span>您尚未登录</span>
 				</navigator>
 				<view @click="goProfileSettingPage()" v-else class="round bg-gray text-center margin-tb padding-xs">
-					<span>{{userInfo?.nickname}}({{edusysAccount.account}})</span>
+					<span>{{userInfo && userInfo.nickname}}({{edusysAccount.account}})</span>
 				</view>
 			</view>
 			<!-- #endif -->

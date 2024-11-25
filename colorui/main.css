@@ -2312,6 +2312,16 @@ button.cuIcon.lg {
 	overflow: hidden;
 }
 
+@media (prefers-color-scheme: dark) {
+	/* DarkMode 下的样式 start */
+	.cu-card.dynamic>.cu-item {
+		display: block;
+		background-color: #000000;
+		overflow: hidden;
+	}
+	/* DarkMode 下的样式 end */
+}
+
 .cu-card.dynamic>.cu-item>.text-content {
 	padding: 0 30upx 0;
 	max-height: 6.4em;

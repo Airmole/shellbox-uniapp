@@ -6,7 +6,7 @@
 
 		<!-- 教学周日期显示 -->
 		<block v-if="!!calendar">
-			<block v-if="calendar?.title">
+			<block v-if="calendar && calendar.title">
 				<navigator url="/pages/school/calendar"
 					class="padding-lr-sm bg-white margin round padding-bottom flex justify-between"
 					:render-link="false"

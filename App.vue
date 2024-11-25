@@ -78,7 +78,7 @@
 						console.log('登录成功11:》》', res)
 						resolve(res.data)
 					} catch(err) {
-						if ((err?.statusCode === 401) && ['请先登录', '账号未登录'].includes(err.data.message)) {
+						if (err && err.statusCode === 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
 							let edusysAccount = getEdusysAccount()
 							if (edusysAccount == false) return
 							// #ifdef MP-WEIXIN

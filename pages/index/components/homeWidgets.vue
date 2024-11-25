@@ -1,7 +1,8 @@
 <template>
 	<view class="cu-list card-menu">
 		<view class="flex margin-top-sm" style="gap: 40rpx;">
-			<view class="flex flex-direction flex-1 box-card text-center shadow-blur">
+			<!-- 日历 -->
+			<view class="flex flex-direction flex-1 box-card text-center shadow-blur margin-lr-xs">
 				<view class="padding-sm text-white" style="background: #ed6663;">{{nowYMD[0]}}年{{nowYMD[1]}}月</view>
 				<view class="flex-1 flex flex-direction text-center padding-tb-sm padding-lr-lg bg-white">
 					<view class="margin-bottom-sm text-bold text-xsl line-height-1">{{nowYMD[2]}}</view>
@@ -9,7 +10,8 @@
 					<view class="margin-top-sm">{{calendarDate.IMonthCn}}{{calendarDate.IDayCn}} {{calendarDate.ncWeek}}</view>
 				</view>
 			</view>
-			<view v-if="holidaysRef" class="flex-1 box-card text-white" style="background: linear-gradient(to right, #0e151c, #272d36);">
+			<!-- 节假 -->
+			<view v-if="holidaysRef" class="flex-1 box-card text-white margin-lr-xs" style="background: linear-gradient(to right, #0e151c, #272d36);">
 				<view class="flex flex-direction height-full justify-center padding-tb-sm padding-lr-sm opacity-9">
 					<template v-for="(holiday, index) in holidaysRef.slice(0, 2)" :key="holiday.holiday">
 						<view :class="[`flex justify-between align-center padding-tb-sm border-bottom-dashed border-xs`, index === 0 ? 'border-top-dashed':'' ]">
@@ -28,7 +30,8 @@
 			</view>
 		</view>
 		<view class="flex margin-top-lg" style="gap: 40rpx;">
-			<view v-if="movieRef" class="box-card flex-1 text-white padding-sm bg-img bg-mask" :style="movieStyle" @tap="displayMovieModal">
+			<!-- 电影 -->
+			<view v-if="movieRef" class="margin-lr-xs box-card flex-1 text-white padding-sm bg-img bg-mask" :style="movieStyle" @tap="displayMovieModal">
 				<view class="text-right">
 					<text class="block text-xxl">{{nowYMD[0]}}</text>
 					<text class="text-lg opacity-9 ">{{nowYMD[1]}}月/{{calendarDate.ncWeek}}</text>
@@ -39,10 +42,11 @@
 					<text class="block overflow-ellipsis-2">{{movieRef.mov_text}}</text>
 				</view>
 			</view>
-			<view v-if="famousSayingRef" @tap="displaySayingModal" class="flex flex-direction flex-1 box-card text-white padding-sm bg-img bg-mask" :style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`">
+			<!-- 每日一言 -->
+			<view v-if="famousSayingRef" @tap="displaySayingModal" class="margin-lr-xs flex flex-direction flex-1 box-card text-white padding-sm bg-img bg-mask" :style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`">
 				<text class="text-lg opacity-6">每日一言</text>
 				<view class="flex-1 flex align-center text-center margin-top-sm">
-					<text class="">{{famousSayingRef?.content}}</text>
+					<text class="">{{famousSayingRef ? famousSayingRef.content : ''}}</text>
 				</view>
 			</view>
 		</view>
@@ -144,7 +148,7 @@
 			'width': '680rpx',
 			'filter': 'blur(2px)'
 		}
-		if (movieRef.value?.mov_pic) {
+		if (movieRef && movieRef.value && movieRef.value.mov_pic) {
 			style.background = `${movieRef.value.bgColor} url("${movieRef.value.mov_pic}") no-repeat center/cover`
 		}
 		return style
@@ -157,7 +161,7 @@
 				'width': '680rpx',
 		 		'filter': 'blur(2px)'
 		 	}
-		 	if (famousSayingRef.value?.thumb) {
+		 	if (famousSayingRef && famousSayingRef.value && famousSayingRef.value.thumb) {
 		 		style.background = `#201f18 url("${famousSayingRef.value.thumb}") no-repeat center/cover`
 		 	}
 		 	return style
@@ -210,5 +214,8 @@
 	}
 	.content-color {
 		color: rgb(209, 208, 208);
+	}
+	.margin-lr-xs {
+		margin: 0 2rpx;
 	}
 </style>
