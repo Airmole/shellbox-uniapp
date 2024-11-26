@@ -28,7 +28,7 @@
 		<!-- 首页小组件 -->
 		<box-home-widgets></box-home-widgets>
 		
-		<view v-if="!loginStatus">
+		<view v-if="!loginStatus" :style="[{animation: 'show ' + ((0+1)*0.2+1) + 's 1'}]">
 			<tips
 				tips="哎呀~还没登录嘛？"
 				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"

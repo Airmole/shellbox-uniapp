@@ -144,6 +144,34 @@
 		background: #f1f1f1;
 	}
 	
+	@keyframes show {
+		0% {
+			transform: translateY(-50px);
+		}
+
+		60% {
+			transform: translateY(40upx);
+		}
+
+		100% {
+			transform: translateY(0px);
+		}
+	}
+	
+	@-webkit-keyframes show {
+		0% {
+			transform: translateY(-50px);
+		}
+
+		60% {
+			transform: translateY(40upx);
+		}
+
+		100% {
+			transform: translateY(0px);
+		}
+	}
+	
 	@media (prefers-color-scheme: dark) {
 		/* DarkMode 下的样式 start */
 		page {

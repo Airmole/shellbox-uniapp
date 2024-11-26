@@ -321,5 +321,8 @@ export default {
 	},
 	fetchMapAllPoi () {
 		return request(`/school/map/poi`, 'GET')
+	},
+	fetchSchoolMediaList () {
+		return request(`/school/media`, 'GET')
 	}
 }
