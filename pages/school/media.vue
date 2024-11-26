@@ -55,7 +55,7 @@
 			</view>
 		</view>
 		
-		<view class="cu-modal" :class="isShowModal&&detail?'show':''">
+		<view class="cu-modal" :class="isShowModal&&detail ? 'show' : ''">
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-gray justify-end">
 					<view class="content">{{detail.title}}</view>
@@ -144,6 +144,7 @@
 				// #ifdef H5
 				const isWechat = /micromessenger/i.test(navigator.userAgent)
 				if (isWechat && data.url) { // 微信内置浏览器访问
+					uni.showLoading({ title: '加载中...' })
 					window.location.href = data.url
 					return
 				}
