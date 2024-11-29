@@ -324,5 +324,12 @@ export default {
 	},
 	fetchSchoolMediaList () {
 		return request(`/school/media`, 'GET')
+	},
+	// 图书查询
+	fetchBookSearch (type = '02', keyword = '') {
+		return request(`/book/search?type=${type}&keyword=${keyword}`, 'GET')
+	},
+	fetchBookDetailByMarcNo (marcNo) {
+		return request(`/book/marc/${marcNo}`, 'GET')
 	}
 }

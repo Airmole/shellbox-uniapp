@@ -89,7 +89,7 @@
 		<!-- #endif -->
 		
 		<template v-if="score !== '' && score.data.length === 0">
-			<tips tips="没有查询到符合条件的成绩" image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"></tips>
+			<tips tips="没有查询到符合条件的成绩" image="/static/image/nothing.png"></tips>
 		</template>
 	
 		<!-- 成绩展示区域 -->
@@ -142,7 +142,7 @@
 		<template v-else>
 			<tips
 				tips="查询您的成绩分数需登录账号"
-				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				image="/static/image/nothing.png"
 				:showButton="true"
 				buttonText="现在登录"
 				path="/pages/index/login"

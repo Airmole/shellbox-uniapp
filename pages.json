@@ -12,22 +12,30 @@
 		{ "path": "pages/school/calendar" },
 		{ "path": "pages/school/rightsProtection/index" },
 		{ "path": "pages/school/rightsProtection/edit" },
-		{ "path" : "pages/school/rightsProtection/detail" },
-		{ "path" : "pages/school/rightsProtection/faq" },
-		{ "path" : "pages/school/contact" },
-		{ "path" : "pages/course/stulist" },
-		{ "path" : "pages/course/classroom" },
-		{ "path" : "pages/webview/webview" },
-		{ "path" : "pages/webview/redpacket" },
-		{ "path" : "pages/school/movie" },
+		{ "path": "pages/school/rightsProtection/detail" },
+		{ "path": "pages/school/rightsProtection/faq" },
+		{ "path": "pages/school/contact" },
+		{ "path": "pages/course/stulist" },
+		{ "path": "pages/course/classroom" },
+		{ "path": "pages/webview/webview" },
+		{ "path": "pages/webview/redpacket" },
+		{ "path": "pages/school/movie" },
 		{
 			"path" : "pages/school/map",
 			"style": {
 				"disableScroll": true
 			}
 		},
-		{ "path" : "pages/course/calendar" },
-		{ "path" : "pages/school/media" }
+		{ "path": "pages/course/calendar" },
+		{ "path": "pages/school/media" },
+		{ "path": "pages/book/search" },
+		{
+			"path" : "pages/book/detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		}
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
