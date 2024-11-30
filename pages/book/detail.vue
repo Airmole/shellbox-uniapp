@@ -89,6 +89,12 @@
 				</template>
 			</view>
 			
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="margin-lr margin-tb-sm radius">
+				<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+			</view>
+			<!-- #endif -->
+			
 			<!-- 同名作者的其他书籍 -->
 			<view class="cu-list menu sm-border card-menu margin-tb" v-if="jsonStr.sameAuthor">
 				<view class="cu-item">
@@ -121,6 +127,7 @@
 
 <script>
 	import api from '../../request/api'
+	let interstitialAd = null
 	export default {
 		data() {
 			return {
@@ -139,6 +146,10 @@
 			}
 		},
 		onLoad(options) {
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
+
 			uni.showLoading({ title: "等我加载一下~" })
 			let codeType = options.codeType ? options.codeType : 'marc';
 			this.code = options.code
@@ -146,6 +157,9 @@
 			if (codeType == 'marc') {
 				this.getBookDetailByMarc(options.code);
 			}
+		},
+		onShow() {
+			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			getBookDetailByMarc(marc) {

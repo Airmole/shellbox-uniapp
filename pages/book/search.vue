@@ -46,11 +46,18 @@
 			</view>
 		</template>
 		
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="margin margin-tb-xl radius">
+			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+		</view>
+		<!-- #endif -->
+		
 	</view>
 </template>
 
 <script>
 	import api from '../../request/api'
+	let interstitialAd = null
 	export default {
 		data() {
 			return {
@@ -66,6 +73,10 @@
 			}
 		},
 		onLoad(options) {
+			// #ifdef MP-WEIXIN
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
+
 			if (options && options.type) {
 				this.radioChange({ detail: { value: options.type } })
 			}
@@ -73,6 +84,9 @@
 				this.keyword = options.keyword
 				this.searchBook()
 			}
+		},
+		onShow() {
+			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
 			searchBook: function () {
@@ -115,7 +129,7 @@
 			let query = `?type=${this.searchType}`
 			if (this.keyword) {
 				query = `${query}&keyword=${this.keyword}`
-				title = `【${this.keyword}】...】相关`
+				title = `【${this.keyword}...】相关`
 			}
 			let data = {
 			  title: `${title}馆藏图书检索 - 贝壳小盒子`,
@@ -128,7 +142,7 @@
 			let query = `type=${this.searchType}`
 			if (this.keyword) {
 				query = `${query}&keyword=${this.keyword}`
-				title = `【${this.keyword}】...】相关`
+				title = `【${this.keyword}...】相关`
 			}
 			let data = {
 				title: `${title}馆藏图书检索 - 贝壳小盒子`,
