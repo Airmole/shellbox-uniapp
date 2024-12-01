@@ -29,13 +29,8 @@
 		{ "path": "pages/course/calendar" },
 		{ "path": "pages/school/media" },
 		{ "path": "pages/book/search" },
-		{
-			"path" : "pages/book/detail",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		}
+		{ "path": "pages/book/detail" },
+		{ "path": "pages/index/about" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",

@@ -6,7 +6,7 @@
 		globalData: {
 			env: 'develop',
 			screenHeight: 800,
-			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
+			logoImageUrl: 'https://r2.airmole.net/i/2024/11/30/17v4j5-c1.jpg',
 			loginPromise: null,
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
 		},
@@ -105,7 +105,7 @@
 			mpappUpdate (from) {
 				const updateManager = uni.getUpdateManager()
 				updateManager.onCheckForUpdate(function (res) {
-				  if (from == 'userclick') {
+				  if (from === 'userClick' && !res.hasUpdate) {
 					uni.showToast({ title: '已是最新版', icon: 'none' })
 				  }
 				})
