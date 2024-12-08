@@ -44,8 +44,10 @@
 							<view class="margin-bottom-xs">{{item.actor}}</view>
 						</view>
 					</view>
+					<!-- #ifndef MP-QQ -->
 					<view class="cu-item padding solid-bottom arrow" v-if="item.origin_url" @tap.stop="goOfficalArticle"
 						:data-index="index">查看原文信息</view>
+					<!-- #endif -->
 				</template>
 			</view>
 			<view class="padding" v-else>

@@ -7,7 +7,7 @@
 				<view class="flex-1 flex flex-direction text-center padding-tb-sm padding-lr-lg bg-white">
 					<view class="margin-bottom-sm text-bold text-xsl line-height-1">{{nowYMD[2]}}</view>
 					<view class="margin-top-auto text-gray text-df">今年{{nowDays}}天 第{{nowWeek}}周</view>
-					<view class="margin-top-sm">{{calendarDate.IMonthCn}}{{calendarDate.IDayCn}} {{calendarDate.ncWeek}}</view>
+					<view class="margin-top-sm text-lg">{{calendarDate.IMonthCn}}{{calendarDate.IDayCn}} {{calendarDate.ncWeek}}</view>
 				</view>
 			</view>
 			<!-- 节假 -->

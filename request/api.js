@@ -4,7 +4,12 @@ import { httpBuildQuery } from '../common/utils/tools.js'
 export default {
 	// 登录换取openID
 	uniLogin: (data) => {
+		// #ifdef MP-WEIXIN
 		return request('/weapp/login/code', 'POST', data)
+		// #endif
+		// #ifdef MP-QQ
+		return request('/qqapp/login/code', 'POST', data)
+		// #endif
 	},
 	// 获取菜单列表
 	fetchMenuList () {

@@ -1,6 +1,6 @@
 <template>
 	<view @tap="navigate" class="flex justify-center align-center margin-xs flex-direction">
-		<image :src="props.image" :style="`height: ${height}rpx;`" mode="heightFix"></image>
+		<image :src="props.image" :style="`height: ${height}rpx;`" mode="aspectFit"></image>
 		<view class="text-center margin-sm">
 			<text>{{tips || props.tips}}</text>
 		</view>
@@ -42,7 +42,6 @@
 	
 	function navigate () {
 		const path = props.path || this.path
-		console.log('navigate path', path)
 		if (path === '' || !path) return
 		uni.navigateTo({ url: path })
 	}

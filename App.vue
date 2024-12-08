@@ -15,6 +15,7 @@
 
 			// #ifdef MP-WEIXIN || MP-QQ
 			const openid = this.getOpenId()
+			console.log('openId ---> ', openid)
 			if (!openid) {
 				this.uniLogin()
 			} else {

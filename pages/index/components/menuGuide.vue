@@ -55,8 +55,11 @@
 		// #ifdef H5
 		platform = 'h5'
 		// #endif
-		// #ifdef MP
+		// #ifdef MP-WEIXIN
 		platform = 'weapp'
+		// #endif
+		// #ifdef MP-QQ
+		platform = 'qqapp'
 		// #endif
 		// #ifdef APP
 		const sysInfo = uni.getSystemInfoSync()

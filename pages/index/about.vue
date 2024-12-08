@@ -11,7 +11,12 @@
 			<!-- #ifdef MP -->
 			<view v-if="version" class="margin-tb-xs">Version <view @tap="checkUpdate" class="margin-lr-sm cu-tag line-blue">v{{version}}</view></view>
 			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
 			<view class="margin-tb-xs">AppID：<text @tap="copyText(appId || 'wxf0ba93e3faff4eda')" class="text-blue">{{appId || 'wxf0ba93e3faff4eda'}}</text></view>
+			<!-- #endif -->
+			<!-- #ifdef MP-QQ -->
+			<view class="margin-tb-xs">AppID：<text @tap="copyText(appId || '1109608669')" class="text-blue">{{appId || '1109608669'}}</text></view>
+			<!-- #endif -->
 			<view class="text-center margin-tb-xs"><text @tap="clickUrl('https://shellbox.airmole.cn')" class="text-blue">https://shellbox.airmole.cn</text></view>
 		</view>
 		
@@ -21,6 +26,7 @@
 		</view>
 		
 		<!-- 小程序码&二维码 -->
+		<!-- #ifndef MP-QQ -->
 		<view class="flex margin-lr margin-tb justify-around text-center bg-white padding-sm card-radius">
 			<view class="">
 				<view class="">
@@ -35,6 +41,7 @@
 				<view class="margin-tb-xs"><text v-if="isWechatH5">可长按识别</text><text v-else>微信小程序码</text></view>
 			</view>
 		</view>
+		<!-- #endif -->
 		
 		<!-- 开源 -->
 		<view class="margin-lr margin-tb-sm bg-white padding-lr-sm card-radius">
@@ -84,7 +91,7 @@
 			<view class="padding-bottom-sm">
 				<view class="flex align-center justify-around text-center">
 					<view class="">
-						<image @tap="previewImage('https://r2.airmole.net/images/weapp/wechat_group.png')" :show-menu-by-longpress="true" class="qrcode-image" src="https://r2.airmole.net/images/weapp/wechat_group.png" mode="aspectFill"></image>
+						<image @tap="previewImage(`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`)" :show-menu-by-longpress="true" class="qrcode-image" :src="`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5"><text class="cuIcon-weixin text-xl"></text>长按识别加入微信群</text><text v-else><text class="cuIcon-weixin text-green"></text>微信群二维码</text>
 					</view>
 					<view class="">
@@ -134,11 +141,13 @@
 		
 		<!-- 操作列表 -->
 		<view class="cu-list menu sm-border card-menu">
+			<!-- #ifndef MP-QQ -->
 		    <view @tap="goPrivacy" class="cu-item arrow">
 		        <view class="content">
 		            <text class="text-grey">隐私协议</text>
 		        </view>
 		    </view>
+			<!-- #endif -->
 			<!-- #ifdef MP -->
 			<view @tap="checkUpdate" class="cu-item arrow">
 			    <view class="content">
@@ -182,6 +191,7 @@
 	export default {
 		data() {
 			return {
+				timestamp: '',
 				logoImage: app.globalData.logoImageUrl,
 				appId: '',
 				version: '',
@@ -201,6 +211,7 @@
 			this.isWechatH5 = isInWechatH5
 			// #endif
 			this.year = (new Date()).getFullYear()
+			this.timestamp = (new Date()).valueOf()
 			console.log('this.year', this.year)
 		},
 		methods: {
@@ -251,25 +262,31 @@
 				// #ifdef MP-WEIXIN
 				uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w') })
 				// #endif
+				// #ifdef MP-QQ
+				this.copyText('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w')
+				// #endif
 				// #ifdef H5
 				uni.showLoading({ title: '加载中...' })
 				window.location.href = 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'
 				// #endif
 			},
 			goJumpGuide () {
-				// #ifdef MP-WEIXIN
+				// #ifdef MP
 				wx.showActionSheet({
 				  itemList: ['公众号菜单跳转小盒子', '公众号文章跳转小盒子', '小程序跳转小盒子'],
 				  success (res) {
-				    console.log(res.tapIndex)
 					let url = 'https://mp.weixin.qq.com/s/ID5bfB-T8xNoBWF_K4EI9g'
 					if (res.tapIndex === 0) url = 'https://mp.weixin.qq.com/s/ID5bfB-T8xNoBWF_K4EI9g'
 					if (res.tapIndex === 1) url = 'https://mp.weixin.qq.com/s/0gRrZAeRmvEk9riItn-gIA'
 					if (res.tapIndex === 2) url = 'https://mp.weixin.qq.com/s/64xrmCb2fAT41bq53ChZSA'
+					// #ifdef MP-WEIXIN
 					uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
+					// #endif
+					// #ifdef MP-QQ
+					this.copyText(url)
+					// #endif
 				  }
 				})
-
 				// #endif
 				// #ifdef H5
 				uni.showLoading({ title: '加载中...' })
@@ -279,6 +296,9 @@
 			goFAQ () {
 				// #ifdef MP-WEIXIN
 				uni.navigateToMiniProgram({ shortLink: '#小程序://腾讯文档/vmDnZwdqqLiY8Dp' })
+				// #endif
+				// #ifdef MP-QQ
+				this.copyText('https://docs.qq.com/doc/DREhocFliTUFRS0dt')
 				// #endif
 				// #ifdef H5
 				uni.showLoading({ title: '加载中...' })
