@@ -15,6 +15,12 @@
 			<view class="text-center margin-tb-xs"><text @tap="clickUrl('https://shellbox.airmole.cn')" class="text-blue">https://shellbox.airmole.cn</text></view>
 		</view>
 		
+		<!-- 介绍 -->
+		<view class="margin padding-sm bg-white card-radius">
+			<text>贝壳小盒子是一款为本校师生定制化开发的校园工具类应用，为师生提供课表、成绩、教师、教室等相关教务信息查询服务，以及图书馆图书检索、音像放映，校园地图、教学校历等校园资讯信息。值得注意的是：<text class="text-red">贝壳小盒子是个人开发应用项目，并非学校官方开发出品</text>，因此所有数据信息仅供您参考，实际请以学校官方为准。</text>
+		</view>
+		
+		<!-- 小程序码&二维码 -->
 		<view class="flex margin-lr margin-tb justify-around text-center bg-white padding-sm card-radius">
 			<view class="">
 				<view class="">
@@ -30,6 +36,7 @@
 			</view>
 		</view>
 		
+		<!-- 开源 -->
 		<view class="margin-lr margin-tb-sm bg-white padding-lr-sm card-radius">
 			<view class="cu-bar bg-white">
 				<view class="action">
@@ -38,11 +45,13 @@
 				</view>
 			</view>
 			<view class="padding-bottom-sm">
-				<text class="cuIcon-info"></text> 本项目前端代码已于 <text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="cuIcon-github text-blue">Github</text> 开源，欢迎fork参与开发优化。<br/>
-				开源仓库：<text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="text-blue">https://github.com/Airmole/shellbox-uniapp</text>
+				<text class="cuIcon-info"></text> 本项目前端代码已于 <text class="cuIcon-github">Github</text> 开源，欢迎fork参与开发优化。<br/>
+				前端项目：<text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="text-blue"><text class="cuIcon-github text-blue"></text>Airmole/shellbox-uniapp</text><br/>
+				后端依赖：<text @tap="clickUrl('https://github.com/Airmole/tjustb-edusys')" class="text-blue"><text class="cuIcon-github text-blue"></text>Airmole/tjustb-edusys</text><br/>
 			</view>
 		</view>
 		
+		<!-- 打赏赞助 -->
 		<view class="margin-lr margin-tb-sm bg-white padding-lr-sm card-radius">
 			<view class="cu-bar bg-white">
 				<view class="action">
@@ -64,6 +73,7 @@
 			</view>
 		</view>
 		
+		<!-- 用户社群 -->
 		<view class="margin-lr margin-tb-sm bg-white padding-lr-sm card-radius">
 			<view class="cu-bar bg-white">
 				<view class="action">
@@ -74,11 +84,11 @@
 			<view class="padding-bottom-sm">
 				<view class="flex align-center justify-around text-center">
 					<view class="">
-						<image @tap="previewImage('https://r2.airmole.net/images/weapp/wechat_group.png')" class="qrcode-image" src="https://r2.airmole.net/images/weapp/wechat_group.png" mode="aspectFill"></image>
+						<image @tap="previewImage('https://r2.airmole.net/images/weapp/wechat_group.png')" :show-menu-by-longpress="true" class="qrcode-image" src="https://r2.airmole.net/images/weapp/wechat_group.png" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5"><text class="cuIcon-weixin text-xl"></text>长按识别加入微信群</text><text v-else><text class="cuIcon-weixin text-green"></text>微信群二维码</text>
 					</view>
 					<view class="">
-						<image @tap="previewImage('https://r2.airmole.net/images/weapp/qq_group.png')" class="qrcode-image" src="https://r2.airmole.net/images/weapp/qq_group.png" mode="aspectFill"></image>
+						<image @tap="previewImage('https://r2.airmole.net/images/weapp/qq_group.png')" :show-menu-by-longpress="true" class="qrcode-image" src="https://r2.airmole.net/images/weapp/qq_group.png" mode="aspectFill"></image>
 						<!-- #ifdef H5 -->
 						<text v-if="!isWechatH5">
 							<br/><a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=REj_D_sTDC2fsiZgqqKRIIMxO5mWMVTm&jump_from=webapi&authKey=lKz0z37IRzLL9wHBNptR/hRUCV6A6jUD8DMSu9Yf83qSJVDCmN/bETSOXqaQ72YO"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="QQ群(662675925)" title="QQ群(662675925)"></a>
@@ -98,6 +108,7 @@
 			</view>
 		</view>
 		
+		<!-- 数据来源 -->
 		<view class="margin-lr margin-tb-sm bg-white padding-lr-sm card-radius">
 			<view class="cu-bar bg-white">
 				<view class="action">
@@ -106,21 +117,22 @@
 				</view>
 			</view>
 			<view class="padding-bottom-sm">
-				<view class="">
+				<view>
 					<text class="cuIcon-title text-green"></text> 课表、成绩等教务信息数据来源于<text @tap="clickUrl('http://jw.bkty.top:89/jsxsd')" class="text-blue">学校教务网</text>
 				</view>
-				<view class="">
+				<view>
 					<text class="cuIcon-title text-green"></text> 图书检索相关信息来源于<text @tap="clickUrl('http://opac.bkty.top')" class="text-blue">图书馆OPAC系统</text>
 				</view>
-				<view class="">
+				<view>
 				 	<text class="cuIcon-title text-green"></text> 音像放映安排信息来源于<text @tap="goLibraryOffical" class="text-blue">图书馆微信公众号</text>
 				</view>
-				<view class="">
+				<view>
 				 	<text class="cuIcon-title text-green"></text> 其余信息均来源于网络收集，如有侵权请<text @tap="goShellboxOffical" class="text-blue">联系我</text>
 				</view>
 			</view>
 		</view>
 		
+		<!-- 操作列表 -->
 		<view class="cu-list menu sm-border card-menu">
 		    <view @tap="goPrivacy" class="cu-item arrow">
 		        <view class="content">
@@ -134,10 +146,26 @@
 			    </view>
 			</view>
 			<!-- #endif -->
+			<view @tap="goUserGuide" class="cu-item arrow">
+			    <view class="content">
+			        <text class="text-grey">用户使用手册</text>
+			    </view>
+			</view>
+			<view @tap="goJumpGuide" class="cu-item arrow">
+			    <view class="content">
+			        <text class="text-grey">公众号、小程序接入指引</text>
+			    </view>
+			</view>
+			<view @tap="goFAQ" class="cu-item arrow">
+			    <view class="content">
+			        <text class="text-grey">FAQ(常见问题解答)文档</text>
+			    </view>
+			</view>
 		</view>
 		
+		<!-- 备案信息 -->
 		<view class="text-center margin">
-			<!-- #ifdef MP-WEIXIN -->
+			<!-- #ifdef MP -->
 			<view class="margin-tb-xs">ICP备案：陇ICP备17001242号-4X</view>
 			<!-- #endif -->
 			<!-- #ifdef H5 -->
@@ -218,6 +246,44 @@
 				uni.navigateTo({
 					url: '/pages/school/media?account=USTBShellBox'
 				})
+			},
+			goUserGuide () {
+				// #ifdef MP-WEIXIN
+				uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w') })
+				// #endif
+				// #ifdef H5
+				uni.showLoading({ title: '加载中...' })
+				window.location.href = 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'
+				// #endif
+			},
+			goJumpGuide () {
+				// #ifdef MP-WEIXIN
+				wx.showActionSheet({
+				  itemList: ['公众号菜单跳转小盒子', '公众号文章跳转小盒子', '小程序跳转小盒子'],
+				  success (res) {
+				    console.log(res.tapIndex)
+					let url = 'https://mp.weixin.qq.com/s/ID5bfB-T8xNoBWF_K4EI9g'
+					if (res.tapIndex === 0) url = 'https://mp.weixin.qq.com/s/ID5bfB-T8xNoBWF_K4EI9g'
+					if (res.tapIndex === 1) url = 'https://mp.weixin.qq.com/s/0gRrZAeRmvEk9riItn-gIA'
+					if (res.tapIndex === 2) url = 'https://mp.weixin.qq.com/s/64xrmCb2fAT41bq53ChZSA'
+					uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
+				  }
+				})
+
+				// #endif
+				// #ifdef H5
+				uni.showLoading({ title: '加载中...' })
+				window.location.href = 'https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzIyOTYyMjE1NQ==&action=getalbum&album_id=3752283129172738048#wechat_redirect'
+				// #endif
+			},
+			goFAQ () {
+				// #ifdef MP-WEIXIN
+				uni.navigateToMiniProgram({ shortLink: '#小程序://腾讯文档/vmDnZwdqqLiY8Dp' })
+				// #endif
+				// #ifdef H5
+				uni.showLoading({ title: '加载中...' })
+				window.location.href = 'https://docs.qq.com/doc/DREhocFliTUFRS0dt'
+				// #endif
 			}
 		}
 	}
