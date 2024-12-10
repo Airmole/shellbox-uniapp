@@ -2,18 +2,18 @@
 	<view class="cu-list card-menu">
 		<view class="flex margin-top-sm" style="gap: 40rpx;">
 			<!-- 日历 -->
-			<view class="flex flex-direction flex-1 box-card text-center shadow-blur margin-lr-xs">
+			<view @tap="goCalendar" class="flex flex-direction flex-1 box-card text-center shadow-blur margin-lr-xs">
 				<view class="padding-sm text-white" style="background: #ed6663;">{{nowYMD[0]}}年{{nowYMD[1]}}月</view>
 				<view class="flex-1 flex flex-direction text-center padding-tb-sm padding-lr-lg bg-white">
 					<view class="margin-bottom-sm text-bold text-xsl line-height-1">{{nowYMD[2]}}</view>
 					<view class="margin-top-auto text-gray text-df">今年{{nowDays}}天 第{{nowWeek}}周</view>
-					<view class="margin-top-sm">{{calendarDate.IMonthCn}}{{calendarDate.IDayCn}} {{calendarDate.ncWeek}}</view>
+					<view class="margin-top-sm text-lg">{{calendarDate.IMonthCn}}{{calendarDate.IDayCn}} {{calendarDate.ncWeek}}</view>
 				</view>
 			</view>
 			<!-- 节假 -->
-			<view v-if="holidaysRef" class="flex-1 box-card text-white margin-lr-xs" style="background: linear-gradient(to right, #0e151c, #272d36);">
+			<view v-if="holidaysRef" @tap="goHoliday" class="flex-1 box-card text-white margin-lr-xs" style="background: linear-gradient(to right, #0e151c, #272d36);">
 				<view class="flex flex-direction height-full justify-center padding-tb-sm padding-lr-sm opacity-9">
-					<template v-for="(holiday, index) in holidaysRef.slice(0, 2)" :key="holiday.holiday">
+					<template v-for="(holiday, index) in holidaysRef.slice(0, 2)" :key="index">
 						<view :class="[`flex justify-between align-center padding-tb-sm border-bottom-dashed border-xs`, index === 0 ? 'border-top-dashed':'' ]">
 							<view>
 								<text class="block">{{ holiday.name }}</text>
@@ -43,7 +43,12 @@
 				</view>
 			</view>
 			<!-- 每日一言 -->
-			<view v-if="famousSayingRef" @tap="displaySayingModal" class="margin-lr-xs flex flex-direction flex-1 box-card text-white padding-sm bg-img bg-mask" :style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`">
+			<view
+				v-if="famousSayingRef"
+				@tap="displaySayingModal"
+				class="margin-lr-xs flex flex-direction flex-1 box-card text-white padding-sm bg-img bg-mask"
+				:style="`background-color: #433728;background-image: url(${famousSayingRef.thumb});`"
+			>
 				<text class="text-lg opacity-6">每日一言</text>
 				<view class="flex-1 flex align-center text-center margin-top-sm">
 					<text class="">{{famousSayingRef ? famousSayingRef.content : ''}}</text>
@@ -51,6 +56,7 @@
 			</view>
 		</view>
 		
+		<!-- 电影模态框 -->
 		<view class="cu-modal" :class="showMovieModal?'show':''">
 			<view class="cu-dialog" v-if="movieRef">
 				<view class="bg-img bg-mask" :style="movieModalStyle"></view>
@@ -88,6 +94,7 @@
 			</view>
 		</view>
 		
+		<!-- 每日一言模态框 -->
 		<view class="cu-modal" :class="showSayingModal?'show':''">
 			<view class="cu-dialog" v-if="famousSayingRef">
 				<view class="bg-img bg-mask" :style="sayingModalStyle"></view>
@@ -188,6 +195,24 @@
 	function goDoubanMovie () {
 		const doubanUrl = movieRef.value.mov_link
 		// window.location.href = doubanUrl
+	}
+	
+	function goCalendar () {
+		// #ifdef MP-WEIXIN
+		uni.navigateToMiniProgram({ appId: 'wx08787e63eba0d16b' }) // 幸运日历 微信小程序
+		// #endif
+		// #ifdef H5
+		window.open('https://mobile.51wnl-cq.com/huangli_tab_h5') //万年历
+		// #endif
+	}
+	
+	function goHoliday () {
+		// #ifdef MP-WEIXIN
+		uni.navigateToMiniProgram({ appId: 'wxf08afe7fdbaee79b' }) // 下一个假期 微信小程序
+		// #endif
+		// #ifdef H5
+		window.open('https://xiayigejiaqi.com') // 下一个假期 H5
+		// #endif
 	}
 	
 	function hideMovieModal () {

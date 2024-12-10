@@ -27,7 +27,7 @@
 			<!-- #endif -->
 			<tips
 				tips="查询您的个人课表需登录账号"
-				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				image="/static/image/nothing.png"
 				:showButton="true"
 				buttonText="立即登录"
 				path="/pages/index/login"

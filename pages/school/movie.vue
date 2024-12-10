@@ -44,8 +44,10 @@
 							<view class="margin-bottom-xs">{{item.actor}}</view>
 						</view>
 					</view>
+					<!-- #ifndef MP-QQ -->
 					<view class="cu-item padding solid-bottom arrow" v-if="item.origin_url" @tap.stop="goOfficalArticle"
 						:data-index="index">查看原文信息</view>
+					<!-- #endif -->
 				</template>
 			</view>
 			<view class="padding" v-else>
@@ -124,12 +126,12 @@
 				// #ifdef MP-WEIXIN
 				wx.navigateToMiniProgram({
 					appId: 'wx2f9b06c1de1ccfca',
-					path: `pages/subject/subject?id=${movie.douban_id}&type=movie`
+					path: `pages/subject/subject?type=movie&id=${movie.douban_id}`
 				})
 				// #endif
 
 				// #ifdef H5
-				window.location.href = `https://movie.douban.com/subject/${movie.douban_id}`
+				window.open(`https://movie.douban.com/subject/${movie.douban_id}`)
 				// #endif
 			},
 			showPoster(e) {

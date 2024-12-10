@@ -205,12 +205,10 @@
 			copyTel: function(e) {
 				var tel = '022' + e.currentTarget.dataset.tel
 				uni.setClipboardData({
-					data: tel
-				})
-				uni.showToast({
-					title: '已复制到粘贴版',
-					icon: 'none',
-					duration: 1000
+					data: tel,
+					success() {
+						uni.showToast({ title: '已复制到粘贴版', icon: 'success'})
+					}
 				})
 			},
 			fetchContactList(option) {

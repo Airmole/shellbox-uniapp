@@ -132,7 +132,8 @@
     "mp-qq" : {
         "uniStatistics" : {
             "enable" : false
-        }
+        },
+        "appid" : "1109608669"
     },
     "quickapp-webview-huawei" : {
         "uniStatistics" : {

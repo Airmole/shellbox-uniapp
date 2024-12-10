@@ -2,7 +2,7 @@
 	<view>
 		<view class="padding-top bg-height bg-img bg-mask flex justify-center"
 			:style="{backgroundImage: `url(${backgroundImageUrl})`}">
-			<!-- #ifdef MP -->
+			<!-- #ifdef MP-WEIXIN -->
 			<view class="padding-xl text-white radius bg-card">
 				<navigator :url="loginStatus?'/pages/setting/profile':'/pages/index/login'" class="margin-top-xxl flex justify-center">
 					<image class="cu-avatar round avatar"
@@ -18,7 +18,7 @@
 				</navigator>
 			</view>
 			<!-- #endif -->
-			<!-- #ifndef MP -->
+			<!-- #ifndef MP-WEIXIN -->
 			<view class="padding-xl text-white radius bg-card">
 				<view @click="goProfileSettingPage()" class="margin-top-xxl flex justify-center">
 					<image class="cu-avatar round avatar"
@@ -126,7 +126,10 @@
 	}
 	
 	function goProfileSettingPage () {
-		uni.showToast({ title: '暂仅支持在小程序端修改头像昵称', icon: 'none' })
+		// #ifdef MP-QQ
+		return
+		// #endif
+		uni.showToast({ title: '暂仅支持在微信小程序端修改头像昵称', icon: 'none' })
 	}
 	
 	onShareAppMessage (() => {

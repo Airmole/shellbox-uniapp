@@ -4,7 +4,12 @@ import { httpBuildQuery } from '../common/utils/tools.js'
 export default {
 	// 登录换取openID
 	uniLogin: (data) => {
+		// #ifdef MP-WEIXIN
 		return request('/weapp/login/code', 'POST', data)
+		// #endif
+		// #ifdef MP-QQ
+		return request('/qqapp/login/code', 'POST', data)
+		// #endif
 	},
 	// 获取菜单列表
 	fetchMenuList () {
@@ -321,5 +326,15 @@ export default {
 	},
 	fetchMapAllPoi () {
 		return request(`/school/map/poi`, 'GET')
+	},
+	fetchSchoolMediaList () {
+		return request(`/school/media`, 'GET')
+	},
+	// 图书查询
+	fetchBookSearch (type = '02', keyword = '') {
+		return request(`/book/search?type=${type}&keyword=${keyword}`, 'GET')
+	},
+	fetchBookDetailByMarcNo (marcNo) {
+		return request(`/book/marc/${marcNo}`, 'GET')
 	}
 }

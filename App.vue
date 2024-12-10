@@ -6,7 +6,7 @@
 		globalData: {
 			env: 'develop',
 			screenHeight: 800,
-			logoImageUrl: 'https://store2018.muapp.cn/images/weapp/logo.jpeg',
+			logoImageUrl: 'https://r2.airmole.net/i/2024/11/30/17v4j5-c1.jpg',
 			loginPromise: null,
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
 		},
@@ -15,6 +15,7 @@
 
 			// #ifdef MP-WEIXIN || MP-QQ
 			const openid = this.getOpenId()
+			console.log('openId ---> ', openid)
 			if (!openid) {
 				this.uniLogin()
 			} else {
@@ -105,7 +106,7 @@
 			mpappUpdate (from) {
 				const updateManager = uni.getUpdateManager()
 				updateManager.onCheckForUpdate(function (res) {
-				  if (from == 'userclick') {
+				  if (from === 'userClick' && !res.hasUpdate) {
 					uni.showToast({ title: '已是最新版', icon: 'none' })
 				  }
 				})
@@ -142,6 +143,34 @@
 
 	body {
 		background: #f1f1f1;
+	}
+	
+	@keyframes show {
+		0% {
+			transform: translateY(-50px);
+		}
+
+		60% {
+			transform: translateY(40upx);
+		}
+
+		100% {
+			transform: translateY(0px);
+		}
+	}
+	
+	@-webkit-keyframes show {
+		0% {
+			transform: translateY(-50px);
+		}
+
+		60% {
+			transform: translateY(40upx);
+		}
+
+		100% {
+			transform: translateY(0px);
+		}
 	}
 	
 	@media (prefers-color-scheme: dark) {

@@ -3,10 +3,18 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="false">
 			<view>贝壳小盒子</view>
 		</cu-custom>
+		
+		<!-- 图书检索 -->
+		<view class="cu-bar search bg-white" @tap="goBookSearch">
+		    <view class="search-form round">
+		        <text class="cuIcon-search"></text>
+		        <input type="text" placeholder="馆藏图书检索：输入图书关键字"></input>
+		    </view>
+		</view>
 
 		<!-- 教学周日期显示 -->
-		<block v-if="!!calendar">
-			<block v-if="calendar && calendar.title">
+		<template v-if="!!calendar">
+			<template v-if="calendar && calendar.title">
 				<navigator url="/pages/school/calendar"
 					class="padding-lr-sm bg-white margin round padding-bottom flex justify-between"
 					:render-link="false"
@@ -15,23 +23,23 @@
 						</text></view>
 					<view class="padding-top"><text>{{ courses.nowWeek }} / {{courses.endWeek}} </text></view>
 				</navigator>
-			</block>
-			<block v-else>
+			</template>
+			<template v-else>
 				<view class="padding-lr-sm bg-white margin round padding-bottom">
 					<view class="padding-top"><text class="cuIcon-titles text-green"></text>{{calendar.date}}
 						{{getDayByDateStr(calendar.date)}}</view>
 					<text class="text-black">{{praise}}</text>
 				</view>
-			</block>
-		</block>
+			</template>
+		</template>
 
 		<!-- 首页小组件 -->
 		<box-home-widgets></box-home-widgets>
 		
-		<view v-if="!loginStatus">
+		<view v-if="!loginStatus" :style="[{animation: 'show ' + ((0+1)*0.2+1) + 's 1'}]">
 			<tips
 				tips="哎呀~还没登录嘛？"
-				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				image="/static/image/nothing.png"
 				:showButton="true"
 				buttonText="立即登录"
 				path="/pages/index/login"
@@ -119,6 +127,10 @@
 	// 周几
 	function getDayByDateStr(str = '') {
 		return getWeekNameByDayNumber(new Date(str).getDay())
+	}
+	
+	function goBookSearch () {
+		uni.navigateTo({ url: '/pages/book/search' })
 	}
 	
 	

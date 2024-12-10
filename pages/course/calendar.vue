@@ -46,7 +46,7 @@
 				</view>
 			</template>
 			<template v-if="!checkedDateCourses || (checkedDateCourses && checkedDateCourses.items && checkedDateCourses.items.filter(course => !Array.isArray(course)).length === 0)">
-				<tips :tips="`${checkedDate} 没有课程安排 😄`" image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"></tips>
+				<tips :tips="`${checkedDate} 没有课程安排 😄`" image="/static/image/nothing.png"></tips>
 			</template>
 			<template v-else>
 				<!-- #ifdef MP -->
@@ -59,7 +59,7 @@
 		<template v-else>
 			<tips
 				tips="查询您的个人课表需登录账号"
-				image="https://r2.airmole.net/i/2024/11/16/su6jl-zd.png"
+				image="/static/image/nothing.png"
 				:showButton="true"
 				buttonText="立即登录"
 				path="/pages/index/login"

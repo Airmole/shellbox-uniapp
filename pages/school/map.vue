@@ -270,7 +270,7 @@
 			},
 			goFullviewMap () {
 				const url = 'https://720yun.com/vr/c80jOsmvzy2'
-				// #ifdef MP-WEIXIN
+				// #ifdef MP
 				uni.setClipboardData({
 					data: url,
 					success() {
@@ -283,7 +283,7 @@
 				// #endif
 				
 				// #ifdef H5
-				window.location.href = url
+				window.open(url)
 				// #endif
 			}
 		},
