@@ -52,7 +52,7 @@
             }
         },
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     /* 快应用特有相关 */
@@ -72,29 +72,29 @@
         },
         "libVersion" : "3.3.0",
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "mp-alipay" : {
         "usingComponents" : true,
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "mp-baidu" : {
         "usingComponents" : true,
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "mp-toutiao" : {
         "usingComponents" : true,
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "uniStatistics" : {
-        "enable" : false,
+        "enable" : true,
         "version" : "2"
     },
     "vueVersion" : "3",
@@ -110,39 +110,49 @@
             }
         },
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "locale" : "zh-Hans",
     "mp-jd" : {
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "mp-kuaishou" : {
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "mp-lark" : {
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "mp-qq" : {
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         },
         "appid" : "1109608669"
     },
     "quickapp-webview-huawei" : {
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
         }
     },
     "quickapp-webview-union" : {
         "uniStatistics" : {
-            "enable" : false
+            "enable" : true
+        }
+    },
+    "app-harmony" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-harmony" : {
+        "uniStatistics" : {
+            "enable" : true
         }
     }
 }
