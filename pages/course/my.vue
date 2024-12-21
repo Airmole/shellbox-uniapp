@@ -25,6 +25,11 @@
 				<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 			</view>
 			<!-- #endif -->
+			<!-- #ifdef MP-QQ -->
+			<view class="margin margin-tb-xl radius">
+				<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
+			</view>
+			<!-- #endif -->
 			<tips
 				tips="查询您的个人课表需登录账号"
 				image="/static/image/nothing.png"

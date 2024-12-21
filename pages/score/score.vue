@@ -87,6 +87,11 @@
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
+		<!-- #ifdef MP-QQ -->
+		<view class="margin margin-tb-xl radius">
+			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
+		</view>
+		<!-- #endif -->
 		
 		<template v-if="score !== '' && score.data.length === 0">
 			<tips tips="没有查询到符合条件的成绩" image="/static/image/nothing.png"></tips>
@@ -125,6 +130,11 @@
 						<!-- #ifdef MP-WEIXIN -->
 						<view v-if="index !== 0 && index % 10 === 0" class="bg-white">
 							<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+						</view>
+						<!-- #endif -->
+						<!-- #ifdef MP-QQ -->
+						<view v-if="index !== 0 && index % 10 === 0" class="bg-white">
+							<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 						</view>
 						<!-- #endif -->
 					</template>
@@ -280,7 +290,10 @@
 		},
 		onLoad() {
 			// #ifdef MP-WEIXIN
-			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-5a3621a7eb4da121' })
+			// #endif
+			// #ifdef MP-QQ
+			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '7be7a448772d36a43560aabf2b2a1a0c' })
 			// #endif
 			
 			if (getEdusysAccount() === false) {
