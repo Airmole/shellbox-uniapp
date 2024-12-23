@@ -110,7 +110,7 @@
 			    </view>
 				<template v-if="!semester.fold">
 					<template v-for="(record, index) in semester.items" :key="index">
-						<view @click="showDetail(semesterIdx, index)" class="cu-item press-class">
+						<view @click="showDetail(semesterIdx, index)" class="cu-item press-class arrow">
 							<view class="content padding-tb-sm text-cut">
 								<view class="text-title">
 									<text class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
@@ -122,7 +122,13 @@
 								</view>
 							</view>
 							<view class="action text-bold">
-								<text v-if="record.score >= 90" class="text-lg text-blue">{{record.score}}</text>
+								<!-- #ifdef MP -->
+								<text v-if="record.score == '请评教'" class="text-lg text-red"><text @tap.stop="goEvaluateTeacher" class="cuIcon-question">{{record.score}}</text></text>
+								<!-- #endif -->
+								<!-- #ifndef MP -->
+								<text v-if="record.score.includes('评教')" class="text-lg text-red"><text @tap.stop="goEvaluateTeacher" class="cuIcon-question">{{record.score}}</text></text>
+								<!-- #endif -->
+								<text v-else-if="record.score >= 90" class="text-lg text-blue">{{record.score}}</text>
 								<text v-else-if="record.score < 60" class="text-lg text-red">{{record.score}}</text>
 								<text v-else class="text-lg text-black">{{record.score}}</text>
 							</view>
@@ -250,7 +256,13 @@
 									<text class="text-grey">成绩</text>
 								</view>
 								<view class="content">
-									<view>{{detail.score}}</view>
+									<!-- #ifdef MP -->
+									<view v-if="detail.score == '请评教'" @tap="goEvaluateTeacher" class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
+									<!-- #endif -->
+									<!-- #ifndef MP -->
+									<view v-if="detail.score.includes('评教')" @tap="goEvaluateTeacher" class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
+									<!-- #endif -->
+									<view v-else>{{detail.score}}</view>
 								</view>
 							</view>
 						</view>
@@ -392,6 +404,22 @@
 				this.natureIndex = -1
 				this.showIndex = -1
 				this.fetchScore()
+			},
+			goEvaluateTeacher () {
+				const url = 'https://mp.weixin.qq.com/s/lfldxFZlLsVlQCjvWt62hg'
+				// #ifdef H5
+				uni.showLoading({ title: '加载中...' })
+				window.location.href = url
+				// #endif
+				// #ifdef MP-WEIXIN
+				uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
+				// #endif
+				// #ifdef MP-QQ
+				uni.setClipboardData({
+					data: url,
+					success() { qq.showToast({ title: '已复制到粘贴板,请打开浏览器粘贴访问', icon: 'none' }) }
+				})
+				// #endif
 			}
 		}
 	}
