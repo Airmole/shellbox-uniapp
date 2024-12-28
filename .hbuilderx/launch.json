@@ -7,6 +7,9 @@
             "default" : {
                 "launchtype" : "local"
             },
+            "h5" : {
+                "launchtype" : "local"
+            },
             "mp-qq" : {
                 "launchtype" : "local"
             },
