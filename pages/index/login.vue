@@ -27,9 +27,18 @@
 						绑定登录 <span class="cuIcon-right margin-left-xs"></span>
 					</button>
 				</view>
+
 			</view>
 		</view>
-
+		
+		<view style="position: fixed;bottom: 0;width: 100%;" class="margin-tb-sm">
+			<view class="flex justify-center">
+				<view @tap="goLoginPasswordArticle" class="bg-white padding-tb-xs padding-lr-sm round">
+					<text class="cuIcon-question"></text> 登录账号密码相关疑问
+				</view>
+			</view>
+		</view>
+		
 		<view class="cu-modal" :class="isLoading?'show':''">
 			<view class="cu-dialog" style="width: 120px; height: 120px;">
 				<view class="bg-img" :style="{ backgroundImage: `url(${loadingUrl})`, height: '120px' }"></view>
@@ -38,8 +47,7 @@
 				</view>
 			</view>
 		</view>
-
-
+		
 	</view>
 </template>
 
@@ -112,6 +120,19 @@
 			const index = Math.floor(Math.random() * (max - min + 1)) + min
 			bgImgUrl.value = `https://bing.com${res.data.images[index].url}`
 		})
+	}
+	
+	function goLoginPasswordArticle () {
+		// #ifdef MP-WEIXIN
+		uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug') })
+		// #endif
+		// #ifdef MP-QQ
+		this.copyText('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug')
+		// #endif
+		// #ifdef H5
+		uni.showLoading({ title: '加载中...' })
+		window.location.href = 'https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug'
+		// #endif
 	}
 </script>
 

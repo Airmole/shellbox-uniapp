@@ -22,7 +22,7 @@
 					</view>
 				</view>
 				<template v-if="!foldOptionsArea">
-					<view class="cu-item arrow">
+					<view class="cu-item">
 						<view class="content">
 							<text class="text-grey">学年学期</text>
 						</view>
@@ -35,7 +35,7 @@
 							</picker>
 						</view>
 					</view>
-					<view class="cu-item arrow">
+					<view class="cu-item">
 						<view class="content">
 							<text class="text-grey">课程性质</text>
 						</view>
@@ -56,7 +56,7 @@
 							<input placeholder="请输入课程名称" name="course" v-model="optionForm.course" />
 						</view>
 					</view>
-					<view class="cu-item arrow">
+					<view class="cu-item">
 						<view class="content">
 							<text class="text-grey">显示方式</text>
 						</view>
