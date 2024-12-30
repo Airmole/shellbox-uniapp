@@ -96,7 +96,12 @@
 		<template v-if="score !== '' && score.data.length === 0">
 			<tips tips="没有查询到符合条件的成绩" image="/static/image/nothing.png"></tips>
 		</template>
-	
+		
+		<!-- 学期成绩图表 -->
+		<view class="margin-tb-sm">
+			<canvas canvas-id="semesterScoreChart" id="semesterScoreChart" class="charts" @touchend="scoreChartTap"/>
+		</view>
+
 		<!-- 成绩展示区域 -->
 		<template v-if="isLogined">
 			<view class="cu-list menu sm-border card-menu" v-for="(semester, semesterIdx) in score.data" :key="semesterIdx">
@@ -260,7 +265,7 @@
 									<view v-if="detail.score == '请评教'" @tap="goEvaluateTeacher" class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
 									<!-- #endif -->
 									<!-- #ifndef MP -->
-									<view v-if="detail.score.includes('评教')" @tap="goEvaluateTeacher" class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
+									<view v-if="detail.score && detail.score.includes('评教')" @tap="goEvaluateTeacher" class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
 									<!-- #endif -->
 									<view v-else>{{detail.score}}</view>
 								</view>
@@ -277,6 +282,8 @@
 <script>
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js'
+	var uChartsInstance = {}
 	let interstitialAd = null
 	export default {
 		data() {
@@ -297,7 +304,9 @@
 				},
 				score: '',
 				displayDetailModal: false,
-				detail: ''
+				detail: '',
+				cWidth: 750,
+				cHeight: 500
 			}
 		},
 		onLoad() {
@@ -315,6 +324,10 @@
 			
 			this.fetchOptions()
 			this.fetchScore()
+		},
+		onReady() {
+			this.cWidth = uni.upx2px(750)
+			this.cHeight = uni.upx2px(500)
 		},
 		onShow() {
 			if (interstitialAd) interstitialAd.show()	
@@ -375,8 +388,11 @@
 					this.optionForm.show
 				).then(res => {
 					console.log('成绩查询：', res.data)
-					// this.score = res.data
 					this.score = this.convertScoreFormat(res.data)
+					// 成绩列表学期>=2则绘制渲染曲线图
+					if (res.data.data && Object.keys(res.data.data).length >= 2) {
+						this.drawCharts('semesterScoreChart', this.convertScoreChartFormat(res.data))
+					}
 					uni.hideLoading()
 				}).catch(error => {
 					console.log('成绩查询失败', error)
@@ -385,10 +401,27 @@
 			},
 			convertScoreFormat (score) {
 				for (let semesterIndex in score.data) {
-					// 学期成绩列表默认不折叠展示
-					score.data[semesterIndex].fold = false
+					score.data[semesterIndex].fold = false // 学期成绩列表默认不折叠展示
 				}
 				return score
+			},
+			convertScoreChartFormat (score) {
+				let res = {
+					categories: [],
+					series: [
+					  { name: "算术平均分",data: []},
+					  { name: "加权平均法",data: []},
+					]
+				}
+				for (let semesterIndex in score.data) {
+					res.categories.push(semesterIndex)
+					res.series[0].data.push(score.data[semesterIndex].avg)
+					res.series[1].data.push(score.data[semesterIndex].gpa)
+				}
+				res.categories = res.categories.reverse()
+				res.series[0].data.reverse()
+				res.series[1].data.reverse()
+				return res
 			},
 			showOptionsArea() {
 				this.foldOptionsArea = !this.foldOptionsArea
@@ -420,11 +453,54 @@
 					success() { qq.showToast({ title: '已复制到粘贴板,请打开浏览器粘贴访问', icon: 'none' }) }
 				})
 				// #endif
+			},
+			drawCharts(id, data) {
+			  const ctx = uni.createCanvasContext(id, this);
+			  uChartsInstance[id] = new uCharts({
+				  type: "area",
+				  context: ctx,
+				  width: this.cWidth,
+				  height: this.cHeight,
+				  categories: data.categories,
+				  series: data.series,
+				  animation: true,
+				  background: "#FFFFFF",
+				  color: ["#1890FF", "#3CA272"],
+				  padding: [15,15,0,15],
+				  enableScroll: false,
+				  legend: {},
+				  xAxis: {
+					disableGrid: true,
+					rotateLabel: true,
+					rotateAngle: 60
+				  },
+				  yAxis: {
+					gridType: "dash",
+					dashLength: 2
+				  },
+				  extra: {
+					area: {
+					  type: "curve",
+					  opacity: 0.2,
+					  addLine: true,
+					  width: 2,
+					  gradient: true,
+					  activeType: "hollow"
+					}
+				  }
+				});
+			},
+			scoreChartTap (e){
+			  uChartsInstance[e.target.id].touchLegend(e);
+			  uChartsInstance[e.target.id].showToolTip(e);
 			}
 		}
 	}
 </script>
 
 <style>
-
+.charts{
+    width: 750rpx;
+    height: 500rpx;
+  }
 </style>
