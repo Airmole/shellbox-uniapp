@@ -134,6 +134,9 @@
 				 	<text class="cuIcon-title text-green"></text> 音像放映安排信息来源于<text @tap="goLibraryOffical" class="text-blue">图书馆微信公众号</text>
 				</view>
 				<view>
+				 	<text class="cuIcon-title text-green"></text> 学校地图建筑照片来源于<text @tap="goTjustb720yun" class="text-blue">涂志远&王道钦学院全景图</text>
+				</view>
+				<view>
 				 	<text class="cuIcon-title text-green"></text> 其余信息均来源于网络收集，如有侵权请<text @tap="goShellboxOffical" class="text-blue">联系我</text>
 				</view>
 			</view>
@@ -252,6 +255,25 @@
 			},
 			goLibraryOffical () {
 				uni.navigateTo({ url: '/pages/school/media?account=tjclib' })
+			},
+			goTjustb720yun () {
+				const url = 'https://720yun.com/vr/c80jOsmvzy2'
+				// #ifdef MP
+				uni.setClipboardData({
+					data: url,
+					success() {
+						uni.showToast({
+							title: '链接已复制到粘贴板，请打开浏览器后粘贴访问！',
+							icon: 'none'
+						})
+					}
+				})
+				// #endif
+				
+				// #ifdef H5
+				uni.showLoading({ title: '加载中...' })
+				window.open(url)
+				// #endif
 			},
 			goShellboxOffical () {
 				uni.navigateTo({
