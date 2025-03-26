@@ -20,6 +20,7 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 				url: baseUrl + url,
 				data: data,
 				method: method,
+				timeout: 60000 * 3, // 超时时间3分钟
 				header: {
 					'Content-Type': 'application/json',
 					'Auth': auth
