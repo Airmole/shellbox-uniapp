@@ -20,17 +20,13 @@
 		{ "path": "pages/webview/webview" },
 		{ "path": "pages/webview/redpacket" },
 		{ "path": "pages/school/movie" },
-		{
-			"path" : "pages/school/map",
-			"style": {
-				"disableScroll": true
-			}
-		},
+		{ "path" :"pages/school/map", "style": { "disableScroll": true } },
 		{ "path": "pages/course/calendar" },
 		{ "path": "pages/school/media" },
 		{ "path": "pages/book/search" },
 		{ "path": "pages/book/detail" },
-		{ "path": "pages/index/about" }
+		{ "path": "pages/index/about" },
+		{ "path" :"pages/score/trainingPlan" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",

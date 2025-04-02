@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'iconfont';  /* Project id 2595220 */
-  src: url('https://at.alicdn.com/t/c/font_2595220_73bx8gt2f9.woff2?t=1732629653574') format('woff2'),
-       url('https://at.alicdn.com/t/c/font_2595220_73bx8gt2f9.woff?t=1732629653574') format('woff'),
-       url('https://at.alicdn.com/t/c/font_2595220_73bx8gt2f9.ttf?t=1732629653574') format('truetype');
+  src: url('https://at.alicdn.com/t/c/font_2595220_ha5v7tmfs7m.woff2?t=1743600368669') format('woff2'),
+       url('https://at.alicdn.com/t/c/font_2595220_ha5v7tmfs7m.woff?t=1743600368669') format('woff'),
+       url('https://at.alicdn.com/t/c/font_2595220_ha5v7tmfs7m.ttf?t=1743600368669') format('truetype');
 }
 
 .iconfont {
@@ -147,4 +147,12 @@
 
 .icon-school_media:before {
   content: "\e614";
+}
+
+.icon-training_plan:before {
+  content: "\e648";
+}
+
+.icon-hunyuan:before {
+  content: "\e60e";
 }

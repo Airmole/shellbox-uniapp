@@ -137,6 +137,9 @@
 				 	<text class="cuIcon-title text-green"></text> 学校地图建筑照片来源于<text @tap="goTjustb720yun" class="text-blue">涂志远&王道钦学院全景图</text>
 				</view>
 				<view>
+				 	<text class="cuIcon-title text-green"></text> 学校手绘地图来源于<text @tap="goTjustbMetaWeapp" class="text-blue">北科天院校友之家</text>
+				</view>
+				<view>
 				 	<text class="cuIcon-title text-green"></text> 其余信息均来源于网络收集，如有侵权请<text @tap="goShellboxOffical" class="text-blue">联系我</text>
 				</view>
 			</view>
@@ -276,9 +279,10 @@
 				// #endif
 			},
 			goShellboxOffical () {
-				uni.navigateTo({
-					url: '/pages/school/media?account=USTBShellBox'
-				})
+				uni.navigateTo({ url: '/pages/school/media?account=USTBShellBox' })
+			},
+			goTjustbMetaWeapp () {
+					uni.navigateTo({ url: '/pages/school/media?account=gh_7b54ab55270c' })
 			},
 			goUserGuide () {
 				// #ifdef MP-WEIXIN

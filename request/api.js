@@ -69,6 +69,10 @@ export default {
 		// console.log(queryString)
 		return request(`/edusys/score?${queryString}`, 'GET')
 	},
+	// 成绩分数AI总结建议
+	fetchScoreSuggestion () {
+		return request('/edusys/score/suggestion', 'GET')
+	},
 	// 首页组件数据
 	fetchHomeWidget(widgetNameList = []) {
 		if (!Array.isArray(widgetNameList)) {
@@ -296,6 +300,10 @@ export default {
 		const queryString = httpBuildQuery(query)
 		let url = `/edusys/classroom/detail`
 		return request(`${url}?${queryString}`, `GET`)
+	},
+	// 培养方案
+	fetchTrainingPlan () {
+		return request('/edusys/trainingPlan', 'GET')
 	},
 	// 权益保护相关
 	// 获取权益投诉帖

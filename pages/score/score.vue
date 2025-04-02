@@ -3,10 +3,11 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>成绩查询</view>
 		</cu-custom>
-		
+
 		<view class="margin" v-if="isLogined">
 			<view class="text-left text bg-white padding-sm text-red card-radius">
-				<text><text class="cuIcon-info margin-lr-xs"></text>本应用算术平均分及加权平均分由程序自动计算得来，结果仅供参考！具体准确加权分和GPA绩点建议咨询导员或学校教务处。</text>
+				<text><text
+						class="cuIcon-info margin-lr-xs"></text>本应用算术平均分及加权平均分由程序自动计算得来，结果仅供参考！具体准确加权分和GPA绩点建议咨询导员或学校教务处。</text>
 			</view>
 		</view>
 
@@ -92,33 +93,35 @@
 			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 		</view>
 		<!-- #endif -->
-		
+
 		<template v-if="score !== '' && score.data.length === 0">
 			<tips tips="没有查询到符合条件的成绩" image="/static/image/nothing.png"></tips>
 		</template>
-		
+
 		<!-- 学期成绩图表 -->
 		<view class="margin-tb-sm">
-			<canvas canvas-id="semesterScoreChart" id="semesterScoreChart" class="charts" @touchend="scoreChartTap"/>
+			<canvas canvas-id="semesterScoreChart" id="semesterScoreChart" class="charts" @touchend="scoreChartTap" />
 		</view>
 
 		<!-- 成绩展示区域 -->
 		<template v-if="isLogined">
-			<view class="cu-list menu sm-border card-menu" v-for="(semester, semesterIdx) in score.data" :key="semesterIdx">
-			    <view class="cu-item press-class" @click="foldSemesterScore(semesterIdx)">
-			    	<view class="content">
-			    		<text class="cuIcon-medal text-blue"></text> {{semester.semester}} 学期
-			    	</view>
-			    	<view class="action text-right">
-			    		<text :class="'text-bold cuIcon-'+(semester.fold?'right':'unfold')"></text>
-			    	</view>
-			    </view>
+			<view class="cu-list menu sm-border card-menu" v-for="(semester, semesterIdx) in score.data"
+				:key="semesterIdx">
+				<view class="cu-item press-class" @click="foldSemesterScore(semesterIdx)">
+					<view class="content">
+						<text class="cuIcon-medal text-blue"></text> {{semester.semester}} 学期
+					</view>
+					<view class="action text-right">
+						<text :class="'text-bold cuIcon-'+(semester.fold?'right':'unfold')"></text>
+					</view>
+				</view>
 				<template v-if="!semester.fold">
 					<template v-for="(record, index) in semester.items" :key="index">
 						<view @click="showDetail(semesterIdx, index)" class="cu-item press-class arrow">
 							<view class="content padding-tb-sm text-cut">
 								<view class="text-title">
-									<text class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
+									<text
+										class="text-black text-cut">{{record.courseName}}</text>({{record.courseType}})
 								</view>
 								<view class="text-gray text-sm">
 									<text class="margin-right-xs">{{record.examNature}}</text>
@@ -128,11 +131,15 @@
 							</view>
 							<view class="action text-bold">
 								<!-- #ifdef MP -->
-								<text v-if="record.score == '请评教'" class="text-lg text-red"><text @tap.stop="goEvaluateTeacher" class="cuIcon-question">{{record.score}}</text></text>
-								<!-- #endif -->
+								<text v-if="record.score == '请评教'" class="text-lg text-red"><text
+										@tap.stop="goEvaluateTeacher"
+										class="cuIcon-question">{{record.score}}</text></text>
+									<!-- #endif -->
 								<!-- #ifndef MP -->
-								<text v-if="record.score.includes('评教')" class="text-lg text-red"><text @tap.stop="goEvaluateTeacher" class="cuIcon-question">{{record.score}}</text></text>
-								<!-- #endif -->
+								<text v-if="record.score.includes('评教')" class="text-lg text-red"><text
+										@tap.stop="goEvaluateTeacher"
+										class="cuIcon-question">{{record.score}}</text></text>
+									<!-- #endif -->
 								<text v-else-if="record.score >= 90" class="text-lg text-blue">{{record.score}}</text>
 								<text v-else-if="record.score < 60" class="text-lg text-red">{{record.score}}</text>
 								<text v-else class="text-lg text-black">{{record.score}}</text>
@@ -159,19 +166,18 @@
 					</view>
 				</view>
 			</view>
+			<view class="margin-tb-xs"></view>
+			<view @click="fetchScoreSuggestion" class="cu-bar bg-gradual-blue foot ai-suggestion-bar">
+				<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结&建议</text></view>
+			</view>
 		</template>
 		<template v-else>
-			<tips
-				tips="查询您的成绩分数需登录账号"
-				image="/static/image/nothing.png"
-				:showButton="true"
-				buttonText="现在登录"
-				path="/pages/index/login"
-			></tips>
+			<tips tips="查询您的成绩分数需登录账号" image="/static/image/nothing.png" :showButton="true" buttonText="现在登录"
+				path="/pages/index/login"></tips>
 		</template>
-		
+
 		<view class="padding-xl"></view>
-		
+
 		<!-- 成绩详情模态框 -->
 		<view class="cu-modal" :class="displayDetailModal?'show':''">
 			<view class="cu-dialog bg-gray">
@@ -184,7 +190,8 @@
 				<view class="text-left padding-xs">
 					<view class="swiper-item">
 						<view class="cu-list menu sm-border">
-							<navigator :url="`/pages/course/lesson?keyword=${detail.courseName}`" :render-link="false" class="cu-item arrow">
+							<navigator :url="`/pages/course/lesson?keyword=${detail.courseName}`" :render-link="false"
+								class="cu-item arrow">
 								<view class="content">
 									<text class="text-grey">课程名称</text>
 								</view>
@@ -262,10 +269,12 @@
 								</view>
 								<view class="content">
 									<!-- #ifdef MP -->
-									<view v-if="detail.score == '请评教'" @tap="goEvaluateTeacher" class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
-									<!-- #endif -->
+									<view v-if="detail.score == '请评教'" @tap="goEvaluateTeacher" class="text-red"><text
+											class="cuIcon-question">{{detail.score}}</text></view>
+										<!-- #endif -->
 									<!-- #ifndef MP -->
-									<view v-if="detail.score && detail.score.includes('评教')" @tap="goEvaluateTeacher" class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
+									<view v-if="detail.score && detail.score.includes('评教')" @tap="goEvaluateTeacher"
+										class="text-red"><text class="cuIcon-question">{{detail.score}}</text></view>
 									<!-- #endif -->
 									<view v-else>{{detail.score}}</view>
 								</view>
@@ -276,12 +285,36 @@
 			</view>
 		</view>
 
+		<!-- AI建议底部模态框 -->
+		<view :class="`cu-modal bottom-modal ` + (displaySuggestionModal?'show':'')">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-gradual-blue">
+					<view class="action text-white"></view>
+					<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结&建议</text></view>
+					<view @click="showSuggestionModal" class="action text-white"><text class="cuIcon-close"></text>
+					</view>
+				</view>
+				<view class="padding-sm text-left bg-white">
+					<view class="text-center text-sm">
+						<text class="iconfont icon-hunyuan"></text> 以下内容由腾讯混元AI大模型生成，不代表贝壳小盒子立场！
+					</view>
+					<scroll-view scroll-y="true" style="height: 480rpx;">
+						<template v-for="(sug, index) in suggestion.Choices" :key="index">
+							<ua-markdown :source="sug.Message.Content" />
+						</template>
+					</scroll-view>
+				</view>
+			</view>
+		</view>
+
 	</view>
 </template>
 
 <script>
 	import api from '@/request/api.js'
-	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import {
+		getEdusysAccount
+	} from '@/common/utils/auth.js'
 	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js'
 	var uChartsInstance = {}
 	let interstitialAd = null
@@ -289,7 +322,7 @@
 		data() {
 			return {
 				isLogined: true,
-				foldOptionsArea: false,
+				foldOptionsArea: true,
 				semesterOptionsList: [],
 				natureOptionsList: [],
 				showOptionsList: [],
@@ -304,24 +337,30 @@
 				},
 				score: '',
 				displayDetailModal: false,
+				displaySuggestionModal: false,
 				detail: '',
 				cWidth: 750,
-				cHeight: 500
+				cHeight: 500,
+				suggestion: ''
 			}
 		},
 		onLoad() {
 			// #ifdef MP-WEIXIN
-			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-5a3621a7eb4da121' })
+			if (wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({
+				adUnitId: 'adunit-5a3621a7eb4da121'
+			})
 			// #endif
 			// #ifdef MP-QQ
-			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '7be7a448772d36a43560aabf2b2a1a0c' })
+			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({
+				adUnitId: '7be7a448772d36a43560aabf2b2a1a0c'
+			})
 			// #endif
-			
+
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
 			}
-			
+
 			this.fetchOptions()
 			this.fetchScore()
 		},
@@ -330,17 +369,19 @@
 			this.cHeight = uni.upx2px(500)
 		},
 		onShow() {
-			if (interstitialAd) interstitialAd.show()	
+			if (interstitialAd) interstitialAd.show()
 		},
 		methods: {
-			showDetail (semesterIndex, index) {
+			showDetail(semesterIndex, index) {
 				const record = this.score.data[semesterIndex].items[index]
 				console.log(record)
 				this.detail = record
 				this.displayDetailModal = true
 			},
-			hideModal () { this.displayDetailModal = !this.displayDetailModal },
-			foldSemesterScore (semesterIndex) {
+			hideModal() {
+				this.displayDetailModal = !this.displayDetailModal
+			},
+			foldSemesterScore(semesterIndex) {
 				let value = this.score.data[semesterIndex].fold
 				if (value == undefined) value = true
 				// console.log(value)
@@ -363,10 +404,13 @@
 			},
 			fetchOptions() {
 				if (!this.isLogined) {
-					uni.showToast({ title: '需要登录后才能查询您的成绩～', icon: 'none' })
+					uni.showToast({
+						title: '需要登录后才能查询您的成绩～',
+						icon: 'none'
+					})
 					return
 				}
-				
+
 				api.fetchScoreOptions().then(res => {
 					console.log('获取成绩筛选项', res.data)
 					this.semesterOptionsList = res.data.time
@@ -376,11 +420,16 @@
 			},
 			fetchScore() {
 				if (!this.isLogined) {
-					uni.showToast({ title: '需要登录后才能查询您的成绩～', icon: 'none' })
+					uni.showToast({
+						title: '需要登录后才能查询您的成绩～',
+						icon: 'none'
+					})
 					return
 				}
-				
-				uni.showLoading({ title: '查询中...' })
+
+				uni.showLoading({
+					title: '查询中...'
+				})
 				api.fetchScore(
 					this.optionForm.semester,
 					this.optionForm.nature,
@@ -399,18 +448,23 @@
 					uni.hideLoading()
 				})
 			},
-			convertScoreFormat (score) {
+			convertScoreFormat(score) {
 				for (let semesterIndex in score.data) {
 					score.data[semesterIndex].fold = false // 学期成绩列表默认不折叠展示
 				}
 				return score
 			},
-			convertScoreChartFormat (score) {
+			convertScoreChartFormat(score) {
 				let res = {
 					categories: [],
-					series: [
-					  { name: "算术平均分",data: []},
-					  { name: "加权平均法",data: []},
+					series: [{
+							name: "算术平均分",
+							data: []
+						},
+						{
+							name: "加权平均法",
+							data: []
+						},
 					]
 				}
 				for (let semesterIndex in score.data) {
@@ -438,69 +492,105 @@
 				this.showIndex = -1
 				this.fetchScore()
 			},
-			goEvaluateTeacher () {
+			goEvaluateTeacher() {
 				const url = 'https://mp.weixin.qq.com/s/lfldxFZlLsVlQCjvWt62hg'
 				// #ifdef H5
-				uni.showLoading({ title: '加载中...' })
+				uni.showLoading({
+					title: '加载中...'
+				})
 				window.location.href = url
 				// #endif
 				// #ifdef MP-WEIXIN
-				uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
+				uni.navigateTo({
+					url: '/pages/webview/webview?url=' + encodeURIComponent(url)
+				})
 				// #endif
 				// #ifdef MP-QQ
 				uni.setClipboardData({
 					data: url,
-					success() { qq.showToast({ title: '已复制到粘贴板,请打开浏览器粘贴访问', icon: 'none' }) }
+					success() {
+						qq.showToast({
+							title: '已复制到粘贴板,请打开浏览器粘贴访问',
+							icon: 'none'
+						})
+					}
 				})
 				// #endif
 			},
 			drawCharts(id, data) {
-			  const ctx = uni.createCanvasContext(id, this);
-			  uChartsInstance[id] = new uCharts({
-				  type: "area",
-				  context: ctx,
-				  width: this.cWidth,
-				  height: this.cHeight,
-				  categories: data.categories,
-				  series: data.series,
-				  animation: true,
-				  background: "#FFFFFF",
-				  color: ["#1890FF", "#3CA272"],
-				  padding: [15,15,0,15],
-				  enableScroll: false,
-				  legend: {},
-				  xAxis: {
-					disableGrid: true,
-					rotateLabel: true,
-					rotateAngle: 60
-				  },
-				  yAxis: {
-					gridType: "dash",
-					dashLength: 2
-				  },
-				  extra: {
-					area: {
-					  type: "curve",
-					  opacity: 0.2,
-					  addLine: true,
-					  width: 2,
-					  gradient: true,
-					  activeType: "hollow"
+				const ctx = uni.createCanvasContext(id, this);
+				uChartsInstance[id] = new uCharts({
+					type: "area",
+					context: ctx,
+					width: this.cWidth,
+					height: this.cHeight,
+					categories: data.categories,
+					series: data.series,
+					animation: true,
+					background: "#FFFFFF",
+					color: ["#1890FF", "#3CA272"],
+					padding: [15, 15, 0, 15],
+					enableScroll: false,
+					legend: {},
+					xAxis: {
+						disableGrid: true,
+						rotateLabel: true,
+						rotateAngle: 60
+					},
+					yAxis: {
+						gridType: "dash",
+						dashLength: 2
+					},
+					extra: {
+						area: {
+							type: "curve",
+							opacity: 0.2,
+							addLine: true,
+							width: 2,
+							gradient: true,
+							activeType: "hollow"
+						}
 					}
-				  }
 				});
 			},
-			scoreChartTap (e){
-			  uChartsInstance[e.target.id].touchLegend(e);
-			  uChartsInstance[e.target.id].showToolTip(e);
+			scoreChartTap(e) {
+				uChartsInstance[e.target.id].touchLegend(e);
+				uChartsInstance[e.target.id].showToolTip(e);
+			},
+			showSuggestionModal() {
+				this.displaySuggestionModal = !this.displaySuggestionModal
+			},
+			fetchScoreSuggestion() {
+				if (this.suggestion !== '') {
+					this.showSuggestionModal()
+					return
+				}
+				
+				uni.showLoading({
+					title: '大约需要十几秒钟，请您耐心等待...'
+				})
+				api.fetchScoreSuggestion().then(res => {
+					this.suggestion = res.data.data
+					uni.hideLoading()
+					this.showSuggestionModal()
+				}).catch(error => {
+					console.log(error)
+					uni.hideLoading()
+				})
 			}
 		}
 	}
 </script>
 
 <style>
-.charts{
-    width: 750rpx;
-    height: 500rpx;
-  }
+	.charts {
+		width: 750rpx;
+		height: 500rpx;
+	}
+
+	.ai-suggestion-bar {
+		border-top-right-radius: 50rpx;
+		border-top-left-radius: 50rpx;
+		min-height: 60rpx;
+	}
 </style>
