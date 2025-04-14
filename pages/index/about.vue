@@ -28,14 +28,14 @@
 		<!-- 小程序码&二维码 -->
 		<!-- #ifndef MP-QQ -->
 		<view class="flex margin-lr margin-tb justify-around text-center bg-white padding-sm card-radius">
-			<view class="">
-				<view class="">
+			<view>
+				<view>
 					<image @tap="previewImage('https://r2.airmole.net/i/2024/11/30/18vlto-0h.png')" :show-menu-by-longpress="true" class="cu-avatar xxl" src="https://r2.airmole.net/i/2024/11/30/18vlto-0h.png" mode="aspectFill"></image>
 				</view>
 				<view @tap="clickUrl('https://shellbox.ustb.tj.cn')" class="margin-tb-xs text-blue">https://shellbox.ustb.tj.cn</view>
 			</view>
-			<view class="">
-				<view class="">
+			<view>
+				<view>
 					<image @tap="previewImage('https://r2.airmole.net/i/2024/11/30/18yjmx-s4.jpg')" :show-menu-by-longpress="true" class="cu-avatar xxl" src="https://r2.airmole.net/i/2024/11/30/18yjmx-s4.jpg" mode="aspectFill"></image>
 				</view>
 				<view class="margin-tb-xs"><text v-if="isWechatH5">可长按识别</text><text v-else>微信小程序码</text></view>
@@ -72,10 +72,12 @@
 						本应用属于个人开发项目，除小程序广告外无其他资金来源，仅能勉强维持每月服务器支出。<br/>
 						如果贝壳小盒子在您的校园生活中确实有帮助到您，并且在不影响您正常生活消费的情况下有心打赏，那么不胜感激。您可以在打赏附言留下您的称呼，我会将您的支持永久展示到赞助榜
 					</view>
-					<view class="text-center margin-xs">
+					<!-- #ifndef MP-QQ -->
+					<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)" class="text-center margin-xs">
 						<image @tap="previewImage('https://r2.airmole.net/i/2024/11/30/1bdnal-fm.webp')" :show-menu-by-longpress="true" style="height: 220rpx;width: 220rpx;" src="https://r2.airmole.net/i/2024/11/30/1bdnal-fm.webp" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5">长按识别赞赏码</text><text v-else>微信赞赏码</text>
 					</view>
+					<!-- #endif -->
 				</view>
 			</view>
 		</view>
@@ -90,11 +92,13 @@
 			</view>
 			<view class="padding-bottom-sm">
 				<view class="flex align-center justify-around text-center">
-					<view class="">
+					<!-- #ifndef MP-QQ -->
+					<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
 						<image @tap="previewImage(`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`)" :show-menu-by-longpress="true" class="qrcode-image" :src="`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5"><text class="cuIcon-weixin text-xl"></text>长按识别加入微信群</text><text v-else><text class="cuIcon-weixin text-green"></text>微信群二维码</text>
 					</view>
-					<view class="">
+					<!-- #endif -->
+					<view>
 						<image @tap="previewImage('https://r2.airmole.net/images/weapp/qq_group.png')" :show-menu-by-longpress="true" class="qrcode-image" src="https://r2.airmole.net/images/weapp/qq_group.png" mode="aspectFill"></image>
 						<!-- #ifdef H5 -->
 						<text v-if="!isWechatH5">
@@ -130,18 +134,22 @@
 				<view>
 					<text class="cuIcon-title text-green"></text> 图书检索相关信息来源于<text @tap="clickUrl('http://opac.bkty.top')" class="text-blue">图书馆OPAC系统</text>
 				</view>
-				<view>
+				<!-- #ifndef MP-QQ -->
+				<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
 				 	<text class="cuIcon-title text-green"></text> 音像放映安排信息来源于<text @tap="goLibraryOffical" class="text-blue">图书馆微信公众号</text>
 				</view>
+				<!-- #endif -->
 				<view>
 				 	<text class="cuIcon-title text-green"></text> 学校地图建筑照片来源于<text @tap="goTjustb720yun" class="text-blue">涂志远&王道钦学院全景图</text>
 				</view>
-				<view>
+				<!-- #ifndef MP-QQ -->
+				<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
 				 	<text class="cuIcon-title text-green"></text> 学校手绘地图来源于<text @tap="goTjustbMetaWeapp" class="text-blue">北科天院校友之家</text>
 				</view>
-				<view>
+				<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
 				 	<text class="cuIcon-title text-green"></text> 其余信息均来源于网络收集，如有侵权请<text @tap="goShellboxOffical" class="text-blue">联系我</text>
 				</view>
+				<!-- #endif -->
 			</view>
 		</view>
 		
@@ -161,12 +169,12 @@
 			    </view>
 			</view>
 			<!-- #endif -->
-			<view @tap="goUserGuide" class="cu-item arrow">
+			<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)" @tap="goUserGuide" class="cu-item arrow">
 			    <view class="content">
 			        <text class="text-grey">用户使用手册</text>
 			    </view>
 			</view>
-			<view @tap="goJumpGuide" class="cu-item arrow">
+			<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)" @tap="goJumpGuide" class="cu-item arrow">
 			    <view class="content">
 			        <text class="text-grey">公众号、小程序接入指引</text>
 			    </view>
@@ -201,8 +209,10 @@
 				logoImage: app.globalData.logoImageUrl,
 				appId: '',
 				version: '',
+				isMpqq: false, 
+				isMpqqRelease: false,
 				isWechatH5: false,
-				year: '2024'
+				year: '2025'
 			}
 		},
 		onLoad() {
@@ -212,13 +222,17 @@
 			this.appId = accountInfo.miniProgram.appId
 			// #endif
 			
+			// #ifdef MP-QQ
+			this.isMpqq = true
+			if (accountInfo.miniProgram.envVersion === 'release') this.isMpqqRelease = true
+			// #endif
+			
 			// #ifdef H5
 			const isInWechatH5 = /micromessenger/i.test(navigator.userAgent)
 			this.isWechatH5 = isInWechatH5
 			// #endif
 			this.year = (new Date()).getFullYear()
 			this.timestamp = (new Date()).valueOf()
-			console.log('this.year', this.year)
 		},
 		methods: {
 			previewImage (image) {
@@ -282,15 +296,17 @@
 				uni.navigateTo({ url: '/pages/school/media?account=USTBShellBox' })
 			},
 			goTjustbMetaWeapp () {
-					uni.navigateTo({ url: '/pages/school/media?account=gh_7b54ab55270c' })
+				uni.navigateTo({ url: '/pages/school/media?account=gh_7b54ab55270c' })
 			},
 			goUserGuide () {
 				// #ifdef MP-WEIXIN
 				uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w') })
 				// #endif
+				
 				// #ifdef MP-QQ
 				this.copyText('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w')
 				// #endif
+				
 				// #ifdef H5
 				uni.showLoading({ title: '加载中...' })
 				window.location.href = 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'
@@ -298,6 +314,7 @@
 			},
 			goJumpGuide () {
 				// #ifdef MP
+				const _this = this
 				wx.showActionSheet({
 				  itemList: ['公众号菜单跳转小盒子', '公众号文章跳转小盒子', '小程序跳转小盒子'],
 				  success (res) {
@@ -309,11 +326,12 @@
 					uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
 					// #endif
 					// #ifdef MP-QQ
-					this.copyText(url)
+					_this.copyText(url)
 					// #endif
 				  }
 				})
 				// #endif
+				
 				// #ifdef H5
 				uni.showLoading({ title: '加载中...' })
 				window.location.href = 'https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzIyOTYyMjE1NQ==&action=getalbum&album_id=3752283129172738048#wechat_redirect'

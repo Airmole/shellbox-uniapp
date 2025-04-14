@@ -161,7 +161,8 @@
 				<template v-for="(classCourse, classIndex) in classCourses" :key="classIndex">
 					<view class="cu-item"  @click="clickClassCourse(classIndex)">
 						<view class="cu-avatar lg round bg-gradual-green"><text class="text-sm">{{classCourse.className}}</text></view>
-					    <view class="content"><view class="padding-lr"><text class="text-xl">{{classCourse.className}}</text></view></view>
+					    <view class="content text-cut"><view class="padding-left-xs"><text class="text-xl">{{classCourse.className}}</text></view></view>
+						<view class="action"><text class="cuIcon-right"></text></view>
 					</view>
 					<!-- #ifdef MP-WEIXIN -->
 					<view v-if="classIndex !== 0 && classIndex % 12 === 0" class="bg-white">
@@ -449,4 +450,8 @@
 </script>
 
 <style>
+	.content {
+		width: calc(100% - 96rpx - 60rpx - 60rpx) !important;
+		line-height: 1.6em;
+	}
 </style>

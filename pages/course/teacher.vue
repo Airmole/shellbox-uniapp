@@ -136,7 +136,8 @@
 				<template v-for="(teacherCourse, teacherIndex) in teacherCourses" :key="teacherIndex">
 					<view class="cu-item" @click="clickTeacherCourse(teacherIndex)">
 						<view class="cu-avatar lg round bg-gradual-green"><text class="text-sm">{{teacherCourse.teacherName}}</text></view>
-						<view class="content"><view class="padding-lr"><text class="text-xl">{{teacherCourse.teacherName}}</text></view></view>
+						<view class="content text-cut"><view class="padding-left-xs"><text class="text-xl">{{teacherCourse.teacherName}}</text></view></view>
+						<view class="action"><text class="cuIcon-right"></text></view>
 					</view>
 					<!-- #ifdef MP-WEIXIN -->
 					<view v-if="teacherIndex !== 0 && teacherIndex % 12 === 0" class="bg-white">
@@ -390,4 +391,8 @@
 </script>
 
 <style>
+	.content {
+		width: calc(100% - 96rpx - 60rpx - 60rpx) !important;
+		line-height: 1.6em;
+	}
 </style>

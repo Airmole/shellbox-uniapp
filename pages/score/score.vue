@@ -99,7 +99,7 @@
 		</template>
 
 		<!-- 学期成绩图表 -->
-		<view class="margin-tb-sm">
+		<view class="margin-tb-sm" v-show="showChart">
 			<canvas canvas-id="semesterScoreChart" id="semesterScoreChart" class="charts" @touchend="scoreChartTap" />
 		</view>
 
@@ -341,7 +341,8 @@
 				detail: '',
 				cWidth: 750,
 				cHeight: 500,
-				suggestion: ''
+				suggestion: '',
+				showChart: true
 			}
 		},
 		onLoad() {
@@ -377,9 +378,11 @@
 				console.log(record)
 				this.detail = record
 				this.displayDetailModal = true
+				this.showChart = false
 			},
 			hideModal() {
 				this.displayDetailModal = !this.displayDetailModal
+				this.showChart = true
 			},
 			foldSemesterScore(semesterIndex) {
 				let value = this.score.data[semesterIndex].fold
@@ -559,6 +562,7 @@
 			},
 			showSuggestionModal() {
 				this.displaySuggestionModal = !this.displaySuggestionModal
+				this.showChart = !this.displaySuggestionModal
 			},
 			fetchScoreSuggestion() {
 				if (this.suggestion !== '') {
