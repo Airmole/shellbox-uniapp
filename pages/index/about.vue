@@ -26,7 +26,6 @@
 		</view>
 		
 		<!-- 小程序码&二维码 -->
-		<!-- #ifndef MP-QQ -->
 		<view class="flex margin-lr margin-tb justify-around text-center bg-white padding-sm card-radius">
 			<view>
 				<view>
@@ -41,7 +40,6 @@
 				<view class="margin-tb-xs"><text v-if="isWechatH5">可长按识别</text><text v-else>微信小程序码</text></view>
 			</view>
 		</view>
-		<!-- #endif -->
 		
 		<!-- 开源 -->
 		<view class="margin-lr margin-tb-sm bg-white padding-lr-sm card-radius">
@@ -53,8 +51,9 @@
 			</view>
 			<view class="padding-bottom-sm">
 				<text class="cuIcon-info"></text> 本项目前端代码已于 <text class="cuIcon-github">Github</text> 开源，欢迎fork参与开发优化。<br/>
-				前端项目：<text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="text-blue"><text class="cuIcon-github text-blue"></text>Airmole/shellbox-uniapp</text><br/>
-				后端依赖：<text @tap="clickUrl('https://github.com/Airmole/tjustb-edusys')" class="text-blue"><text class="cuIcon-github text-blue"></text>Airmole/tjustb-edusys</text><br/>
+				前端项目：<text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/shellbox-uniapp</text><br/>
+				后端依赖：<text @tap="clickUrl('https://github.com/Airmole/tjustb-edusys')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/tjustb-edusys</text><br/>
+				API接口：<text @tap="clickUrl('https://doc.shellbox.ustb.tj.cn')" class="text-blue"><text class="cuIcon-link text-blue margin-lr-xs"></text>https://doc.shellbox.ustb.tj.cn</text><br/>
 			</view>
 		</view>
 		
@@ -72,12 +71,10 @@
 						本应用属于个人开发项目，除小程序广告外无其他资金来源，仅能勉强维持每月服务器支出。<br/>
 						如果贝壳小盒子在您的校园生活中确实有帮助到您，并且在不影响您正常生活消费的情况下有心打赏，那么不胜感激。您可以在打赏附言留下您的称呼，我会将您的支持永久展示到赞助榜
 					</view>
-					<!-- #ifndef MP-QQ -->
-					<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)" class="text-center margin-xs">
+					<view class="text-center margin-xs">
 						<image @tap="previewImage('https://r2.airmole.net/i/2024/11/30/1bdnal-fm.webp')" :show-menu-by-longpress="true" style="height: 220rpx;width: 220rpx;" src="https://r2.airmole.net/i/2024/11/30/1bdnal-fm.webp" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5">长按识别赞赏码</text><text v-else>微信赞赏码</text>
 					</view>
-					<!-- #endif -->
 				</view>
 			</view>
 		</view>
@@ -92,12 +89,10 @@
 			</view>
 			<view class="padding-bottom-sm">
 				<view class="flex align-center justify-around text-center">
-					<!-- #ifndef MP-QQ -->
-					<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
+					<view>
 						<image @tap="previewImage(`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`)" :show-menu-by-longpress="true" class="qrcode-image" :src="`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5"><text class="cuIcon-weixin text-xl"></text>长按识别加入微信群</text><text v-else><text class="cuIcon-weixin text-green"></text>微信群二维码</text>
 					</view>
-					<!-- #endif -->
 					<view>
 						<image @tap="previewImage('https://r2.airmole.net/images/weapp/qq_group.png')" :show-menu-by-longpress="true" class="qrcode-image" src="https://r2.airmole.net/images/weapp/qq_group.png" mode="aspectFill"></image>
 						<!-- #ifdef H5 -->
@@ -108,10 +103,7 @@
 							<br/><text @tap="copyText('662675925')" class="text-blue">QQ群(662675925)</text>
 						</text>
 						<!-- #endif -->
-						<!-- #ifdef MP-WEIXIN -->
-						<br/><text @tap="copyText('662675925')" class="text-blue">QQ群(662675925)</text>
-						<!-- #endif -->
-						<!-- #ifdef MP-QQ -->
+						<!-- #ifdef MP -->
 						<br/><text @tap="copyText('662675925')" class="text-blue">QQ群(662675925)</text>
 						<!-- #endif -->
 					</view>
@@ -134,22 +126,18 @@
 				<view>
 					<text class="cuIcon-title text-green"></text> 图书检索相关信息来源于<text @tap="clickUrl('http://opac.bkty.top')" class="text-blue">图书馆OPAC系统</text>
 				</view>
-				<!-- #ifndef MP-QQ -->
-				<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
+				<view>
 				 	<text class="cuIcon-title text-green"></text> 音像放映安排信息来源于<text @tap="goLibraryOffical" class="text-blue">图书馆微信公众号</text>
 				</view>
-				<!-- #endif -->
 				<view>
 				 	<text class="cuIcon-title text-green"></text> 学校地图建筑照片来源于<text @tap="goTjustb720yun" class="text-blue">涂志远&王道钦学院全景图</text>
 				</view>
-				<!-- #ifndef MP-QQ -->
-				<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
+				<view>
 				 	<text class="cuIcon-title text-green"></text> 学校手绘地图来源于<text @tap="goTjustbMetaWeapp" class="text-blue">北科天院校友之家</text>
 				</view>
-				<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)">
+				<view>
 				 	<text class="cuIcon-title text-green"></text> 其余信息均来源于网络收集，如有侵权请<text @tap="goShellboxOffical" class="text-blue">联系我</text>
 				</view>
-				<!-- #endif -->
 			</view>
 		</view>
 		
@@ -169,12 +157,12 @@
 			    </view>
 			</view>
 			<!-- #endif -->
-			<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)" @tap="goUserGuide" class="cu-item arrow">
+			<view @tap="goUserGuide" class="cu-item arrow">
 			    <view class="content">
 			        <text class="text-grey">用户使用手册</text>
 			    </view>
 			</view>
-			<view v-if="!isMpqq || (isMpqq&&isMpqqRelease)" @tap="goJumpGuide" class="cu-item arrow">
+			<view @tap="goJumpGuide" class="cu-item arrow">
 			    <view class="content">
 			        <text class="text-grey">公众号、小程序接入指引</text>
 			    </view>
@@ -194,7 +182,7 @@
 			<!-- #ifdef H5 -->
 			<view class="margin-tb-xs">ICP备案：陇ICP备17001242号-3</view>
 			<!-- #endif -->
-			<view class="margin-tb-xs"><text @tap="goShellboxOffical">@Airmole</text> | 2018-{{year}}</view>
+			<view class="margin-tb-xs"><text @tap="goShellboxOffical">@Airmole</text>丨2018-{{year}}</view>
 		</view>
 		
 	</view>
@@ -209,8 +197,6 @@
 				logoImage: app.globalData.logoImageUrl,
 				appId: '',
 				version: '',
-				isMpqq: false, 
-				isMpqqRelease: false,
 				isWechatH5: false,
 				year: '2025'
 			}
@@ -220,11 +206,6 @@
 			const accountInfo = uni.getAccountInfoSync()
 			this.version = accountInfo.miniProgram.version
 			this.appId = accountInfo.miniProgram.appId
-			// #endif
-			
-			// #ifdef MP-QQ
-			this.isMpqq = true
-			if (accountInfo.miniProgram.envVersion === 'release') this.isMpqqRelease = true
 			// #endif
 			
 			// #ifdef H5

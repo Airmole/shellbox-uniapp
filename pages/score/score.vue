@@ -6,8 +6,7 @@
 
 		<view class="margin" v-if="isLogined">
 			<view class="text-left text bg-white padding-sm text-red card-radius">
-				<text><text
-						class="cuIcon-info margin-lr-xs"></text>本应用算术平均分及加权平均分由程序自动计算得来，结果仅供参考！具体准确加权分和GPA绩点建议咨询导员或学校教务处。</text>
+				<text><text class="cuIcon-info margin-lr-xs"></text>本应用算术平均分及加权平均分由程序自动计算得来，结果仅供参考！具体准确加权分和GPA绩点建议咨询导员或学校教务处。</text>
 			</view>
 		</view>
 
@@ -83,6 +82,7 @@
 			</view>
 		</view>
 
+		<!-- 广告位 -->
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="margin margin-tb-xl radius">
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
@@ -158,15 +158,12 @@
 					</template>
 				</template>
 				<view class="cu-item">
-					<view class="content text-left">
-						算术平均分：<text class="text-bold">{{semester.avg}}</text>
-					</view>
-					<view class="content text-right">
-						加权平均分：<text class="text-bold">{{semester.gpa}}</text>
-					</view>
+					<view class="content text-left">算术平均分：<text class="text-bold">{{semester.avg}}</text></view>
+					<view class="content text-right">加权平均分：<text class="text-bold">{{semester.gpa}}</text></view>
 				</view>
 			</view>
 			<view class="margin-tb-xs"></view>
+			<!-- AI总结建议按钮 -->
 			<view @click="fetchScoreSuggestion" class="cu-bar bg-gradual-blue foot ai-suggestion-bar">
 				<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结&建议</text></view>
 			</view>
@@ -192,76 +189,44 @@
 						<view class="cu-list menu sm-border">
 							<navigator :url="`/pages/course/lesson?keyword=${detail.courseName}`" :render-link="false"
 								class="cu-item arrow">
-								<view class="content">
-									<text class="text-grey">课程名称</text>
-								</view>
-								<view class="content">
-									<view>{{detail.courseName}}</view>
-								</view>
+								<view class="content"><text class="text-grey">课程名称</text></view>
+								<view class="content"><view>{{detail.courseName}}</view></view>
 							</navigator>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">课程编号</text>
-								</view>
-								<view class="content">
-									<view>{{detail.courseCode}}</view>
-								</view>
+								<view class="content"><text class="text-grey">课程编号</text></view>
+								<view class="content"><view>{{detail.courseCode}}</view></view>
 							</view>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">课程性质</text>
-								</view>
-								<view class="content">
-									<view>{{detail.courseNature}}</view>
-								</view>
+								<view class="content"><text class="text-grey">课程性质</text></view>
+								<view class="content"><view>{{detail.courseNature}}</view></view>
 							</view>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">开课学期</text>
-								</view>
-								<view class="content">
-									<view>{{detail.courseSemester}}</view>
-								</view>
+								<view class="content"><text class="text-grey">开课学期</text></view>
+								<view class="content"><view>{{detail.courseSemester}}</view></view>
 							</view>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">课程属性</text>
-								</view>
-								<view class="content">
-									<view>{{detail.courseType}}</view>
-								</view>
+								<view class="content"><text class="text-grey">课程属性</text></view>
+								<view class="content"><view>{{detail.courseType}}</view></view>
+							</view>
+							<view class="cu-item" v-if="detail.courseCategory">
+								<view class="content"><text class="text-grey">课程类别</text></view>
+								<view class="content"><view>{{detail.courseCategory}}</view></view>
 							</view>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">考核方式</text>
-								</view>
-								<view class="content">
-									<view>{{detail.accessMethod}}</view>
-								</view>
+								<view class="content"><text class="text-grey">考核方式</text></view>
+								<view class="content"><view>{{detail.accessMethod}}</view></view>
 							</view>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">学分</text>
-								</view>
-								<view class="content">
-									<view>{{detail.credit}}</view>
-								</view>
+								<view class="content"><text class="text-grey">学分</text></view>
+								<view class="content"><view>{{detail.credit}}</view></view>
 							</view>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">考试性质</text>
-								</view>
-								<view class="content">
-									<view>{{detail.examNature}}</view>
-								</view>
+								<view class="content"><text class="text-grey">考试性质</text></view>
+								<view class="content"><view>{{detail.examNature}}</view></view>
 							</view>
 							<view class="cu-item">
-								<view class="content">
-									<text class="text-grey">总学时</text>
-								</view>
-								<view class="content">
-									<view>{{detail.period}}</view>
-								</view>
+								<view class="content"><text class="text-grey">总学时</text></view>
+								<view class="content"><view>{{detail.period}}</view></view>
 							</view>
 							<view class="cu-item">
 								<view class="content">
@@ -278,6 +243,18 @@
 									<!-- #endif -->
 									<view v-else>{{detail.score}}</view>
 								</view>
+							</view>
+							<view class="cu-item" v-if="detail.scoreMark">
+								<view class="content"><text class="text-grey">成绩标识</text></view>
+								<view class="content"><view>{{detail.scoreMark}}</view></view>
+							</view>
+							<view class="cu-item" v-if="detail.groupName">
+								<view class="content"><text class="text-grey">分组名</text></view>
+								<view class="content"><view>{{detail.groupName}}</view></view>
+							</view>
+							<view class="cu-item" v-if="detail.refixTream">
+								<view class="content"><text class="text-grey">补重学期</text></view>
+								<view class="content"><view>{{detail.refixTream}}</view></view>
 							</view>
 						</view>
 					</view>
@@ -312,9 +289,7 @@
 
 <script>
 	import api from '@/request/api.js'
-	import {
-		getEdusysAccount
-	} from '@/common/utils/auth.js'
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js'
 	var uChartsInstance = {}
 	let interstitialAd = null
