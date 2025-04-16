@@ -62,7 +62,8 @@
         "darkmode" : true,
         "appid" : "wxf0ba93e3faff4eda",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : false,
+            "minified" : true
         },
         "usingComponents" : true,
         "permission" : {
@@ -73,7 +74,8 @@
         "libVersion" : "3.3.0",
         "uniStatistics" : {
             "enable" : false
-        }
+        },
+        "lazyCodeLoading" : "requiredComponents"
     },
     "mp-alipay" : {
         "usingComponents" : true,

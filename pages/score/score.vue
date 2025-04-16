@@ -268,8 +268,7 @@
 				<view class="cu-bar bg-gradual-blue">
 					<view class="action text-white"></view>
 					<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结&建议</text></view>
-					<view @click="showSuggestionModal" class="action text-white"><text class="cuIcon-close"></text>
-					</view>
+					<view @click="showSuggestionModal" class="action text-white"><text class="cuIcon-close"></text></view>
 				</view>
 				<view class="padding-sm text-left bg-white">
 					<view class="text-center text-sm">

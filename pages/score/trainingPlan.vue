@@ -19,21 +19,25 @@
 						<text class="text-bold">{{plan.title}}</text>
 					</view>
 				</view>
-				<view class="cu-bar">
-					<view class="action">
-						<text class="cuIcon-title text-green"></text>
-						<text class="text-title text-title">一、培养目标</text>
+				<template v-if="plan.cultivateTarget">
+					<view class="cu-bar">
+						<view class="action">
+							<text class="cuIcon-title text-green"></text>
+							<text class="text-title text-title">一、培养目标</text>
+						</view>
 					</view>
-				</view>
-				<view><text>{{plan.cultivateTarget}}</text></view>
-				<view class="cu-bar">
-					<view class="action">
-						<text class="cuIcon-title text-green"></text>
-						<text class="text-title text-title">二、详细说明</text>
+					<view><text>{{plan.cultivateTarget}}</text></view>
+				</template>
+				<template v-if="plan.description">
+					<view class="cu-bar">
+						<view class="action">
+							<text class="cuIcon-title text-green"></text>
+							<text class="text-title text-title">二、详细说明</text>
+						</view>
 					</view>
-				</view>
-				<view><text>{{plan.description}}</text></view>
-				<view class="cu-bar">
+					<view><text>{{plan.description}}</text></view>
+				</template>
+				<view v-if="plan.courseList" class="cu-bar">
 					<view class="action">
 						<text class="cuIcon-title text-green"></text>
 						<text class="text-title text-title">三、课程设置总表</text>
@@ -234,16 +238,14 @@
 
 <script>
 	import api from '@/request/api.js'
-	import {
-		getEdusysAccount
-	} from '@/common/utils/auth.js'
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
 				isLogined: true,
 				showAllProgress: true,
-				plan: ''
+				plan: null
 			}
 		},
 		onLoad() {
@@ -275,7 +277,6 @@
 			foldCourseSystem(index) {
 				let value = this.plan.courseList.content[index].fold
 				if (value == undefined) value = true
-				console.log(value)
 				this.plan.courseList.content[index].fold = !value
 			},
 			fetchTrainingPlan() {
@@ -295,6 +296,7 @@
 					uni.hideLoading()
 				}).catch(error => {
 					console.log('培养计划查询失败', error)
+					this.plan = ''
 					uni.hideLoading()
 				})
 			}

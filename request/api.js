@@ -305,6 +305,18 @@ export default {
 	fetchTrainingPlan () {
 		return request('/edusys/trainingPlan', 'GET')
 	},
+	// 获取评教批次列表
+	fetchEvaluateTeacherSemester () {
+		return request(`/edusys/evaluateTeacher/semester`)
+	},
+	// 获取评教课程列表
+	fetchEvaluateTeacherCourse (url) {
+		return request(`/edusys/evaluateTeacher/course?url=${url}`)
+	},
+	// 获取评教课程详情
+	fetchEvaluateTeacherDetail (url) {
+		return request(`edusys/evaluateTeacher/detail?url=${url}`)
+	},
 	// 权益保护相关
 	// 获取权益投诉帖
 	fetchRightsProtectionIndex (page = 1, tag = '[0,1,2,3,4]', hot = '[0,1]') {
