@@ -320,10 +320,10 @@ export default {
 	// 权益保护相关
 	// 获取权益投诉帖
 	fetchRightsProtectionIndex (page = 1, tag = '[0,1,2,3,4]', hot = '[0,1]') {
-		return request(`/rightsProtection?page=${page}&tag=${tag}&hot=${hot}`, `GET`)
+		return request(`/rightsProtection?page=${page}&tag=${tag}&hot=${hot}`)
 	},
 	fetchRightsProtectionDetail (id, page = 1) {
-		return request(`/rightsProtection/${id}?page=${page}`, `GET`)
+		return request(`/rightsProtection/${id}?page=${page}`)
 	},
 	postRightsProtection (data) {
 		return request(`/rightsProtection`, `POST`, data)
@@ -335,26 +335,38 @@ export default {
 		return request(`/rightsProtection/${id}`, `DELETE`)
 	},
 	fetchIsRightsProtectionAdminer (account) {
-		return request(`/rightsProtection/adminer/${account}`, `GET`)
+		return request(`/rightsProtection/adminer/${account}`)
 	},
 	// 电影放映
 	fetchMovieDay (date = '') {
-		return request(`/school/movie?date=${date}`, 'GET')
+		return request(`/school/movie?date=${date}`)
 	},
 	fetchMovieMonthList (month = '') {
-		return request(`/school/movie/month?month=${month}`, 'GET')
+		return request(`/school/movie/month?month=${month}`)
 	},
 	fetchMapAllPoi () {
-		return request(`/school/map/poi`, 'GET')
+		return request(`/school/map/poi`)
 	},
 	fetchSchoolMediaList () {
-		return request(`/school/media`, 'GET')
+		return request(`/school/media`)
 	},
 	// 图书查询
 	fetchBookSearch (type = '02', keyword = '') {
-		return request(`/book/search?type=${type}&keyword=${keyword}`, 'GET')
+		return request(`/book/search?type=${type}&keyword=${keyword}`)
 	},
 	fetchBookDetailByMarcNo (marcNo) {
-		return request(`/book/marc/${marcNo}`, 'GET')
+		return request(`/book/marc/${marcNo}`)
+	},
+	fetchBookLendTrend (marcNo) {
+		return request(`/book/lendTrend/${marcNo}`)
+	},
+	fetchSameAuthorBooks (marcNo) {
+		return request(`/book/sameAuthor/${marcNo}`)
+	},
+	fetchOpacsysKeywordCloud () {
+		return request(`/book/keywordCloud`)
+	},
+	fetchOpacsysHotRankSimple () {
+		return request(`/book/hot/simple`)
 	}
 }
