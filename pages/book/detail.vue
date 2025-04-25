@@ -324,6 +324,14 @@
 				this.jsonStr.journals = journals
 			},
 			drawCharts(id,data) {
+				// #ifndef MP-QQ
+				const appBaseInfo = uni.getAppBaseInfo()
+				const theme = appBaseInfo.theme ? appBaseInfo.theme : appBaseInfo.hostTheme
+				// #endif
+				// #ifdef MP-QQ
+				const appBaseInfo = qq.getSystemInfoSync()
+				const theme = appBaseInfo.theme ? appBaseInfo.theme : 'light'
+				// #endif
 				const min = Math.min(...data.series[0].data)
 				const max = Math.max(...data.series[0].data)
 			    const ctx = uni.createCanvasContext(id, this);
@@ -336,7 +344,7 @@
 			        series: data.series,
 					dataLabel: false,
 			        animation: true,
-			        background: "#FFFFFF",
+			        background: theme === 'dark' ? '#000000' : '#ffffff',
 			        padding: [15,50,0,0],
 			        enableScroll: false,
 			        legend: { show: false },

@@ -495,6 +495,8 @@
 				// #endif
 			},
 			drawCharts(id, data) {
+				const appBaseInfo = uni.getAppBaseInfo()
+				const theme = appBaseInfo.theme ? appBaseInfo.theme : appBaseInfo.hostTheme
 				const ctx = uni.createCanvasContext(id, this);
 				uChartsInstance[id] = new uCharts({
 					type: "area",
@@ -504,7 +506,7 @@
 					categories: data.categories,
 					series: data.series,
 					animation: true,
-					background: "#FFFFFF",
+					background: theme === 'dark' ? '#000000' : '#ffffff',
 					color: ["#1890FF", "#3CA272"],
 					padding: [15, 15, 0, 15],
 					enableScroll: false,

@@ -192,6 +192,14 @@
 				})
 			},
 			drawKeywordCloudCharts(id, keywords) {
+				// #ifndef MP-QQ
+				const appBaseInfo = uni.getAppBaseInfo()
+				const theme = appBaseInfo.theme ? appBaseInfo.theme : appBaseInfo.hostTheme
+				// #endif
+				// #ifdef MP-QQ
+				const appBaseInfo = qq.getSystemInfoSync()
+				const theme = appBaseInfo.theme ? appBaseInfo.theme : 'light'
+				// #endif
 				const ctx = uni.createCanvasContext(id, this)
 				const _this = this
 				uChartsInstance[id] = new uCharts({
@@ -202,6 +210,7 @@
 			        series: keywords,
 			        animation: true,
 			        enableScroll: false,
+					background: theme === 'dark' ? '#000000' : '#ffffff',
 			        extra: {
 			          word: { type: "normal", autoColors: true }
 			        }

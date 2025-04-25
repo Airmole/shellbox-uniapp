@@ -135,6 +135,7 @@
         }
     },
     "mp-qq" : {
+        "darkmode" : true,
         "uniStatistics" : {
             "enable" : false
         },
