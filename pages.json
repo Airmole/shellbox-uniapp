@@ -27,7 +27,10 @@
 		{ "path": "pages/book/detail" },
 		{ "path": "pages/index/about" },
 		{ "path" :"pages/score/trainingPlan" },
-		{ "path" : "pages/score/evaluateTeacher" }
+		{ "path" : "pages/score/evaluateTeacher" },
+		{ "path" : "pages/book/hotbook" },
+		{ "path" : "pages/book/shelf" },
+		{ "path" : "pages/book/scan" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",

@@ -13,6 +13,7 @@
 		    <view class="search-form round">
 		      <text class="cuIcon-search"></text>
 		      <input type="text" placeholder="输入要检索的图书关键词" v-model="keyword" confirm-type="search"  @confirm="searchBook" :auto-focus="true"></input>
+		      <text @click="goScanBook" class="cuIcon-scan"></text>
 		    </view>
 		  </view>
 		  <radio-group class="block" @change="radioChange">
@@ -55,9 +56,9 @@
 			<view class="cu-list menu sm-border card-menu margin-top margin-bottom">
 			    <navigator :url="`/pages/book/detail?code=${item.marcRecNo}`" class="cu-item arrow" v-for="(item, index) in searchResult.content" :key='index'>
 			      <view class="content padding-tb-sm">
-			        <view><text user-select="true">{{item.title}}</text></view>
+			        <view><text user-select="true">{{item.num}}.{{item.title}}</text></view>
 			        <view class="text-gray text-sm">
-			          <text decode="true" user-select="true"><template v-if="item.author"><text class="cuIcon-people text-cyan margin-right-xs"></text>{{item.author}}<br/></template><template v-if="item.callNo"><text class="cuIcon-barcode text-cyan margin-right-xs"></text>索书号：<text class="text-cyan">{{item.callNo}}</text></template>
+			          <text :decode="true" user-select="true"><template v-if="item.author"><text class="cuIcon-people text-cyan margin-right-xs"></text>{{item.author}}丨{{item.publisher}}{{item.pubYear}}<text :decode="true">\n</text> </template><template v-if="item.callNo"><text class="cuIcon-barcode text-cyan margin-right-xs"></text>索书号：<text class="text-cyan">{{item.callNo}}</text></template>
 			          </text>
 			        </view>
 			      </view>
@@ -228,6 +229,9 @@
 				const index = e.currentTarget.dataset.id
 				this.currentHot = index
 			},
+			goScanBook () {
+				uni.navigateTo({ url: '/pages/book/scan' })
+			}
 		},
 		onShareAppMessage() {
 			let title = ''

@@ -149,8 +149,27 @@
 				<canvas v-show="showChart" canvas-id="lendTrendChart" id="lendTrendChart" class="charts bg-white" @touchend="tapChart" />
 			</view>
 			
+			<!-- 相关书架图书 -->
+			<view class="cu-list menu sm-border card-menu margin-tb" v-if="jsonStr.shelf.length > 0">
+				<view class="cu-item">
+				  <view class="action">
+					<text class="cuIcon-title text-cyan"></text> 相关书架
+				  </view>
+				</view>
+				<navigator :url="`/pages/book/shelf?id=${item.id}`" class="cu-item arrow" v-for="(item, index) in jsonStr.shelf" :key="index" :render-link="false">
+				  <view class="content">
+					<text class="cuIcon-goodsfavor text-cyan"></text>
+					<text class="text-grey">{{item.name}}</text>
+				  </view>
+				  <view class="action">
+					<text class="text-grey text-sm">{{item.count}}册书刊</text>
+				  </view>
+				</navigator>
+			</view>
+
+			
 			<!-- 同名作者的其他书籍 -->
-			<view class="cu-list menu sm-border card-menu margin-tb" v-if="sameAuthors">
+			<view class="cu-list menu sm-border card-menu margin-tb" v-if="sameAuthors && sameAuthors.length">
 				<view class="cu-item">
 					<view class="action">
 						<text class="cuIcon-title text-cyan"></text> 同名作者其他著作
@@ -173,6 +192,39 @@
 					</navigator>
 				</template>
 			</view>
+			
+			<!-- 豆瓣、当当、微信读书 -->
+			<view class="cu-list menu sm-border card-menu margin-tb" v-if="jsonStr.isbn && !isMpQQ">
+			    <view class="cu-item">
+			      <view class="action">
+			        <text class="cuIcon-title text-cyan"></text> 其他相关资源
+			      </view>
+			    </view>
+				<!-- #ifdef MP-WEIXIN -->
+				<view class="cu-item arrow" @click="goWechatBook">
+				  <view class="content">
+				    <image src="https://r2.airmole.net/i/2025/04/27/17ndig-v8.jpg" class="png radius" mode="aspectFit"></image>
+				    <text class="text-black">微信读书</text>
+				  </view>
+				  <view class="action">前往阅读</view>
+				</view>
+				<!-- #endif -->
+			    <view class="cu-item arrow" @click="goToDouban">
+			      <view class="content">
+			        <image src="https://r2.airmole.net/i/2025/04/27/s3qy1-93.ico" class="png radius" mode="aspectFit"></image>
+			        <text class="text-black">豆瓣评分</text>
+			      </view>
+			      <view class="action">查看热评</view>
+			    </view>
+			    <view class="cu-item arrow" @click="goToDangdang">
+			      <view class="content">
+			        <image src="https://r2.airmole.net/i/2025/04/27/s3uey-7d.ico" class="png radius" mode="aspectFit"></image>
+			        <text class="text-black">当当图书</text>
+			      </view>
+			      <view class="action">前往购买</view>
+			    </view>
+			</view>
+			
 		</template>
 
 	</view>
@@ -203,6 +255,7 @@
 				cWidth: 750,
 				cHeight: 300,
 				showChart: true,
+				isMpQQ: false,
 			}
 		},
 		onLoad(options) {
@@ -211,6 +264,7 @@
 			// #endif
 			// #ifdef MP-QQ
 			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '8fe9b8e7191346a2ffb0c20c6bf3e0cf' })
+			this.isMpQQ = true
 			// #endif
 
 			uni.showLoading({ title: "等我加载一下~" })
@@ -371,6 +425,53 @@
 			tapChart(e){
 			  uChartsInstance[e.target.id].touchLegend(e)
 			  uChartsInstance[e.target.id].showToolTip(e)
+			},
+			goToDouban () {
+				if (!this.jsonStr.isbn) return
+				uni.showLoading({ title: '加载中...' })
+				api.fetchDoubanIdByISBN(this.jsonStr.isbn).then(res => {
+					if (!res.data.doubanId) {
+						uni.showToast({ title: '豆瓣未收录'})
+						return
+					}
+					// #ifdef MP-WEIXIN
+					wx.navigateToMiniProgram({
+						appId: 'wx2f9b06c1de1ccfca', // 豆瓣评分
+						path: `pages/subject/subject?id=${res.data.doubanId}&type=book`
+					})
+					// #endif
+					// #ifdef H5
+					window.open(`https://book.douban.com/subject/${res.data.doubanId}/`)
+					// #endif
+				}).catch(error => {
+					uni.showToast({ title: '豆瓣未收录'})
+					console.log('fetchDoubanIdByISBN', error)
+				}).finally(() =>{
+					uni.hideLoading()
+				})
+			},
+			goToDangdang () {
+				const keyword = (this.jsonStr.intro && this.jsonStr.intro[0].content) ? this.jsonStr.intro[0].content : this.jsonStr.isbn;
+				// #ifdef MP-WEIXIN
+				wx.navigateToMiniProgram({
+				  appId: 'wx7bb576902363f4ff', // 当当购物
+				  path: `pages/search/index?keyword=${keyword}`
+				})
+				return
+				// #endif
+				
+				// #ifdef H5
+				window.open(`https://search.dangdang.com/?key=${keyword}`)
+				// #endif
+			},
+			goWechatBook () {
+				const keyword = (this.jsonStr.intro && this.jsonStr.intro[0].content) ? this.jsonStr.intro[0].content : '';
+				// #ifdef MP-WEIXIN
+				wx.navigateToMiniProgram({
+				  appId: 'wx8a5d6f9fad07544e', // 微信读书
+				  path: `pages/search/main?keyword=${keyword}`
+				})
+				// #endif
 			}
 		}
 	}

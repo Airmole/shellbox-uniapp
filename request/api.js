@@ -368,5 +368,23 @@ export default {
 	},
 	fetchOpacsysHotRankSimple () {
 		return request(`/book/hot/simple`)
+	},
+	fetchOpacsysHotLendBooks(classType = 'ALL') {
+		return request(`/book/hot/lend?class=${classType}`)
+	},
+	fetchOpacsysHotScoreBooks (classType = 'ALL', sort = '') {
+		return request(`/book/hot/score?class=${classType}&sort=${sort}`)
+	},
+	fetchOpacsysHotStarBooks (classType = 'ALL') {
+		return request(`/book/hot/star?class=${classType}`)
+	},
+	fetchOpacsysHotBooks (classType = 'ALL') {
+		return request(`/book/hot/book?class=${classType}`)
+	},
+	fetchOpacsysShelfBooks (shelfId) {
+		return request(`/book/shelf/${shelfId}`)
+	},
+	fetchDoubanIdByISBN (isbn) {
+		return request(`/book/isbn/douban/${isbn}`)
 	}
 }
