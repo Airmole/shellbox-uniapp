@@ -96,7 +96,6 @@
 				}
 			},
 			scanCode () {
-				const api = api
 				const _this = this
 				uni.scanCode({
 					scanType: 'barCode',

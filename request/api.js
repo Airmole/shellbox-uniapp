@@ -386,5 +386,14 @@ export default {
 	},
 	fetchDoubanIdByISBN (isbn) {
 		return request(`/book/isbn/douban/${isbn}`)
+	},
+	fetchOpacsysOverdueList (page = 1) {
+		return request(`/book/overdue?page=${page}`)
+	},
+	fetchOpacsysExceedFine (page = 1) {
+		return request(`/book/exceedFine?page=${page}`)
+	},
+	fetchOpacsysOverdueSearch (usercode) {
+		return request(`/book/overdue/search?usercode=${usercode}`)
 	}
 }

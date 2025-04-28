@@ -30,7 +30,8 @@
 		{ "path" : "pages/score/evaluateTeacher" },
 		{ "path" : "pages/book/hotbook" },
 		{ "path" : "pages/book/shelf" },
-		{ "path" : "pages/book/scan" }
+		{ "path" : "pages/book/scan" },
+		{ "path" : "pages/book/overdue" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
