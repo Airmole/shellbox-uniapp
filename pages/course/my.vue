@@ -21,12 +21,12 @@
 		<courseTable v-if="isLogined" :columnTitles="courseData.columnTitle" :table="courseData.table" :tips="courseData.tips"></courseTable>
 		<template v-else>
 			<!-- #ifdef MP-WEIXIN -->
-			<view class="margin margin-tb-xl radius">
+			<view v-if="!isVip" class="margin margin-tb-xl radius">
 				<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 			</view>
 			<!-- #endif -->
 			<!-- #ifdef MP-QQ -->
-			<view class="margin margin-tb-xl radius">
+			<view v-if="!isVip" class="margin margin-tb-xl radius">
 				<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 			</view>
 			<!-- #endif -->
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
@@ -52,6 +53,7 @@
 		},
 		data() {
 			return {
+				isVip: false,
 				isLogined: true,
 				courseData: '',
 				semesterIndex: 0,
@@ -61,6 +63,7 @@
 			}
 		},
 		onLoad (options) {
+			this.isVip = app.globalData.isVip
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return

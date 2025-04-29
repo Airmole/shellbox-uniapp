@@ -56,12 +56,12 @@
 		</view>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
 		<!-- #ifdef MP-QQ -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 		</view>
 		<!-- #endif -->
@@ -71,11 +71,13 @@
 	</view>
 </template>
 <script>
+	const app = getApp()
 	import api from '@/request/api.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
+				isVip: false,
 				checkedDate: null,
 				type: "month",
 				mode: "single",
@@ -91,6 +93,7 @@
 			}
 		},
 		onLoad(option) {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
@@ -110,7 +113,7 @@
 			this.getMonthMovie(this.checkedDate)
 		},
 		onShow() {
-			if (interstitialAd) interstitialAd.show()	
+			if (interstitialAd && !this.isVip) interstitialAd.show()	
 		},
 		methods: {
 			goOfficalArticle(e) {

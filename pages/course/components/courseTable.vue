@@ -193,12 +193,12 @@
 				</swiper>
 				<view v-if="details.length>1" class="padding-sm text-center bg-gray"><text>左右滑动可切换课程</text></view>
 				<!-- #ifdef MP-WEIXIN -->
-				<view v-if="displayDetailModal" class="margin-sm bg-white">
+				<view v-if="displayDetailModal && !isVip" class="margin-sm bg-white">
 					<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 				</view>
 				<!-- #endif -->
 				<!-- #ifdef MP-QQ -->
-				<view v-if="displayDetailModal" class="margin-sm bg-white">
+				<view v-if="displayDetailModal && !isVip" class="margin-sm bg-white">
 					<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 				</view>
 				<!-- #endif -->
@@ -211,6 +211,7 @@
 	import { ref } from 'vue'
 	import { onLoad } from '@dcloudio/uni-app'
 
+	const app = getApp()
 	let screenWidth = ref(375)
 	let columnTitleWidth = ref(42)
 	let tableWidth = ref(500)
@@ -222,6 +223,7 @@
 	let details = ref([])
 	let newRowTitles = ref([])
 	const rowTitles = ref([["08:00","09:35"], ["09:55","11:30"], ["13:10","14:45"], ["15:00","16:35"], ["16:50","18:25"], ["19:10","21:35"]])
+	let isVip = ref(false)
 	
 	const props = defineProps({
 		columnTitles: {
@@ -243,6 +245,7 @@
 	
 	onLoad(() => {
 		calcTableSize()
+		isVip.value = app.globalData.isVip
 	})
 	
 	function hideModal() {

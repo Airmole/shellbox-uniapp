@@ -193,6 +193,7 @@
 	export default {
 		data() {
 			return {
+				isVip: false,
 				timestamp: '',
 				logoImage: app.globalData.logoImageUrl,
 				appId: '',

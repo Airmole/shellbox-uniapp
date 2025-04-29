@@ -47,12 +47,12 @@
 		</view>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin-lr margin-tb-sm radius">
+		<view v-if="isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
 		<!-- #ifdef MP-QQ -->
-		<view class="margin-lr margin-tb-sm radius">
+		<view v-if="isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 		</view>
 		<!-- #endif -->
@@ -94,18 +94,16 @@
 	import { onShow, onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 	import BoxHomeWidgets from './components/homeWidgets.vue'
 	import { getWeekNameByDayNumber } from '@/common/utils/tools.js'
-	import { useAppStore } from '@/stores/app';
-	import { storeToRefs } from 'pinia';
-
+	import { useAppStore } from '@/stores/app'
+	import { storeToRefs } from 'pinia'
 	const app = getApp()
+	const appStore = useAppStore()
+	const { courses, calendar, loginStatus } = storeToRefs(appStore)
 	const praise = ref('')
 	const isLoading = ref(true)
 	const isShowTodayCourse = ref(false)
 	const now = ref(new Date())
 	let todayCourses = ref([])
-
-	const appStore = useAppStore()
-	const { courses, calendar, loginStatus } = storeToRefs(appStore)
 
 	watch(loginStatus, (newValue, oldValue) => {
 		if (newValue === true) uni.hideLoading()
@@ -116,10 +114,10 @@
 		todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
 	})
 
+	const isVip = ref(false)
 	onLoad(() => {
-		uni.showLoading({
-			title: '加载中...'
-		})
+		isVip.value = app.globalData.isVip
+		uni.showLoading({ title: '加载中...'})
 		// #ifdef MP
 		uni.showShareMenu({ menus: ["shareAppMessage", "shareTimeline"] })
 		// #endif

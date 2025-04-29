@@ -118,12 +118,12 @@
 								</view>
 							</view>
 							<!-- #ifdef MP-WEIXIN -->
-							<view v-if="courseIndex !== 0 && courseIndex % 5 === 0" class="bg-white">
+							<view v-if="courseIndex !== 0 && courseIndex % 5 === 0 && !isVip" class="bg-white">
 								<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 							</view>
 							<!-- #endif -->
 							<!-- #ifdef MP-QQ -->
-							<view v-if="courseIndex !== 0 && courseIndex % 5 === 0" class="bg-white">
+							<view v-if="courseIndex !== 0 && courseIndex % 5 === 0 && !isVip" class="bg-white">
 								<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 							</view>
 							<!-- #endif -->
@@ -237,18 +237,21 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
+				isVip: false,
 				isLogined: true,
 				showAllProgress: true,
 				plan: null
 			}
 		},
 		onLoad() {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if (wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({
 				adUnitId: 'adunit-5a3621a7eb4da121'
@@ -268,7 +271,7 @@
 			this.fetchTrainingPlan()
 		},
 		onShow() {
-			if (interstitialAd) interstitialAd.show()
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			foldProgress() {

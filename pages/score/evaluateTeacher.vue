@@ -157,6 +157,7 @@
 	export default {
 		data() {
 			return {
+				isVip: false,
 				isLogined: true,
 				pageHeight: 0,
 				semesterIndex: null,
@@ -169,6 +170,7 @@
 			}
 		},
 		onLoad() {
+			this.isVip = app.globalData.isVip
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
@@ -176,6 +178,8 @@
 			
 			this.pageHeight = app.globalData.screenHeight
 			this.fetchSemester()
+		},
+		onShow() {
 		},
 		methods: {
 			checkSemester (index) {

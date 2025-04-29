@@ -122,12 +122,12 @@
 			</view>
 			
 			<!-- #ifdef MP-WEIXIN -->
-			<view class="margin margin-tb-xl radius">
+			<view v-if="!isVip" class="margin margin-tb-xl radius">
 				<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 			</view>
 			<!-- #endif -->
 			<!-- #ifdef MP-QQ -->
-			<view class="margin margin-tb-xl radius">
+			<view v-if="!isVip" class="margin margin-tb-xl radius">
 				<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 			</view>
 			<!-- #endif -->
@@ -140,12 +140,12 @@
 						<view class="action"><text class="cuIcon-right"></text></view>
 					</view>
 					<!-- #ifdef MP-WEIXIN -->
-					<view v-if="teacherIndex !== 0 && teacherIndex % 12 === 0" class="bg-white">
+					<view v-if="teacherIndex !== 0 && teacherIndex % 12 === 0 && !isVip" class="bg-white">
 						<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 					</view>
 					<!-- #endif -->
 					<!-- #ifdef MP-QQ -->
-					<view v-if="teacherIndex !== 0 && teacherIndex % 12 === 0" class="bg-white">
+					<view v-if="teacherIndex !== 0 && teacherIndex % 12 === 0 && !isVip" class="bg-white">
 						<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 					</view>
 					<!-- #endif -->
@@ -167,6 +167,7 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '@/request/api.js'
 	import courseTable from './components/courseTable.vue'
 	let interstitialAd = null
@@ -174,6 +175,7 @@
 		components: { courseTable },
 		data() {
 			return {
+				isVip: false,
 				showSearchArea: true,
 				showAllOption: false,
 				foldOptionsArea: false,
@@ -206,6 +208,7 @@
 			}
 		},
 		onLoad(options) {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
@@ -223,7 +226,7 @@
 			this.fetchOptions(options.keyword)
 		},
 		onShow() {
-			if (interstitialAd) interstitialAd.show()	
+			if (interstitialAd && !this.isVip) interstitialAd.show()	
 		},
 		methods: {
 			generateWeekOption () {

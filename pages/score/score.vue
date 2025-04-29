@@ -84,12 +84,12 @@
 
 		<!-- 广告位 -->
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
 		<!-- #ifdef MP-QQ -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 		</view>
 		<!-- #endif -->
@@ -146,12 +146,12 @@
 							</view>
 						</view>
 						<!-- #ifdef MP-WEIXIN -->
-						<view v-if="index !== 0 && index % 10 === 0" class="bg-white">
+						<view v-if="index !== 0 && index % 10 === 0 && !isVip" class="bg-white">
 							<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 						</view>
 						<!-- #endif -->
 						<!-- #ifdef MP-QQ -->
-						<view v-if="index !== 0 && index % 10 === 0" class="bg-white">
+						<view v-if="index !== 0 && index % 10 === 0 && !isVip" class="bg-white">
 							<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 						</view>
 						<!-- #endif -->
@@ -287,6 +287,7 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js'
@@ -295,6 +296,7 @@
 	export default {
 		data() {
 			return {
+				isVip: false,
 				isLogined: true,
 				foldOptionsArea: true,
 				semesterOptionsList: [],
@@ -320,6 +322,7 @@
 			}
 		},
 		onLoad() {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if (wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({
 				adUnitId: 'adunit-5a3621a7eb4da121'
@@ -344,7 +347,7 @@
 			this.cHeight = uni.upx2px(500)
 		},
 		onShow() {
-			if (interstitialAd) interstitialAd.show()
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			showDetail(semesterIndex, index) {

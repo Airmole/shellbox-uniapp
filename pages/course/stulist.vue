@@ -67,6 +67,7 @@
 	export default {
 		data() {
 			return {
+				isVip: false,
 				isTeacher: false,
 				courseList: '',
 				stulistTitle: '',

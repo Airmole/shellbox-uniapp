@@ -68,12 +68,12 @@
 		</template>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
 		<!-- #ifdef MP-QQ -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 		</view>
 		<!-- #endif -->
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '../../request/api'
 	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js'
 	var uChartsInstance = {}
@@ -91,6 +92,7 @@
 	export default {
 		data() {
 			return {
+				isVip: false,
 				cWidth: 750,
 				cHeight: 500,
 				searchType: '02',
@@ -108,6 +110,7 @@
 			}
 		},
 		onLoad(options) {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
@@ -133,7 +136,7 @@
 			this.cHeight = uni.upx2px(500)
 		},
 		onShow() {
-			if (interstitialAd) interstitialAd.show()
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			searchBook: function () {

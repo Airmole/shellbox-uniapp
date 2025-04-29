@@ -196,12 +196,12 @@
 		</view>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
 		<!-- #ifdef MP-QQ -->
-		<view class="margin margin-tb-xl radius">
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 		</view>
 		<!-- #endif -->
@@ -259,12 +259,12 @@
 				</view>
 			</view>
 			<!-- #ifdef MP-WEIXIN -->
-			<view v-if="roomIndex !== 0 && roomIndex % 3 === 0" class="margin-lr bg-white">
+			<view v-if="roomIndex !== 0 && roomIndex % 3 === 0 && !isVip" class="margin-lr bg-white">
 				<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 			</view>
 			<!-- #endif -->
 			<!-- #ifdef MP-QQ -->
-			<view v-if="roomIndex !== 0 && roomIndex % 3 === 0" class="margin-lr bg-white">
+			<view v-if="roomIndex !== 0 && roomIndex % 3 === 0 && !isVip" class="margin-lr bg-white">
 				<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 			</view>
 			<!-- #endif -->
@@ -339,11 +339,13 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '@/request/api.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
+				isVip: false,
 				classrooms: '',
 				foldOptionsArea: false,
 				foldOptionForm: true,
@@ -398,6 +400,7 @@
 			}
 		},
 		onLoad() {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
@@ -411,7 +414,7 @@
 			// this.fetchClassroomList('classroom')
 		},
 		onShow() {
-			if (interstitialAd) interstitialAd.show()	
+			if (interstitialAd && !this.isVip) interstitialAd.show()	
 		},
 		methods: {
 			fetchOptions () {

@@ -22,6 +22,8 @@ export const useAppStore = defineStore('app', () => {
 	function dataInit() {
 		app.globalData.loginPromise.then((res) => {
 			setAppAuth(res)
+			app.globalData.isVip = (res && res.isVip) ? true : false
+			console.log('app.globalData.isVip', app.globalData.isVip)
 		}).catch(err => {
 			console.log('err:>>',err);
 			clearLoginStatus()
@@ -65,6 +67,7 @@ export const useAppStore = defineStore('app', () => {
 			let userInfo = {}
 			if (res.data.avatar) userInfo.avatar = res.data.avatar
 			if (res.data.nickname) userInfo.nickname = res.data.nickname
+			if (res.data.isVip) userInfo.isVip = res.data.isVip
 			if (Object.keys(userInfo).length === 0) userInfo = undefined
 			setUserInfo(userInfo)
 		}).catch(error => {

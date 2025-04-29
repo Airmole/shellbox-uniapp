@@ -66,12 +66,13 @@
 </template>
 
 <script>
-	import api from '@/request/api.js'
 	const app = getApp()
+	import api from '@/request/api.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
+				isVip: false,
 				pageHeight: 0,
 				defaultCenter: [117.392825, 39.542733],
 				currentTab: 0,
@@ -87,6 +88,7 @@
 			}
 		},
 		onLoad(option) {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
@@ -105,7 +107,7 @@
 			});
 		},
 		onShow () {
-			if (interstitialAd) interstitialAd.show()
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			showPoiCardArea () {
