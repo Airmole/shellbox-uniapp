@@ -39,7 +39,7 @@
 		</view>
 
 		<block v-for="(item, index) in menuList" :key="index">
-			<menuGuide :title="item.title" :menuList="item.children"></menuGuide>
+			<menuGuide :title="item.title" :menuList="item.children" :isFold="item.fold"></menuGuide>
 		</block>
 		
 		<!-- #ifdef MP-WEIXIN -->

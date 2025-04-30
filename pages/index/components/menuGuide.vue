@@ -31,12 +31,14 @@
 	
 	const props = defineProps({
 		menuList: Object,
-		title: String
+		title: String,
+		isFold: Boolean
 	})
 	
-	const fold = ref(true)
+	const fold = ref(null)
 	const renderMenu = computed(() => {
-		if (fold.value) return props.menuList
+		if (fold.value === null) fold.value = props.isFold
+		if (!fold.value) return props.menuList
 		return props.menuList.slice(0, 5)
 	})
 	
@@ -69,13 +71,10 @@
 		return function (icon) {
 		    // 如果icon.logined为true，则需要检查loginStatus是否也为true
 		    if (icon.logined && !loginStatus) return false;
-		    
 		    // 如果icon.teacher为true，则需要检查isTeacher是否也为true
 		    if (icon.teacher && !isTeacher) return false;
-		    
 		    // 如果icon.student为true，则需要检查isStudent是否也为true
 		    if (icon.student && !isStudent) return false;
-
 		    // 如果icon.platform包含platform，则返回true，否则返回false
 		    return icon.platform.includes(platform);
 		}

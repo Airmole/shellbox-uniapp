@@ -52,7 +52,7 @@
 		</view>
 		<!-- #endif -->
 		<!-- #ifdef MP-QQ -->
-		<view v-if="isVip" class="margin-lr margin-tb-sm radius">
+		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 		</view>
 		<!-- #endif -->
