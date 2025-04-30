@@ -54,8 +54,8 @@
 		</view>
 		<!-- #endif -->
 	
-		<view v-if="currentTab==0" class="text-center margin-top"><text>有欠款未缴纳</text></view>
-		<view v-if="currentTab==1" class="text-center margin-top"><text>书已经超期，请及时归还</text></view>
+		<view v-if="currentTab==0" class="text-center margin-top"><text>以下清单为有欠款未缴纳</text></view>
+		<view v-if="currentTab==1" class="text-center margin-top"><text>以下清单为书已经超期，请及时归还</text></view>
 		<view class="cu-list menu-avatar margin-lr-sm margin-top-xs card-radius">
 			<view class="cu-item" v-for="(item, index) in list.data" :key="index">
 				<view class="cu-avatar lg round bg-gradual-green"><text class="text-lg">{{item.name[0]}}</text></view>

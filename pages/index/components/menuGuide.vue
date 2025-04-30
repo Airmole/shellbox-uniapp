@@ -1,12 +1,12 @@
 <template>
 	<view class="cu-list menu sm-border" style="margin-top: 0;">
-		<view class="cu-bar solid-bottom bg-white" style="min-height: 60rpx;">
+		<view class="cu-bar solid-bottom bg-white" style="min-height: 60rpx;" @click="fold = !fold">
 			<view class="action">
 				<text class="cuIcon-titles text-green"></text>
 				<text class="text-xl text-bold">{{title}}</text>
 			</view>
-			<view class="action" v-if="menuList.length > 5" @click="fold = !fold">
-				<text :class="['text-green', fold ? 'cuIcon-right' : 'cuIcon-unfold']"></text>
+			<view class="action text-green" v-if="menuList.length > 5">
+				{{fold?`展开`:''}}<text :class="['text-green', fold ? 'cuIcon-right' : 'cuIcon-unfold']"></text>
 			</view>
 		</view>
 		
