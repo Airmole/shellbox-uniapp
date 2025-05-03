@@ -1,12 +1,12 @@
 <template>
 	<view class="cu-list menu sm-border" style="margin-top: 0;">
-		<view class="cu-bar solid-bottom bg-white" style="min-height: 60rpx;">
+		<view class="cu-bar solid-bottom bg-white" style="min-height: 60rpx;" @click="fold = !fold">
 			<view class="action">
 				<text class="cuIcon-titles text-green"></text>
 				<text class="text-xl text-bold">{{title}}</text>
 			</view>
-			<view class="action" v-if="menuList.length > 5" @click="fold = !fold">
-				<text :class="['text-green', fold ? 'cuIcon-right' : 'cuIcon-unfold']"></text>
+			<view class="action text-green" v-if="menuList.length > 5">
+				{{fold?`展开`:''}}<text :class="['text-green', fold ? 'cuIcon-right' : 'cuIcon-unfold']"></text>
 			</view>
 		</view>
 		
@@ -31,12 +31,14 @@
 	
 	const props = defineProps({
 		menuList: Object,
-		title: String
+		title: String,
+		isFold: Boolean
 	})
 	
-	const fold = ref(true)
+	const fold = ref(null)
 	const renderMenu = computed(() => {
-		if (fold.value) return props.menuList
+		if (fold.value === null) fold.value = props.isFold
+		if (!fold.value) return props.menuList
 		return props.menuList.slice(0, 5)
 	})
 	
@@ -69,13 +71,10 @@
 		return function (icon) {
 		    // 如果icon.logined为true，则需要检查loginStatus是否也为true
 		    if (icon.logined && !loginStatus) return false;
-		    
 		    // 如果icon.teacher为true，则需要检查isTeacher是否也为true
 		    if (icon.teacher && !isTeacher) return false;
-		    
 		    // 如果icon.student为true，则需要检查isStudent是否也为true
 		    if (icon.student && !isStudent) return false;
-
 		    // 如果icon.platform包含platform，则返回true，否则返回false
 		    return icon.platform.includes(platform);
 		}

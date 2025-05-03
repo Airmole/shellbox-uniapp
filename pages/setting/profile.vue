@@ -28,8 +28,13 @@
 		
 
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin-sm bg-white">
+		<view v-if="!isVip" class="margin-sm bg-white">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef MP-QQ -->
+		<view v-if="!isVip" class="margin-sm bg-white">
+			<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 		</view>
 		<!-- #endif -->
 
@@ -37,12 +42,12 @@
 </template>
 
 <script>
+	const app = getApp()
 	import { request } from '../../request'
 	import api from '@/request/api.js'
 	import { onLoad } from '@dcloudio/uni-app'
 	import { useAppStore } from '@/stores/app.js'
 	const { setUserInfo } = useAppStore()
-	const app = getApp()
 	export default {
 		data() {
 			return {
@@ -51,6 +56,7 @@
 			}
 		},
 		onLoad() {
+			this.isVip = app.globalData.isVip
 			uni.showLoading({ title: '加载中...'})
 			this.fetchProfile()
 		},

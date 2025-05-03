@@ -56,12 +56,14 @@
 </template>
 
 <script>
+	const app = getApp()
 	import { getCurrentInstance } from "vue"
 	import api from '@/request/api.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
+				isVip: false,
 				StatusBar: 0,
 				CustomBar: 0,
 				hidden: true,
@@ -73,12 +75,14 @@
 			}
 		},
 		onLoad(option) {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
-			uni.showLoading({
-				title: '加载中...'
-			})
+			// #ifdef MP-QQ
+			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '8fe9b8e7191346a2ffb0c20c6bf3e0cf' })
+			// #endif
+			uni.showLoading({ title: '加载中...' })
 			let list = [];
 			for (let i = 0; i < 26; i++) {
 				list[i] = String.fromCharCode(65 + i)
@@ -120,7 +124,7 @@
 			uni.createSelectorQuery().select('.indexes').boundingClientRect(function(res) {
 				_this.barTop = res.top
 			}).exec()
-			if (interstitialAd) interstitialAd.show()
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			inital(option) {

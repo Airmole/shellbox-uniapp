@@ -10,6 +10,7 @@
 		</scroll-view>
 		<view class="no-scrool flex justify-center align-center" :style="{ height: `${pageHeight-50}px`,width: '100%' }">
 			<map
+				id="map"
 				:style="{ height: `${pageHeight-60}px`,width: '100%' }"
 				:longitude="defaultCenter[0]"
 				:latitude="defaultCenter[1]"
@@ -17,6 +18,7 @@
 				:show-location="true"
 				:markers="markers"
 				:include-points="points"
+				subkey="JLHBZ-JQELU-I7HVD-B2XSN-5VU3Z-BZFDK"
 				@markertap="markerTap"
 				@regionchange="regionChange"
 			></map>
@@ -64,12 +66,13 @@
 </template>
 
 <script>
-	import api from '@/request/api.js'
 	const app = getApp()
+	import api from '@/request/api.js'
 	let interstitialAd = null
 	export default {
 		data() {
 			return {
+				isVip: false,
 				pageHeight: 0,
 				defaultCenter: [117.392825, 39.542733],
 				currentTab: 0,
@@ -85,14 +88,26 @@
 			}
 		},
 		onLoad(option) {
+			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			// #endif
+			// #ifdef MP-QQ
+			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '8fe9b8e7191346a2ffb0c20c6bf3e0cf' })
 			// #endif
 			this.pageHeight = app.globalData.screenHeight
 			this.fetchPoi(option)
 		},
+		onReady () {
+			this._mapContext = uni.createMapContext("map", this)
+			this._mapContext && this._mapContext.addCustomLayer({
+				layerId: '67eaa0550282',
+				success: (res) => { console.log('addCustomLayer success', res); },
+				fail: (e) => { console.log('addCustomLayer fail', e); },
+			});
+		},
 		onShow () {
-			if (interstitialAd) interstitialAd.show()
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			showPoiCardArea () {
@@ -256,14 +271,26 @@
 				})
 			},
 			previewMapPic () {
-				uni.previewImage({
-					urls: ['https://r2.airmole.net/i/2024/11/12/vbmpa-2i.png']
+				let actions = ['平面示意图', '手绘地图(转载自校友会)']
+				// #ifdef H5
+				actions.push('手绘地图(H5)')
+				// #endif
+				uni.showActionSheet({
+				  itemList: actions,
+				  success (res) {
+					if (res.tapIndex < 2) {
+						const urls = [
+							'https://r2.airmole.net/i/2024/11/12/vbmpa-2i.png',
+							'https://r2.airmole.net/i/2025/04/01/1bsehl-ab.jpg'
+						]
+						uni.previewImage({ urls: urls, current: urls[res.tapIndex] })
+					}
+					if (res.tapIndex === 2) window.open('https://map.ustb.tj.cn')
+				  }
 				})
 			},
 			previewImg (url) {
-				uni.previewImage({
-					urls: [url]
-				})
+				uni.previewImage({ urls: [url] })
 			},
 			resetMapCenter () {
 				this.defaultCenter = [117.392825, 39.542733]

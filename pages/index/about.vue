@@ -26,22 +26,20 @@
 		</view>
 		
 		<!-- 小程序码&二维码 -->
-		<!-- #ifndef MP-QQ -->
 		<view class="flex margin-lr margin-tb justify-around text-center bg-white padding-sm card-radius">
-			<view class="">
-				<view class="">
+			<view>
+				<view>
 					<image @tap="previewImage('https://r2.airmole.net/i/2024/11/30/18vlto-0h.png')" :show-menu-by-longpress="true" class="cu-avatar xxl" src="https://r2.airmole.net/i/2024/11/30/18vlto-0h.png" mode="aspectFill"></image>
 				</view>
 				<view @tap="clickUrl('https://shellbox.ustb.tj.cn')" class="margin-tb-xs text-blue">https://shellbox.ustb.tj.cn</view>
 			</view>
-			<view class="">
-				<view class="">
+			<view>
+				<view>
 					<image @tap="previewImage('https://r2.airmole.net/i/2024/11/30/18yjmx-s4.jpg')" :show-menu-by-longpress="true" class="cu-avatar xxl" src="https://r2.airmole.net/i/2024/11/30/18yjmx-s4.jpg" mode="aspectFill"></image>
 				</view>
 				<view class="margin-tb-xs"><text v-if="isWechatH5">可长按识别</text><text v-else>微信小程序码</text></view>
 			</view>
 		</view>
-		<!-- #endif -->
 		
 		<!-- 开源 -->
 		<view class="margin-lr margin-tb-sm bg-white padding-lr-sm card-radius">
@@ -53,8 +51,9 @@
 			</view>
 			<view class="padding-bottom-sm">
 				<text class="cuIcon-info"></text> 本项目前端代码已于 <text class="cuIcon-github">Github</text> 开源，欢迎fork参与开发优化。<br/>
-				前端项目：<text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="text-blue"><text class="cuIcon-github text-blue"></text>Airmole/shellbox-uniapp</text><br/>
-				后端依赖：<text @tap="clickUrl('https://github.com/Airmole/tjustb-edusys')" class="text-blue"><text class="cuIcon-github text-blue"></text>Airmole/tjustb-edusys</text><br/>
+				前端项目：<text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/shellbox-uniapp</text><br/>
+				后端依赖：<text @tap="clickUrl('https://github.com/Airmole/tjustb-edusys')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/tjustb-edusys</text><br/>
+				API接口：<text @tap="clickUrl('https://doc.shellbox.ustb.tj.cn')" class="text-blue"><text class="cuIcon-link text-blue margin-lr-xs"></text>https://doc.shellbox.ustb.tj.cn</text><br/>
 			</view>
 		</view>
 		
@@ -90,11 +89,11 @@
 			</view>
 			<view class="padding-bottom-sm">
 				<view class="flex align-center justify-around text-center">
-					<view class="">
+					<view>
 						<image @tap="previewImage(`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`)" :show-menu-by-longpress="true" class="qrcode-image" :src="`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5"><text class="cuIcon-weixin text-xl"></text>长按识别加入微信群</text><text v-else><text class="cuIcon-weixin text-green"></text>微信群二维码</text>
 					</view>
-					<view class="">
+					<view>
 						<image @tap="previewImage('https://r2.airmole.net/images/weapp/qq_group.png')" :show-menu-by-longpress="true" class="qrcode-image" src="https://r2.airmole.net/images/weapp/qq_group.png" mode="aspectFill"></image>
 						<!-- #ifdef H5 -->
 						<text v-if="!isWechatH5">
@@ -104,10 +103,7 @@
 							<br/><text @tap="copyText('662675925')" class="text-blue">QQ群(662675925)</text>
 						</text>
 						<!-- #endif -->
-						<!-- #ifdef MP-WEIXIN -->
-						<br/><text @tap="copyText('662675925')" class="text-blue">QQ群(662675925)</text>
-						<!-- #endif -->
-						<!-- #ifdef MP-QQ -->
+						<!-- #ifdef MP -->
 						<br/><text @tap="copyText('662675925')" class="text-blue">QQ群(662675925)</text>
 						<!-- #endif -->
 					</view>
@@ -132,6 +128,12 @@
 				</view>
 				<view>
 				 	<text class="cuIcon-title text-green"></text> 音像放映安排信息来源于<text @tap="goLibraryOffical" class="text-blue">图书馆微信公众号</text>
+				</view>
+				<view>
+				 	<text class="cuIcon-title text-green"></text> 学校地图建筑照片来源于<text @tap="goTjustb720yun" class="text-blue">涂志远&王道钦学院全景图</text>
+				</view>
+				<view>
+				 	<text class="cuIcon-title text-green"></text> 学校手绘地图来源于<text @tap="goTjustbMetaWeapp" class="text-blue">北科天院校友之家</text>
 				</view>
 				<view>
 				 	<text class="cuIcon-title text-green"></text> 其余信息均来源于网络收集，如有侵权请<text @tap="goShellboxOffical" class="text-blue">联系我</text>
@@ -180,7 +182,7 @@
 			<!-- #ifdef H5 -->
 			<view class="margin-tb-xs">ICP备案：陇ICP备17001242号-3</view>
 			<!-- #endif -->
-			<view class="margin-tb-xs"><text @tap="goShellboxOffical">@Airmole</text> | 2018-{{year}}</view>
+			<view class="margin-tb-xs"><text @tap="goShellboxOffical">@Airmole</text>丨2018-{{year}}</view>
 		</view>
 		
 	</view>
@@ -191,12 +193,13 @@
 	export default {
 		data() {
 			return {
+				isVip: false,
 				timestamp: '',
 				logoImage: app.globalData.logoImageUrl,
 				appId: '',
 				version: '',
 				isWechatH5: false,
-				year: '2024'
+				year: '2025'
 			}
 		},
 		onLoad() {
@@ -212,7 +215,6 @@
 			// #endif
 			this.year = (new Date()).getFullYear()
 			this.timestamp = (new Date()).valueOf()
-			console.log('this.year', this.year)
 		},
 		methods: {
 			previewImage (image) {
@@ -253,10 +255,30 @@
 			goLibraryOffical () {
 				uni.navigateTo({ url: '/pages/school/media?account=tjclib' })
 			},
-			goShellboxOffical () {
-				uni.navigateTo({
-					url: '/pages/school/media?account=USTBShellBox'
+			goTjustb720yun () {
+				const url = 'https://720yun.com/vr/c80jOsmvzy2'
+				// #ifdef MP
+				uni.setClipboardData({
+					data: url,
+					success() {
+						uni.showToast({
+							title: '链接已复制到粘贴板，请打开浏览器后粘贴访问！',
+							icon: 'none'
+						})
+					}
 				})
+				// #endif
+				
+				// #ifdef H5
+				uni.showLoading({ title: '加载中...' })
+				window.open(url)
+				// #endif
+			},
+			goShellboxOffical () {
+				uni.navigateTo({ url: '/pages/school/media?account=USTBShellBox' })
+			},
+			goTjustbMetaWeapp () {
+				uni.navigateTo({ url: '/pages/school/media?account=gh_7b54ab55270c' })
 			},
 			goUserGuide () {
 				// #ifdef MP-WEIXIN
@@ -266,9 +288,11 @@
 					uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w') })
 				}
 				// #endif
+				
 				// #ifdef MP-QQ
 				this.copyText('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w')
 				// #endif
+				
 				// #ifdef H5
 				uni.showLoading({ title: '加载中...' })
 				window.location.href = 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'
@@ -276,6 +300,7 @@
 			},
 			goJumpGuide () {
 				// #ifdef MP
+				const _this = this
 				wx.showActionSheet({
 				  itemList: ['公众号菜单跳转小盒子', '公众号文章跳转小盒子', '小程序跳转小盒子'],
 				  success (res) {
@@ -287,11 +312,12 @@
 					uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) })
 					// #endif
 					// #ifdef MP-QQ
-					this.copyText(url)
+					_this.copyText(url)
 					// #endif
 				  }
 				})
 				// #endif
+				
 				// #ifdef H5
 				uni.showLoading({ title: '加载中...' })
 				window.location.href = 'https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzIyOTYyMjE1NQ==&action=getalbum&album_id=3752283129172738048#wechat_redirect'

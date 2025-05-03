@@ -35,8 +35,13 @@
 		</view>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin bg-white card-radius">
+		<view v-if="!isVip" class="margin bg-white card-radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef MP-QQ -->
+		<view v-if="!isVip" class="margin bg-white card-radius">
+			<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 		</view>
 		<!-- #endif -->
 		
@@ -44,11 +49,13 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '@/request/api.js'
 	
 	export default {
 		data() {
 			return {
+				isVip: false,
 				semesterIndex: -1,
 				semesterOptionsList: [],
 				schoolCalendarImage: '',
@@ -56,6 +63,7 @@
 			}
 		},
 		onLoad(options) {
+			this.isVip = app.globalData.isVip
 			const semester = (options && options.semester) ? options.semester : ''
 			this.fetchAllCalendar(semester)
 		},

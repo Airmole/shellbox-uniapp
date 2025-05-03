@@ -69,6 +69,10 @@ export default {
 		// console.log(queryString)
 		return request(`/edusys/score?${queryString}`, 'GET')
 	},
+	// 成绩分数AI总结建议
+	fetchScoreSuggestion () {
+		return request('/edusys/score/suggestion', 'GET')
+	},
 	// 首页组件数据
 	fetchHomeWidget(widgetNameList = []) {
 		if (!Array.isArray(widgetNameList)) {
@@ -297,13 +301,29 @@ export default {
 		let url = `/edusys/classroom/detail`
 		return request(`${url}?${queryString}`, `GET`)
 	},
+	// 培养方案
+	fetchTrainingPlan () {
+		return request('/edusys/trainingPlan', 'GET')
+	},
+	// 获取评教批次列表
+	fetchEvaluateTeacherSemester () {
+		return request(`/edusys/evaluateTeacher/semester`)
+	},
+	// 获取评教课程列表
+	fetchEvaluateTeacherCourse (url) {
+		return request(`/edusys/evaluateTeacher/course?url=${url}`)
+	},
+	// 获取评教课程详情
+	fetchEvaluateTeacherDetail (url) {
+		return request(`edusys/evaluateTeacher/detail?url=${url}`)
+	},
 	// 权益保护相关
 	// 获取权益投诉帖
 	fetchRightsProtectionIndex (page = 1, tag = '[0,1,2,3,4]', hot = '[0,1]') {
-		return request(`/rightsProtection?page=${page}&tag=${tag}&hot=${hot}`, `GET`)
+		return request(`/rightsProtection?page=${page}&tag=${tag}&hot=${hot}`)
 	},
 	fetchRightsProtectionDetail (id, page = 1) {
-		return request(`/rightsProtection/${id}?page=${page}`, `GET`)
+		return request(`/rightsProtection/${id}?page=${page}`)
 	},
 	postRightsProtection (data) {
 		return request(`/rightsProtection`, `POST`, data)
@@ -315,24 +335,24 @@ export default {
 		return request(`/rightsProtection/${id}`, `DELETE`)
 	},
 	fetchIsRightsProtectionAdminer (account) {
-		return request(`/rightsProtection/adminer/${account}`, `GET`)
+		return request(`/rightsProtection/adminer/${account}`)
 	},
 	// 电影放映
 	fetchMovieDay (date = '') {
-		return request(`/school/movie?date=${date}`, 'GET')
+		return request(`/school/movie?date=${date}`)
 	},
 	fetchMovieMonthList (month = '') {
-		return request(`/school/movie/month?month=${month}`, 'GET')
+		return request(`/school/movie/month?month=${month}`)
 	},
 	fetchMapAllPoi () {
-		return request(`/school/map/poi`, 'GET')
+		return request(`/school/map/poi`)
 	},
 	fetchSchoolMediaList () {
-		return request(`/school/media`, 'GET')
+		return request(`/school/media`)
 	},
 	// 图书查询
 	fetchBookSearch (type = '02', keyword = '') {
-		return request(`/book/search?type=${type}&keyword=${keyword}`, 'GET')
+		return request(`/book/search?type=${type}&keyword=${keyword}`)
 	},
 	fetchBookDetailByMarcNo (marcNo) {
 		return request(`/book/marc/${marcNo}`)

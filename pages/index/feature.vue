@@ -55,12 +55,17 @@
 		</view>
 
 		<block v-for="(item, index) in menuList" :key="index">
-			<menuGuide :title="item.title" :menuList="item.children"></menuGuide>
+			<menuGuide :title="item.title" :menuList="item.children" :isFold="item.fold"></menuGuide>
 		</block>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view class="margin-lr margin-tb-sm radius">
+		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef MP-QQ -->
+		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
+			<ad unit-id="297c24fcd434022129795daed3f46440"></ad>
 		</view>
 		<!-- #endif -->
 
@@ -149,6 +154,7 @@
 	const balance = ref('*')
 	
 	onLoad(() => {
+		isVip.value = app.globalData.isVip
 		uni.showLoading({ title: '加载中...' })
 		const sysInfo = uni.getSystemInfoSync()
 		if (sysInfo.theme === 'dark') waterWaveUrl.value = 'https://shellbox-image.ustb.tj.cn/water-wave-dark.webp'

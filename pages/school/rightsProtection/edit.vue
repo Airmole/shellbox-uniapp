@@ -268,7 +268,7 @@
 			    }
 			    // 发布新帖、评论
 			    const uid = this.uid
-			    const nickname = this.nickname ? this.nickname : uid
+			    const nickname = this.nickname ? this.nickname : ''
 			    const avatar = this.avatar ? this.avatar : ''
 			    const content = this.content
 			    const images = this.imgList
