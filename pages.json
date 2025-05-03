@@ -30,7 +30,16 @@
 		{ "path": "pages/school/media" },
 		{ "path": "pages/book/search" },
 		{ "path": "pages/book/detail" },
-		{ "path": "pages/index/about" }
+		{ "path": "pages/index/about" },
+		{ "path" :"pages/score/trainingPlan" },
+		{ "path" : "pages/score/evaluateTeacher" },
+		{ "path" : "pages/book/hotbook" },
+		{ "path" : "pages/book/shelf" },
+		{ "path" : "pages/book/scan" },
+		{ "path" : "pages/book/overdue" },
+		{ "path" : "pages/points/balance" },
+		{ "path" : "pages/points/history" },
+		{ "path" : "pages/points/checkin" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",

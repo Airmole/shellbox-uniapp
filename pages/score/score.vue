@@ -140,13 +140,8 @@
 			</view>
 		</template>
 		<template v-else>
-			<tips
-				tips="查询您的成绩分数需登录账号"
-				image="/static/image/nothing.png"
-				:showButton="true"
-				buttonText="现在登录"
-				path="/pages/index/login"
-			></tips>
+			<tips tips="查询您的成绩分数需登录账号" image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif" :showButton="true" buttonText="现在登录"
+				path="/pages/index/login"></tips>
 		</template>
 		
 		<view class="padding-xl"></view>

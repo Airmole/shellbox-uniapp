@@ -335,6 +335,63 @@ export default {
 		return request(`/book/search?type=${type}&keyword=${keyword}`, 'GET')
 	},
 	fetchBookDetailByMarcNo (marcNo) {
-		return request(`/book/marc/${marcNo}`, 'GET')
+		return request(`/book/marc/${marcNo}`)
+	},
+	fetchBookLendTrend (marcNo) {
+		return request(`/book/lendTrend/${marcNo}`)
+	},
+	fetchSameAuthorBooks (marcNo) {
+		return request(`/book/sameAuthor/${marcNo}`)
+	},
+	fetchOpacsysKeywordCloud () {
+		return request(`/book/keywordCloud`)
+	},
+	fetchOpacsysHotRankSimple () {
+		return request(`/book/hot/simple`)
+	},
+	fetchOpacsysHotLendBooks(classType = 'ALL') {
+		return request(`/book/hot/lend?class=${classType}`)
+	},
+	fetchOpacsysHotScoreBooks (classType = 'ALL', sort = '') {
+		return request(`/book/hot/score?class=${classType}&sort=${sort}`)
+	},
+	fetchOpacsysHotStarBooks (classType = 'ALL') {
+		return request(`/book/hot/star?class=${classType}`)
+	},
+	fetchOpacsysHotBooks (classType = 'ALL') {
+		return request(`/book/hot/book?class=${classType}`)
+	},
+	fetchOpacsysShelfBooks (shelfId) {
+		return request(`/book/shelf/${shelfId}`)
+	},
+	fetchDoubanIdByISBN (isbn) {
+		return request(`/book/isbn/douban/${isbn}`)
+	},
+	fetchOpacsysOverdueList (page = 1) {
+		return request(`/book/overdue?page=${page}`)
+	},
+	fetchOpacsysExceedFine (page = 1) {
+		return request(`/book/exceedFine?page=${page}`)
+	},
+	fetchOpacsysOverdueSearch (usercode) {
+		return request(`/book/overdue/search?usercode=${usercode}`)
+	},
+	fetchUserPointsBalance () {
+		return request(`/points/balance`)
+	},
+	fetchUserPointsDocument () {
+		return request(`/points/balance/doc`)
+	},
+	fetchUserPointsBalanceIndex () {
+		return request(`/points/balance/index`)
+	},
+	fetchUserPointsCheckinIndex (month) {
+		return request(`/points/checkin/index?month=${month}`)
+	},
+	userPointsCheckin () {
+		return request(`/points/checkin`, 'POST')
+	},
+	fetchPointsCheckinDocument () {
+		return request(`/points/checkin/doc`)
 	}
 }

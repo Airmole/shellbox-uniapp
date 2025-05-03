@@ -113,6 +113,23 @@
 			bgImgUrl.value = `https://bing.com${res.data.images[index].url}`
 		})
 	}
+	
+	function goLoginPasswordArticle () {
+		// #ifdef MP-WEIXIN
+		try {
+			wx.openOfficialAccountArticle({url: `https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug`})
+		} catch (error) {
+			uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug') })
+		}
+		// #endif
+		// #ifdef MP-QQ
+		this.copyText('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug')
+		// #endif
+		// #ifdef H5
+		uni.showLoading({ title: '加载中...' })
+		window.location.href = 'https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug'
+		// #endif
+	}
 </script>
 
 <style>
