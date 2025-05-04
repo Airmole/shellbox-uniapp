@@ -45,31 +45,15 @@
 				<text class="cuIcon-title text-green"></text> <text class="text-title text-lg text-bold">连续签到奖励</text>
 			</view>
 			<scroll-view :scroll-x="true">
-				<view class="flex margin-lr-xs">
-					<!-- 签到第一天 -->
-					<view class="padding-tb-sm bg-gradual-blue reward-item radius margin-lr-xs flex">
-						<view class="text-sl margin-xs"><text class="bg-white round padding-xs text-blue cuIcon-redpacket_fill"></text></view>
-						<view class="margin-xs">
-							<view>连续签到1天</view>
-							<view class="margin-top-xs"><view class='cu-tag round line-white'>送10金贝壳</view></view>
-						</view>
-					</view>
-					<!-- 签到2~6天 -->
-					<template v-for="(item, index) in [2,3,4,5,6]">
-						<view class="padding-tb-sm bg-gradual-blue reward-item radius margin-lr-xs flex">
-							<view class="text-sl margin-xs"><text class="bg-white round padding-xs text-blue cuIcon-redpacket_fill"></text></view>
-							<view class="margin-xs">
-								<view>连续签到{{item}}天</view>
-								<view class="margin-top-xs"><view class='cu-tag round line-white'>送{{10+(5*(item-1))}}金贝壳</view></view>
-							</view>
-						</view>					
-					</template>
-					<template v-for="(item, index) in [7,8,9,10]">
-						<view class="padding-tb-sm bg-gradual-blue reward-item radius margin-lr-xs flex">
-							<view class="text-sl margin-xs"><text class="bg-white round padding-xs text-blue cuIcon-redpacket_fill"></text></view>
-							<view class="margin-xs">
-								<view>连续签到{{item}}天</view>
-								<view class="margin-top-xs"><view class='cu-tag round line-white'>送30金贝壳</view></view>
+				<view class="flex">
+					<template v-for="(item, index) in 10" :key="index">
+						<view class="padding-tb-sm bg-gradual-blue reward-item radius margin-lr-xs flex align-center">
+							<view class="text-xxl margin-xs"><text class="bg-white round padding-xs text-blue cuIcon-redpacket_fill"></text></view>
+							<view class="margin-xs flex justify-center flex-direction align-center">
+								<view>连续签到第{{item}}天</view>
+								<view v-if="index < 1" class="margin-top-xs"><view class='cu-tag round line-white'>送10金贝壳</view></view>
+								<view v-else-if="index < 7" class="margin-top-xs"><view class='cu-tag round line-white'>送{{10+(5*index)}}金贝壳</view></view>
+								<view v-else class="margin-top-xs"><view class='cu-tag round line-white'>送{{40}}金贝壳</view></view>
 							</view>
 						</view>					
 					</template>
@@ -79,12 +63,11 @@
 		
 		<!-- 签到规则 -->
 		<view class="cu-modal bottom-modal" :class="showDocument?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white">
-					<view class="action text-green"></view>
-					<view class="action text-blue" @tap="showCheckinDocument"><text class="cuIcon-close text-red"></text></view>
+			<view class="cu-dialog padding-sm bg-gray">
+				<view class="text-right">
+					<view class="action text-blue text-xxl" @tap="showCheckinDocument"><text class="cuIcon-close text-red"></text></view>
 				</view>
-				<scroll-view class="padding-lg text-left bg-white" style="height: 800rpx;" :scroll-y="true">
+				<scroll-view class="padding text-left bg-white radius" style="height: 800rpx;" :scroll-y="true">
 					<ua-markdown :source="checkinDocument"/>
 				</scroll-view>
 			</view>
@@ -202,7 +185,7 @@
 	}
 	
 	.reward-item {
-		min-width: 320rpx;
+		min-width: 310rpx;
 		height: 150rpx;
 	}
 </style>

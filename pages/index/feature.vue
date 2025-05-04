@@ -81,7 +81,7 @@
 		
 		<!-- 更多 抽屉模态框 -->
 		<view class="cu-modal drawer-modal justify-end" :class="moreModal?'show':''" @tap="moreModal = !moreModal">
-			<view class="cu-dialog basis-lg padding-top-xl bg-gray" @tap.stop="">
+			<view class="cu-dialog basis-xl padding-top-xl bg-gray" @tap.stop="">
 				<!-- #ifdef MP -->
 				<view class="margin-tb-xl padding-tb"></view>
 				<!-- #endif -->
@@ -90,6 +90,10 @@
 				</view>
 				<view class="margin">{{(loginStatus?profile.nickname:'未登录')}} <text class="cuIcon-vip text-yellow"></text> </view>
 				<view class="margin">{{(loginStatus?edusysAccount.account:'未登录')}}</view>
+				<view v-if="profile.isVip" class="margin">会员到期：{{profile.vipExpireAt}}</view>
+				<view v-else-if="profile.vipExpireAt===null" class="margin">您还没有成为过会员</view>
+				<view v-else-if="profile.vipExpireAt===''" class="margin">您的会员被禁用</view>
+				<view v-else class="margin">会员已于{{profile.vipExpireAt}}过期</view>
 				<view class="cu-list menu sm-border card-menu margin-top text-left">
 					<navigator v-if="loginStatus" url="/pages/points/balance" class="cu-item arrow" :render-link="false">
 					    <view class="content">

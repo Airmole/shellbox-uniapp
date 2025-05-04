@@ -413,5 +413,14 @@ export default {
 	},
 	fetchPointsCheckinDocument () {
 		return request(`/points/checkin/doc`)
+	},
+	pointsVideoAdsPlayEnd () {
+		return request(`/points/videoAdsEnd`, 'POST')
+	},
+	fetchUserPointsBalanceHistory (page = 1, type = '', bizType = '') {
+		return request(`/points/balance/history?page=${page}&type=${type}&bizType=${bizType}`)
+	},
+	userPointsExchaneGoods (goodsId) {
+		return request(`/points/exchangeGoods?goodsId=${goodsId}`, 'POST')
 	}
 }

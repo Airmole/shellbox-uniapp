@@ -40,7 +40,7 @@
 						</view>
 						 <view class="action">
 							<button v-if="!data.todayCheckin" @click="goCheckin" class="cu-btn round bg-gradual-blue shadow sm"><text>去签到</text></button>
-							<button v-else @click="goCheckin" class="cu-btn round bg-grey shadow sm"><text class="text-black">已签到</text></button>
+							<button v-else @click="goCheckin" class="cu-btn round bg-grey shadow sm"><text>已签到</text></button>
 						</view>
 					</view>
 					<view class="cu-item">
@@ -49,18 +49,19 @@
 							<text class="text-grey" :decode="true">2.&nbsp;看视频广告得积分</text>（{{data.videoAds.finished}}/{{data.videoAds.total}}）
 						</view>
 						 <view class="action">
-							<button v-if="data.videoAds.finished<data.videoAds.total" @click="showVideoAds" class="cu-btn round bg-gradual-blue shadow sm"><text></text>看视频</button>
-							<button v-else :disabled="true" class="cu-btn round bg-grey shadow sm"><text>已完成</text></button>
+							<button v-if="fetchVideoAdFinished && data.videoAds.finished<data.videoAds.total" @click="showVideoAds" class="cu-btn round bg-gradual-blue shadow sm"><text></text>看视频</button>
+							<button v-else-if="data.videoAds.finished==data.videoAds.total" :disabled="true" class="cu-btn round bg-grey shadow sm"><text class="text-white">已完成</text></button>
+							<button v-else class="cu-btn round bg-grey shadow sm" :disabled="true"><text class="text-white">不可用</text></button>
 						</view>
 					</view>
 					<view class="cu-item">
 						<view class="content">
 							<text class="cuIcon-profile text-blue"></text>
-							<text class="text-grey" :decode="true">3.&nbsp;补充完善资料得积分</text>
+							<text class="text-grey" :decode="true">3.&nbsp;完善资料得积分(仅限首次)</text>
 						</view>
 						 <view class="action">
 							<button v-if="!data.profileUpdated" @click="goProfileUpdate" class="cu-btn round bg-gradual-blue shadow sm"><text></text>去补充</button>
-							<button v-else class="cu-btn round bg-grey shadow sm"><text></text>已完成</button>
+							<button v-else :disabled="true" class="cu-btn round bg-grey shadow sm"><text class="text-white">已完成</text></button>
 						</view>
 					</view>
 				</view>
@@ -78,7 +79,7 @@
 							</view>
 						</view>
 						<view class="basis-xs bg-white radius flex align-center coupon-action">
-							<button class="cu-btn round bg-gradual-blue margin-lr-xs">兑换</button>
+							<button @click="exchangeGoods(item)" class="cu-btn round bg-gradual-blue margin-lr-xs">兑换</button>
 						</view>
 					</view>
 				</view>
@@ -87,12 +88,11 @@
 		
 		<!-- 金贝壳积分规则说明 -->
 		<view class="cu-modal bottom-modal" :class="showDocument?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white">
-					<view class="action text-green"></view>
-					<view class="action text-blue" @tap="showPointsDocument"><text class="cuIcon-close text-red"></text></view>
+			<view class="cu-dialog padding-sm bg-gray">
+				<view class="text-right">
+					<view class="action text-blue text-xxl" @tap="showPointsDocument"><text class="cuIcon-close text-red"></text></view>
 				</view>
-				<scroll-view class="padding-lg text-left bg-white" style="height: 800rpx;" :scroll-y="true">
+				<scroll-view class="padding text-left bg-white radius" style="height: 800rpx;" :scroll-y="true">
 					<ua-markdown :source="pointsDocument"/>
 				</scroll-view>
 			</view>
@@ -105,13 +105,15 @@
 <script>
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '../../request/api'
+	let videoAd = null
 	export default {
 		data() {
 			return {
 				isLogined: true,
 				pointsDocument: '',
 				showDocument: false,
-				data: ''
+				data: '',
+				fetchVideoAdFinished: false,
 			}
 		},
 		onLoad() {
@@ -119,6 +121,36 @@
 				this.isLogined = false
 				return
 			}
+			
+			// #ifdef MP-WEIXIN
+			const _this = this
+			if (wx.createRewardedVideoAd) {
+				videoAd = wx.createRewardedVideoAd({ adUnitId: 'adunit-6eaa05f3467dce0c' })
+			    videoAd.onLoad(() => { this.fetchVideoAdFinished = true })
+			    videoAd.onError((err) => {
+				    this.fetchVideoAdFinished = false
+				    console.error('激励视频光告加载失败', err)
+				    uni.showModal({ title: err, showCancel: false })
+			    })
+			    videoAd.onClose((res) => {
+					if (res.isEnded) {
+						uni.showLoading({ title: '正在为您下发积分奖励...'})
+						api.pointsVideoAdsPlayEnd().then(endRes => {
+							_this.fetchData()
+							uni.hideLoading()
+							uni.showModal({ title: endRes.data.message, showCancel: false })
+						}).catch(error => {
+							console.log('pointsVideoAdsPlayEnd error', error)
+							uni.showModal({ title: error, showCancel: false })
+						}).finally(() => {
+							uni.hideLoading()
+						})
+					} else {
+						uni.showToast({ title: '广告中断，无法获得金贝壳奖励', icon: 'none'})
+					}
+				})
+			}
+			// #endif
 		},
 		onShow() {
 			this.fetchData()
@@ -143,7 +175,16 @@
 				return
 				// #endif
 				// #ifdef MP-WEIXIN
-				// TODO...
+				if (videoAd) {
+				  videoAd.show().catch(() => {
+				    // 失败重试
+				    videoAd.load()
+				      .then(() => videoAd.show()).catch(err => {
+				        console.error('激励视频 广告显示失败', err)
+						uni.showModal({ title: err, showCancel: false })
+				      })
+				  })
+				}
 				// #endif
 			},
 			goProfileUpdate () {
@@ -169,6 +210,32 @@
 				} else {
 					this.showDocument = !this.showDocument
 				}
+			},
+			exchangeGoods (goods) {
+				if (parseInt(goods.price) > parseInt(this.data.balance)) {
+					uni.showModal({ title: '提示', content: `您的金贝壳余额不足，需要${goods.price}金贝壳,您的金贝壳仅剩${this.data.balance}`, showCancel: false })
+					return
+				}
+				var _this = this
+				uni.showModal({
+					title: '提示',
+					content: `确认要兑换【${goods.title}】吗？`,
+					success: function (confirmRes) {
+						if (confirmRes.confirm) {
+							uni.showLoading({ title: '正在为你兑换中...' })
+							api.userPointsExchaneGoods(goods.id).then(res => {
+								uni.hideLoading()
+								if (res.data.balance) _this.data.balance = res.data.balance
+								uni.showModal({ content: res.data.message, showCancel: false})
+							}).catch(error => {
+								console.log('exchangeGoods error', error)
+								uni.showModal({ content: error.data.message, showCancel: false })
+							}).finally(() => {
+								uni.hideLoading()
+							})
+						}
+					}
+				})
 			}
 		}
 	}
