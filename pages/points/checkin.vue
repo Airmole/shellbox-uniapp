@@ -78,11 +78,12 @@
 <script>
 	import api from '../../request/api'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import { getTodayDateString } from '../../common/utils/tools'
 	export default {
 		data() {
 			return {
 				waterWaveUrl: 'https://shellbox-image.ustb.tj.cn/water-wave-light.webp',
-				date: "2025-05-03",
+				date: "",
 				type: "week",
 				mode: "single",
 				color: "#3c9cff",
@@ -106,7 +107,8 @@
 			}
 		},
 		onLoad () {
-			this.date = new Date().toISOString().split('T')[0]
+			this.date = getTodayDateString()
+			console.log('date ', this.date)
 			const sysInfo = uni.getSystemInfoSync()
 			if (sysInfo.theme === 'dark') this.waterWaveUrl = 'https://shellbox-image.ustb.tj.cn/water-wave-dark.webp'
 			if (getEdusysAccount() === false) {
