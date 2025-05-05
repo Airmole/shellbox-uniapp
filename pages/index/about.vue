@@ -90,10 +90,6 @@
 			<view class="padding-bottom-sm">
 				<view class="flex align-center justify-around text-center">
 					<view>
-						<image @tap="previewImage(`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`)" :show-menu-by-longpress="true" class="qrcode-image" :src="`https://r2.airmole.net/images/weapp/wechat_group.png?t=${timestamp}`" mode="aspectFill"></image>
-						<br/><text v-if="isWechatH5"><text class="cuIcon-weixin text-xl"></text>长按识别加入微信群</text><text v-else><text class="cuIcon-weixin text-green"></text>微信群二维码</text>
-					</view>
-					<view>
 						<image @tap="previewImage('https://r2.airmole.net/images/weapp/qq_group.png')" :show-menu-by-longpress="true" class="qrcode-image" src="https://r2.airmole.net/images/weapp/qq_group.png" mode="aspectFill"></image>
 						<!-- #ifdef H5 -->
 						<text v-if="!isWechatH5">
@@ -275,7 +271,12 @@
 				// #endif
 			},
 			goShellboxOffical () {
-				uni.navigateTo({ url: '/pages/school/media?account=USTBShellBox' })
+				// #ifdef MP-WEIXIN
+				wx.openOfficialAccountProfile({ username: 'USTBShellBox' })
+				// #endif
+				// #ifndef MP-WEIXIN
+				uni.navigateTo({ url: '/pages/school/media?account=USTBShellBox' })				
+				// #endif
 			},
 			goTjustbMetaWeapp () {
 				uni.navigateTo({ url: '/pages/school/media?account=gh_7b54ab55270c' })

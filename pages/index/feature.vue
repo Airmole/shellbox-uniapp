@@ -98,10 +98,18 @@
 					<navigator v-if="loginStatus" url="/pages/points/balance" class="cu-item arrow" :render-link="false">
 					    <view class="content">
 					        <text class="cuIcon-people text-blue"></text>
-					        <text class="text-grey">我的积分</text>
+					        <text class="text-grey">我的金贝壳</text>
 					    </view>
 						<view class="action text-yellow"><text v-if="loginStatus">{{balance}}</text><text v-else>*</text></view>
 					</navigator>
+					<!-- #ifndef MP-QQ -->
+					<view v-if="isReleaseEnv" @click="goRecharge" class="cu-item arrow">
+					    <view class="content">
+					        <text class="cuIcon-moneybag text-blue"></text>
+					        <text class="text-grey">金贝壳充值</text>
+					    </view>
+					</view>
+					<!-- #endif -->
 					<!-- #ifdef MP-WEIXIN -->
 				    <navigator v-if="loginStatus" url="/pages/setting/profile" class="cu-item arrow">
 				        <view class="content">
@@ -112,7 +120,7 @@
 					<view @click="openWechatAuthSetting" class="cu-item arrow">
 					    <view class="content">
 					        <text class="cuIcon-settings text-blue"></text>
-					        <text class="text-grey">授权管理设置</text>
+					        <text class="text-grey">系统授权管理</text>
 					    </view>
 					</view>
 					<!-- #endif -->
@@ -156,9 +164,16 @@
 	const menuList = ref([])
 	const moreModal = ref(false)
 	const balance = ref('*')
+	const isReleaseEnv = ref(false)
 	
 	onLoad(() => {
 		isVip.value = app.globalData.isVip
+		// #ifdef MP-WEIXIN
+		isReleaseEnv.value = (app.globalData.env === 'release')
+		// #endif
+		// #ifdef H5
+		isReleaseEnv.value = true
+		// #endif
 		uni.showLoading({ title: '加载中...' })
 		const sysInfo = uni.getSystemInfoSync()
 		if (sysInfo.theme === 'dark') waterWaveUrl.value = 'https://shellbox-image.ustb.tj.cn/water-wave-dark.webp'
@@ -251,6 +266,23 @@
 	
 	function openWechatAuthSetting () {
 		wx.openAppAuthorizeSetting()
+	}
+	
+	function goRecharge () {
+		// #ifdef MP-WEIXIN
+		uni.showModal({
+			content: '在打开公众号页面的服务或菜单中点击【充值使用】->【会员丨充值】',
+			success(res) {
+				if (res.confirm) wx.openOfficialAccountProfile({ username: 'gh_0a3884f25944' })
+			}
+		})
+		return
+		// #endif
+		
+		// #ifdef H5
+		window.open('https://ifdian.net/a/Airmole?tab=shop')
+		return
+		// #endif
 	}
 	
 	onShareAppMessage (() => {

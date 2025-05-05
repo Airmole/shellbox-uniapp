@@ -13,19 +13,27 @@
 				<view class="flex justify-end margin-top-sm">
 					<view @click="showPointsDocument" style="margin-right: -10rpx;" class='cu-tag round bg-white padding-right sm'>积分规则</view>
 				</view>
-				<view class="text-xl">
-					<text class="iconfont icon-shell"></text><text class="text-xxl margin-lr-xs">{{data.balance}}</text><text class="text-df">金贝壳</text>
+				<view class="text-xxl">
+					<text class="iconfont icon-shell"></text><text class="margin-lr-xs">{{data.balance}}</text><text class="text-xxl">金贝壳</text>
 				</view>
-				<view class="margin-top">
-					做任务得积分&nbsp;积分兑会员
+				<view class="flex margin-top justify-center">
+					<view>做任务得积分&nbsp;积分兑会员</view>
 				</view>
 			</view>
 			<!-- 明细 -->
 			<view class="cu-list menu sm-border card-menu margin-top-lg">
+				<!-- #ifndef MP-QQ -->
+			    <view v-if="isReleaseEnv" class="cu-item arrow" @click="goRecharge">
+			        <view class="content">
+			            <text class="cuIcon-moneybag text-blue"></text>
+			            <text class="text-grey">金贝壳积分充值</text>
+			        </view>
+			    </view>
+				<!-- #endif -->
 			    <navigator url="/pages/points/history" class="cu-item arrow" :render-link="false">
 			        <view class="content">
 			            <text class="cuIcon-list text-blue"></text>
-			            <text class="text-grey">查看积分明细</text>
+			            <text class="text-grey">查看金贝壳积分明细</text>
 			        </view>
 			    </navigator>
 			</view>
@@ -50,10 +58,11 @@
 						</view>
 						 <view class="action">
 							<button v-if="fetchVideoAdFinished && data.videoAds.finished<data.videoAds.total" @click="showVideoAds" class="cu-btn round bg-gradual-blue shadow sm"><text></text>看视频</button>
-							<button v-else-if="data.videoAds.finished==data.videoAds.total" :disabled="true" class="cu-btn round bg-grey shadow sm"><text class="text-white">已完成</text></button>
-							<button v-else class="cu-btn round bg-grey shadow sm" :disabled="true"><text class="text-white">不可用</text></button>
+							<button v-else-if="data.videoAds.finished==data.videoAds.total" :disabled="true" class="cu-btn round bg-grey shadow sm"><text class="text-red">已完成</text></button>
+							<button v-else class="cu-btn round bg-grey shadow sm" :disabled="true"><text class="text-red">不可用</text></button>
 						</view>
 					</view>
+					<!-- #ifndef MP-QQ -->
 					<view class="cu-item">
 						<view class="content">
 							<text class="cuIcon-profile text-blue"></text>
@@ -64,6 +73,7 @@
 							<button v-else :disabled="true" class="cu-btn round bg-grey shadow sm"><text class="text-white">已完成</text></button>
 						</view>
 					</view>
+					<!-- #endif -->
 				</view>
 			</template>
 			<!-- 积分兑换权益 -->
@@ -86,6 +96,17 @@
 			</template>
 		</template>
 		
+		<!-- #ifdef MP-WEIXIN -->
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
+			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef MP-QQ -->
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
+			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
+		</view>
+		<!-- #endif -->
+		
 		<!-- 金贝壳积分规则说明 -->
 		<view class="cu-modal bottom-modal" :class="showDocument?'show':''">
 			<view class="cu-dialog padding-sm bg-gray">
@@ -103,12 +124,15 @@
 </template>
 
 <script>
+	const app = getApp()
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '../../request/api'
 	let videoAd = null
 	export default {
 		data() {
 			return {
+				isReleaseEnv: false,
+				isVip: false,
 				isLogined: true,
 				pointsDocument: '',
 				showDocument: false,
@@ -117,15 +141,28 @@
 			}
 		},
 		onLoad() {
+			// #ifdef MP-WEIXIN
+			this.isReleaseEnv = (app.globalData.env === 'release')
+			// #endif
+			// #ifdef H5
+			isReleaseEnv.value = true
+			// #endif
+			this.isVip = app.globalData.isVip = app.globalData.isVip
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
 			}
-			
 			// #ifdef MP-WEIXIN
+			const adUnitId = 'adunit-6eaa05f3467dce0c'
+			// #endif
+			// #ifdef MP-QQ
+			const adUnitId = 'dd90320609f722f9c6f37135eb404a71'
+			// #endif
+			
+			// #ifdef MP
 			const _this = this
-			if (wx.createRewardedVideoAd) {
-				videoAd = wx.createRewardedVideoAd({ adUnitId: 'adunit-6eaa05f3467dce0c' })
+			if (uni.createRewardedVideoAd) {
+				videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId })
 			    videoAd.onLoad(() => { this.fetchVideoAdFinished = true })
 			    videoAd.onError((err) => {
 				    this.fetchVideoAdFinished = false
@@ -170,11 +207,11 @@
 				uni.navigateTo({ url: '/pages/points/checkin' })
 			},
 			showVideoAds () {
-				// #ifndef MP-WEIXIN
-				uni.showToast({ title: '仅支持微信小程序端看视频得积分' , icon: 'none'})
+				// #ifndef MP
+				uni.showToast({ title: '仅支持小程序端看视频得积分' , icon: 'none'})
 				return
 				// #endif
-				// #ifdef MP-WEIXIN
+				// #ifdef MP
 				if (videoAd) {
 				  videoAd.show().catch(() => {
 				    // 失败重试
@@ -236,6 +273,22 @@
 						}
 					}
 				})
+			},
+			goRecharge () {
+				// #ifdef MP-WEIXIN
+				uni.showModal({
+					content: '在打开公众号页面的服务或菜单中点击【充值使用】->【会员丨充值】',
+					success(res) {
+						if (res.confirm) wx.openOfficialAccountProfile({ username: 'gh_0a3884f25944' })
+					}
+				})
+				return
+				// #endif				
+				
+				// #ifdef H5
+				window.open('https://ifdian.net/a/Airmole?tab=shop')
+				return
+				// #endif
 			}
 		}
 	}

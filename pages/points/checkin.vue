@@ -61,6 +61,17 @@
 			</scroll-view>
 		</view>
 		
+		<!-- #ifdef MP-WEIXIN -->
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
+			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef MP-QQ -->
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
+			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
+		</view>
+		<!-- #endif -->
+		
 		<!-- 签到规则 -->
 		<view class="cu-modal bottom-modal" :class="showDocument?'show':''">
 			<view class="cu-dialog padding-sm bg-gray">
@@ -76,12 +87,14 @@
 	</view>
 </template> 
 <script>
+	const app = getApp()
 	import api from '../../request/api'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import { getTodayDateString } from '../../common/utils/tools'
 	export default {
 		data() {
 			return {
+				isVip: false,
 				waterWaveUrl: 'https://shellbox-image.ustb.tj.cn/water-wave-light.webp',
 				date: "",
 				type: "week",
@@ -107,8 +120,8 @@
 			}
 		},
 		onLoad () {
+			this.isVip = app.globalData.isVip
 			this.date = getTodayDateString()
-			console.log('date ', this.date)
 			const sysInfo = uni.getSystemInfoSync()
 			if (sysInfo.theme === 'dark') this.waterWaveUrl = 'https://shellbox-image.ustb.tj.cn/water-wave-dark.webp'
 			if (getEdusysAccount() === false) {

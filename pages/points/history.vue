@@ -44,12 +44,23 @@
 			</view>
 		</view>
 		
+		<!-- #ifdef MP-WEIXIN -->
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
+			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+		</view>
+		<!-- #endif -->
+		<!-- #ifdef MP-QQ -->
+		<view v-if="!isVip" class="margin margin-tb-xl radius">
+			<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
+		</view>
+		<!-- #endif -->
+		
 		<template v-if="!isLogined">
 			<tips tips="查看积分明细，需先登录~" image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips>
 		</template>
 		<template v-else>
 			<view class="cu-list menu sm-border card-menu margin-top-xl">
-				<view class="cu-item" v-for="(item, index) in data.data">
+				<view class="cu-item" v-for="(item, index) in data.data" :key="index">
 					<view class="content padding-tb-sm">
 						<view><text class="cuIcon-title text-green margin-right-xs"></text> {{item.remark}}</view>
 						<view class="text-gray text-sm">
@@ -78,11 +89,13 @@
 </template>
 
 <script>
+	const app = getApp()
 	import api from '../../request/api'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	export default {
 		data() {
 			return {
+				isVip: false,
 				isLogined: true,
 				bizTypes: {
 					'order': '订单',
@@ -117,6 +130,7 @@
 			}
 		},
 		onLoad() {
+			this.isVip = app.globalData.isVip
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
@@ -131,6 +145,7 @@
 					console.log(res.data)
 				}).catch(error => {
 					console.log('fetchUserPointsBalanceHistory error', error)
+					uni.showModal({ content: error.data.message, showCancel: false})
 				}).finally(() => {
 					uni.hideLoading()
 				})
