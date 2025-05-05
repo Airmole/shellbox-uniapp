@@ -395,5 +395,32 @@ export default {
 	},
 	fetchOpacsysOverdueSearch (usercode) {
 		return request(`/book/overdue/search?usercode=${usercode}`)
+	},
+	fetchUserPointsBalance () {
+		return request(`/points/balance`)
+	},
+	fetchUserPointsDocument () {
+		return request(`/points/balance/doc`)
+	},
+	fetchUserPointsBalanceIndex () {
+		return request(`/points/balance/index`)
+	},
+	fetchUserPointsCheckinIndex (month) {
+		return request(`/points/checkin/index?month=${month}`)
+	},
+	userPointsCheckin () {
+		return request(`/points/checkin`, 'POST')
+	},
+	fetchPointsCheckinDocument () {
+		return request(`/points/checkin/doc`)
+	},
+	pointsVideoAdsPlayEnd () {
+		return request(`/points/videoAdsEnd`, 'POST')
+	},
+	fetchUserPointsBalanceHistory (page = 1, type = '', bizType = '') {
+		return request(`/points/balance/history?page=${page}&type=${type}&bizType=${bizType}`)
+	},
+	userPointsExchaneGoods (goodsId) {
+		return request(`/points/exchangeGoods?goodsId=${goodsId}`, 'POST')
 	}
 }

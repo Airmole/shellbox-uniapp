@@ -36,28 +36,18 @@
 		try {
 			if (getCurrentPages().length < 2 && 'undefined' !== typeof __wxConfig) {
 				const url = '/' + __wxConfig.pages[0]
-				return uni.redirectTo({
-					url
-				})
+				return uni.redirectTo({ url })
 			}
 			if (getCurrentPages().length === 1) {
-				return uni.switchTab({
-					url: '/pages/index/index'
-				})
+				return uni.switchTab({ url: '/pages/index/index' })
 			}
-			uni.navigateBack({
-				delta: 1
-			});
+			uni.navigateBack({ delta: 1 })
 		} catch (e) {
-			try{
-				return uni.redirectTo({
-					url: '/pages/index/index'
-				})
-			}catch(e){
+			try {
+				return uni.redirectTo({ url: '/pages/index/index' })
+			} catch (e) {
 				const url = '/' + __wxConfig.pages[0]
-				return uni.switchTab({
-					url: '/pages/index/index'
-				})
+				return uni.switchTab({ url: '/pages/index/index' })
 			}
 		}
 	}

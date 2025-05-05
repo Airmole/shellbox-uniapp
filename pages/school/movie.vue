@@ -73,6 +73,7 @@
 <script>
 	const app = getApp()
 	import api from '@/request/api.js'
+	import { getTodayDateString } from '../../common/utils/tools'
 	let interstitialAd = null
 	export default {
 		data() {
@@ -103,11 +104,7 @@
 			if (option && option.date) {
 				this.checkedDate = option.date // 格式：2024-11-09
 			} else {
-				var date = new Date()
-				var year = date.getFullYear()
-				var month = date.getMonth() + 1
-				var day = date.getDate()
-				this.checkedDate = `${year}-${month}-${day}`
+				this.checkedDate = getTodayDateString()
 			}
 			this.getDateMovie(this.checkedDate)
 			this.getMonthMovie(this.checkedDate)

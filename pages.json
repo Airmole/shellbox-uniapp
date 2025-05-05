@@ -31,7 +31,10 @@
 		{ "path" : "pages/book/hotbook" },
 		{ "path" : "pages/book/shelf" },
 		{ "path" : "pages/book/scan" },
-		{ "path" : "pages/book/overdue" }
+		{ "path" : "pages/book/overdue" },
+		{ "path" : "pages/points/balance" },
+		{ "path" : "pages/points/history" },
+		{ "path" : "pages/points/checkin" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",

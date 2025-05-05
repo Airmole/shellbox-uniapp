@@ -161,6 +161,13 @@
 				}
 				// #endif
 				
+				// #ifdef MP-WEIXIN
+				if (data.account == 'USTBShellBox') {
+					wx.openOfficialAccountProfile({ username: 'gh_0a3884f25944' })
+					return
+				}
+				// #endif
+				
 				this.detail = data
 				this.isShowModal = true
 			},

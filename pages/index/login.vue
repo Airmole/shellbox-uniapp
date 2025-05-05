@@ -124,7 +124,11 @@
 	
 	function goLoginPasswordArticle () {
 		// #ifdef MP-WEIXIN
-		uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug') })
+		try {
+			wx.openOfficialAccountArticle({url: `https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug`})
+		} catch (error) {
+			uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug') })
+		}
 		// #endif
 		// #ifdef MP-QQ
 		this.copyText('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug')
