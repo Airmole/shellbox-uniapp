@@ -145,7 +145,7 @@
 			this.isReleaseEnv = (app.globalData.env === 'release')
 			// #endif
 			// #ifdef H5
-			isReleaseEnv.value = true
+			this.isReleaseEnv = true
 			// #endif
 			this.isVip = app.globalData.isVip = app.globalData.isVip
 			if (getEdusysAccount() === false) {
