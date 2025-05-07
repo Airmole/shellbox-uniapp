@@ -58,8 +58,8 @@
 						</view>
 						 <view class="action">
 							<button v-if="fetchVideoAdFinished && data.videoAds.finished<data.videoAds.total" @click="showVideoAds" class="cu-btn round bg-gradual-blue shadow sm"><text></text>看视频</button>
-							<button v-else-if="data.videoAds.finished==data.videoAds.total" :disabled="true" class="cu-btn round bg-grey shadow sm"><text class="text-red">已完成</text></button>
-							<button v-else class="cu-btn round bg-grey shadow sm" :disabled="true"><text class="text-red">不可用</text></button>
+							<view v-else-if="data.videoAds.finished==data.videoAds.total" class="cu-btn round bg-grey shadow sm"><text class="text-red">已完成</text></view>
+							<view v-else class="cu-btn round bg-grey shadow sm"><text class="text-red">不可用</text></view>
 						</view>
 					</view>
 					<!-- #ifndef MP-QQ -->
@@ -70,7 +70,7 @@
 						</view>
 						 <view class="action">
 							<button v-if="!data.profileUpdated" @click="goProfileUpdate" class="cu-btn round bg-gradual-blue shadow sm"><text></text>去补充</button>
-							<button v-else :disabled="true" class="cu-btn round bg-grey shadow sm"><text class="text-white">已完成</text></button>
+							<view v-else class="cu-btn round bg-grey shadow sm"><text class="text-white">已完成</text></view>
 						</view>
 					</view>
 					<!-- #endif -->
