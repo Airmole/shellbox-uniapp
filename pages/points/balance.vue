@@ -58,26 +58,34 @@
 						</view>
 						 <view class="action">
 							<button v-if="fetchVideoAdFinished && data.videoAds.finished<data.videoAds.total" @click="showVideoAds" class="cu-btn round bg-gradual-blue shadow sm"><text></text>看视频</button>
-							<view v-else-if="data.videoAds.finished==data.videoAds.total" class="cu-btn round bg-grey shadow sm"><text class="text-red">已完成</text></view>
-							<view v-else class="cu-btn round bg-grey shadow sm"><text class="text-red">不可用</text></view>
+							<view v-else-if="data.videoAds.finished==data.videoAds.total" class="cu-btn round bg-grey shadow sm"><text>已完成</text></view>
+							<view v-else class="cu-btn round bg-grey shadow sm"><text>不可用</text></view>
 						</view>
 					</view>
-					<!-- #ifndef MP-QQ -->
+					<view class="cu-item">
+						<view class="content">
+							<text class="cuIcon-squarecheck text-blue"></text>
+							<text class="text-grey" :decode="true">3.&nbsp;访问黄金价格小程序</text>
+						</view>
+						 <view class="action">
+							<button v-if="!data.todayVisitGold" @click="visitGoldWeapp" class="cu-btn round bg-gradual-blue shadow sm"><text>去访问</text></button>
+							<button v-else class="cu-btn round bg-grey shadow sm"><text>已完成</text></button>
+						</view>
+					</view>
 					<view class="cu-item">
 						<view class="content">
 							<text class="cuIcon-profile text-blue"></text>
-							<text class="text-grey" :decode="true">3.&nbsp;完善资料得积分(仅限首次)</text>
+							<text class="text-grey" :decode="true">4.&nbsp;完善资料得积分(仅限首次)</text>
 						</view>
 						 <view class="action">
 							<button v-if="!data.profileUpdated" @click="goProfileUpdate" class="cu-btn round bg-gradual-blue shadow sm"><text></text>去补充</button>
-							<view v-else class="cu-btn round bg-grey shadow sm"><text class="text-white">已完成</text></view>
+							<view v-else class="cu-btn round bg-grey shadow sm"><text>已完成</text></view>
 						</view>
 					</view>
-					<!-- #endif -->
 				</view>
 			</template>
 			<!-- 积分兑换权益 -->
-			<template v-if="data.pointsGoods">
+			<template v-if="isReleaseEnv && data.pointsGoods">
 				<view class="margin-top-xl text-center"><text>积分兑换权益</text></view>
 				<view class="bg-gray margin">
 					<view class="flex margin-tb" v-for="(item, index) in data.pointsGoods" :key="index">
@@ -138,6 +146,7 @@
 				showDocument: false,
 				data: '',
 				fetchVideoAdFinished: false,
+				usercode: ''
 			}
 		},
 		onLoad() {
@@ -148,7 +157,9 @@
 			this.isReleaseEnv = true
 			// #endif
 			this.isVip = app.globalData.isVip = app.globalData.isVip
-			if (getEdusysAccount() === false) {
+			const usercode = getEdusysAccount()
+			this.usercode = usercode
+			if (usercode === false) {
 				this.isLogined = false
 				return
 			}
@@ -205,6 +216,16 @@
 			},
 			goCheckin () {
 				uni.navigateTo({ url: '/pages/points/checkin' })
+			},
+			visitGoldWeapp () {
+				// #ifndef MP-WEIXIN
+				uni.showToast({ title: '仅支持微信小程序端' , icon: 'none'})
+				return
+				// #endif
+				
+				// #ifdef MP-WEIXIN
+				uni.navigateToMiniProgram({ appId: 'wxb0107143d31f1b7c', extraData: { userCode: this.usercode.account }})
+				// #endif
 			},
 			showVideoAds () {
 				// #ifndef MP

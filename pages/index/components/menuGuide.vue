@@ -1,5 +1,5 @@
 <template>
-	<view class="cu-list menu sm-border" style="margin-top: 0;">
+	<view class="cu-list menu sm-border margin-sm card-radius">
 		<view class="cu-bar solid-bottom bg-white" style="min-height: 60rpx;" @click="fold = !fold">
 			<view class="action">
 				<text class="cuIcon-titles text-green"></text>
@@ -126,4 +126,7 @@
 </script>
 
 <style>
+	.card-radius {
+		border-radius: 15rpx;
+	}
 </style>
