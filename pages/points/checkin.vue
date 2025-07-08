@@ -95,7 +95,7 @@
 		data() {
 			return {
 				isVip: false,
-				waterWaveUrl: 'https://shellbox-image.ustb.tj.cn/water-wave-light.webp',
+				waterWaveUrl: 'https://r2.airmole.cn/images/weapp/water-wave-light.webp',
 				date: "",
 				type: "week",
 				mode: "single",
@@ -123,7 +123,7 @@
 			this.isVip = app.globalData.isVip
 			this.date = getTodayDateString()
 			const sysInfo = uni.getSystemInfoSync()
-			if (sysInfo.theme === 'dark') this.waterWaveUrl = 'https://shellbox-image.ustb.tj.cn/water-wave-dark.webp'
+			if (sysInfo.theme === 'dark') this.waterWaveUrl = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return

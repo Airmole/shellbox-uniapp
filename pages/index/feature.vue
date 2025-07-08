@@ -157,7 +157,7 @@
 	const { loginStatus, userInfo, edusysAccount } = storeToRefs(appStore)
 	const defaultAvatar = 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
 	const backgroundImageUrl = 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp'
-	let waterWaveUrl = ref('https://shellbox-image.ustb.tj.cn/water-wave-light.webp')
+	let waterWaveUrl = ref('https://r2.airmole.cn/images/weapp/water-wave-light.webp')
 	
 	const isVip = ref(false)
 	const profile = ref('')
@@ -176,7 +176,7 @@
 		// #endif
 		uni.showLoading({ title: '加载中...' })
 		const sysInfo = uni.getSystemInfoSync()
-		if (sysInfo.theme === 'dark') waterWaveUrl.value = 'https://shellbox-image.ustb.tj.cn/water-wave-dark.webp'
+		if (sysInfo.theme === 'dark') waterWaveUrl.value = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'
 		fetchMenuList()
 	})
 	
