@@ -6,7 +6,7 @@
 		globalData: {
 			env: 'develop',
 			screenHeight: 800,
-			logoImageUrl: 'https://r2.airmole.net/i/2024/11/30/17v4j5-c1.jpg',
+			logoImageUrl: 'https://r2.airmole.cn/i/2024/11/30/17v4j5-c1.jpg',
 			loginPromise: null,
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
 		},

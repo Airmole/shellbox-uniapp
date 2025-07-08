@@ -150,7 +150,7 @@
 				env: 'develop',
 				isAdminer: false,
 				uid: 0,
-				qrcode: 'https://r2.airmole.net/images/upload/quanyi_offical_qrcode.webp',
+				qrcode: 'https://r2.airmole.cn/images/upload/quanyi_offical_qrcode.webp',
 				datalist: [],
 				hotDatalist: [],
 				tags: ['其他', '食堂', '宿舍', '教学楼', '老师'],

@@ -56,7 +56,7 @@
 		<!-- #endif -->
 		
 		<template v-if="!isLogined">
-			<tips tips="查看积分明细，需先登录~" image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips>
+			<tips tips="查看积分明细，需先登录~" image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips>
 		</template>
 		<template v-else>
 			<view class="cu-list menu sm-border card-menu margin-top-xl">
@@ -76,7 +76,7 @@
 				</view>
 			</view>
 			<!-- 无数据 -->
-			<template v-if="data && data.pager && data.pager.total==0"><tips tips="还没有符合条件的数据" image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips></template>
+			<template v-if="data && data.pager && data.pager.total==0"><tips tips="还没有符合条件的数据" image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips></template>
 			<!-- 分页器 -->
 			<view v-if="data && data.pager" class="flex margin align-center text-center">
 				<view class="flex-sub"><button v-if="data.pager.currentPage!=1" @click="lastPage" class="cu-btn round bg-gradual-blue">上一页</button></view>

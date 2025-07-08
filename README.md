@@ -8,7 +8,7 @@
 
 |网页H5版|微信小程序版|QQ小程序版|
 |------|-----------|---------|
-| <img src="https://r2.airmole.net/i/2024/11/30/18vlto-0h.png" style="width:160px"></img>| <img src="https://r2.airmole.net/i/2024/11/30/18yjmx-s4.jpg" style="width:160px"></img>|<img src="https://r2.airmole.net/i/2024/12/10/vffoh-ev.webp" style="width:160px"></img>|
+| <img src="https://r2.airmole.cn/i/2024/11/30/18vlto-0h.png" style="width:160px"></img>| <img src="https://r2.airmole.cn/i/2024/11/30/18yjmx-s4.jpg" style="width:160px"></img>|<img src="https://r2.airmole.cn/i/2024/12/10/vffoh-ev.webp" style="width:160px"></img>|
 
 ## 应用截图
 
@@ -21,14 +21,14 @@
 
 |微信群|QQ群(662675925)|微信公众号(USTBShellBox)|
 | ----|----|-------|
-| <img src="https://r2.airmole.net/images/weapp/wechat_group.png?t=1" style="width:160px"/> | <img src="https://r2.airmole.net/images/weapp/qq_group.png" style="width:160px"/>|<img src="https://r2.airmole.net/i/2024/11/25/1c3f3u-ft.png" style="width:160px"/>|
+| <img src="https://r2.airmole.cn/images/weapp/wechat_group.png?t=1" style="width:160px"/> | <img src="https://r2.airmole.cn/images/weapp/qq_group.png" style="width:160px"/>|<img src="https://rr2.airmole.cnet/i/2024/11/25/1c3f3u-ft.png" style="width:160px"/>|
 
 
 ## 数据来源
 
 - 课表、成绩等教务信息数据来源于[学校教务网](http://jw.bkty.top:89/jsxsd)
 - 图书检索相关信息来源于[图书馆OPAC系统](http://opac.bkty.top)
-- 音像放映安排信息来源于[图书馆微信公众号](https://r2.airmole.net/i/2024/11/25/12veuy-7v.png)
+- 音像放映安排信息来源于[图书馆微信公众号](https://r2.airmole.cn/i/2024/11/25/12veuy-7v.png)
 - 其余信息均来源于网络收集，如有侵权请[联系我](mailto:admin@airmole.cn)
 
 ## 相关项目
@@ -55,4 +55,4 @@
 
 ## 打赏赞助
 
-<img src="https://r2.airmole.net/i/2024/11/30/1bdnal-fm.webp" style="width: 200px;" />
+<img src="https://r2.airmole.cn/i/2024/11/30/1bdnal-fm.webp" style="width: 200px;" />

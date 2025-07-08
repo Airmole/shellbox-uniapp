@@ -9,7 +9,7 @@
 				<text>请扫描图书背面底部的ISBN码</text>
 			</view>
 			<view class="text-center margin">
-				<image style="width: 300rpx;" src="https://r2.airmole.net/i/2025/04/27/17zht3-w9.jpg" mode="widthFix"></image>
+				<image style="width: 300rpx;" src="https://r2.airmole.cn/i/2025/04/27/17zht3-w9.jpg" mode="widthFix"></image>
 			</view>
 			<view class="text-left">
 				<text>ISBN（International Standard Book Number，国际标准书号），是国际上通用的图书唯一标识编码，便于出版、销售和库存管理。</text>

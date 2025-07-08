@@ -39,7 +39,7 @@
 			></wu-calendar>	 
 		</view>
 		
-		<view v-if="!isLogined"><tips tips="需先登录，方可签到~" image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips></view>
+		<view v-if="!isLogined"><tips tips="需先登录，方可签到~" image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips></view>
 		<view v-else>
 			<view class="margin-top-xl margin">
 				<text class="cuIcon-title text-green"></text> <text class="text-title text-lg text-bold">连续签到奖励</text>

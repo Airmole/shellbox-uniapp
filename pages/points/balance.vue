@@ -5,7 +5,7 @@
 		</cu-custom>
 		
 		<template v-if="!isLogined">
-			<tips tips="需要登录才能查看您的积分" image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips>
+			<tips tips="需要登录才能查看您的积分" image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips>
 		</template>
 		<template v-else>
 			<!-- 积分余额 -->

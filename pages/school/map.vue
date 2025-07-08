@@ -31,11 +31,11 @@
 					<text class="text-xs">全景地图</text>
 				</view>
 				<view class="margin-tb-xs flex flex-direction" @tap.stop="previewMapPic">
-					<image src="https://r2.airmole.net/images/weapp/navIcon/staticMap.png" mode="aspectFill" class="tool-icon"></image>
+					<image src="https://r2.airmole.cn/images/weapp/navIcon/staticMap.png" mode="aspectFill" class="tool-icon"></image>
 					<text class="text-xs">平面地图</text>
 				</view>
 				<view class="margin-tb-xs flex flex-direction" @tap.stop="resetMapCenter">
-					<image src="https://r2.airmole.net/images/weapp/navIcon/moveSchool.png" mode="aspectFill" class="tool-icon"></image>
+					<image src="https://r2.airmole.cn/images/weapp/navIcon/moveSchool.png" mode="aspectFill" class="tool-icon"></image>
 					<text class="text-xs">回到学校</text>
 				</view>
 			</view>
@@ -133,7 +133,7 @@
 							  id: Number(place.id),
 							  latitude: Number(place.latitude),
 							  longitude: Number(place.longitude),
-							  iconPath: `https://r2.airmole.net/images/weapp/navIcon/${place.icon}.png`,
+							  iconPath: `https://r2.airmole.cn/images/weapp/navIcon/${place.icon}.png`,
 							  width: 30,
 							  height: 32,
 							  callout: {
@@ -167,7 +167,7 @@
 					  id: Number(place.id),
 					  latitude: Number(place.latitude),
 					  longitude: Number(place.longitude),
-					  iconPath: `https://r2.airmole.net/images/weapp/navIcon/${place.icon}.png`,
+					  iconPath: `https://r2.airmole.cn/images/weapp/navIcon/${place.icon}.png`,
 					  width: 30,
 					  height: 32,
 					  callout: {
@@ -199,7 +199,7 @@
 					  id: Number(poi.id),
 					  latitude: Number(poi.latitude),
 					  longitude: Number(poi.longitude),
-					  iconPath: `https://r2.airmole.net/images/weapp/navIcon/${poi.icon}.png`,
+					  iconPath: `https://r2.airmole.cn/images/weapp/navIcon/${poi.icon}.png`,
 					  width: 30,
 					  height: 32,
 					  callout: {
@@ -234,7 +234,7 @@
 					  id: Number(poi.id),
 					  latitude: Number(poi.latitude),
 					  longitude: Number(poi.longitude),
-					  iconPath: `https://r2.airmole.net/images/weapp/navIcon/${poi.icon}.png`,
+					  iconPath: `https://r2.airmole.cn/images/weapp/navIcon/${poi.icon}.png`,
 					  width: 30,
 					  height: 32,
 					  callout: {
@@ -280,8 +280,8 @@
 				  success (res) {
 					if (res.tapIndex < 2) {
 						const urls = [
-							'https://r2.airmole.net/i/2024/11/12/vbmpa-2i.png',
-							'https://r2.airmole.net/i/2025/04/01/1bsehl-ab.jpg'
+							'https://r2.airmole.cn/i/2024/11/12/vbmpa-2i.png',
+							'https://r2.airmole.cn/i/2025/04/01/1bsehl-ab.jpg'
 						]
 						uni.previewImage({ urls: urls, current: urls[res.tapIndex] })
 					}

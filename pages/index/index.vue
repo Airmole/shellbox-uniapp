@@ -39,7 +39,7 @@
 		<view v-if="!loginStatus" :style="[{animation: 'show ' + ((0+1)*0.2+1) + 's 1'}]">
 			<tips
 				tips="哎呀~还没登录嘛？"
-				image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"
+				image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"
 				:showButton="true"
 				buttonText="立即登录"
 				path="/pages/index/login"

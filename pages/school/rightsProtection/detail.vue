@@ -159,7 +159,7 @@
 	export default {
 		data() {
 			return {
-				defaultAvatar: 'https://r2.airmole.net/images/upload/4697920-5a559d389ef75773.webp',
+				defaultAvatar: 'https://r2.airmole.cn/images/upload/4697920-5a559d389ef75773.webp',
 				env: 'develop',
 				isLoading: true,
 				isAdminer: false,

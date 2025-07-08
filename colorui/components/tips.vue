@@ -16,7 +16,7 @@
 		image: {
 		  type: String,
 		  required: false,
-		  default: 'https://r2.airmole.net/gif/BrunoError.gif'
+		  default: 'https://r2.airmole.cn/gif/BrunoError.gif'
 		},
 		height: {
 		  type: [Number, String],

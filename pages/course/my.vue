@@ -32,7 +32,7 @@
 			<!-- #endif -->
 			<tips
 				tips="查询您的个人课表需登录账号"
-				image="https://r2.airmole.net/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"
+				image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"
 				:showButton="true"
 				buttonText="立即登录"
 				path="/pages/index/login"

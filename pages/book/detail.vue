@@ -203,7 +203,7 @@
 				<!-- #ifdef MP-WEIXIN -->
 				<view class="cu-item arrow" @click="goWechatBook">
 				  <view class="content">
-				    <image src="https://r2.airmole.net/i/2025/04/27/17ndig-v8.jpg" class="png radius" mode="aspectFit"></image>
+				    <image src="https://r2.airmole.cn/i/2025/04/27/17ndig-v8.jpg" class="png radius" mode="aspectFit"></image>
 				    <text class="text-black">微信读书</text>
 				  </view>
 				  <view class="action">前往阅读</view>
@@ -211,14 +211,14 @@
 				<!-- #endif -->
 			    <view class="cu-item arrow" @click="goToDouban">
 			      <view class="content">
-			        <image src="https://r2.airmole.net/i/2025/04/27/s3qy1-93.ico" class="png radius" mode="aspectFit"></image>
+			        <image src="https://r2.airmole.cn/i/2025/04/27/s3qy1-93.ico" class="png radius" mode="aspectFit"></image>
 			        <text class="text-black">豆瓣评分</text>
 			      </view>
 			      <view class="action">查看热评</view>
 			    </view>
 			    <view class="cu-item arrow" @click="goToDangdang">
 			      <view class="content">
-			        <image src="https://r2.airmole.net/i/2025/04/27/s3uey-7d.ico" class="png radius" mode="aspectFit"></image>
+			        <image src="https://r2.airmole.cn/i/2025/04/27/s3uey-7d.ico" class="png radius" mode="aspectFit"></image>
 			        <text class="text-black">当当图书</text>
 			      </view>
 			      <view class="action">前往购买</view>

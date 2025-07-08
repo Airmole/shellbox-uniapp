@@ -151,7 +151,7 @@
 			    let openid = app.getOpenId()
 				if (typeof openid === 'object') openid = openid.openid
 			    const nickname = openid
-			    const avatar = 'https://r2.airmole.net/images/upload/4697920-5a559d389ef75773.webp'
+			    const avatar = 'https://r2.airmole.cn/images/upload/4697920-5a559d389ef75773.webp'
 				const edusysAccount = getEdusysAccount()
 			    const uid = edusysAccount.account ? edusysAccount.account : 0
 			    const related = options.id ? options.id : ''
