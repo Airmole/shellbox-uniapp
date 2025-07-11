@@ -126,8 +126,6 @@ let {"code-data-index":codeDataIndex,"class":className} = attrs
 	 hr, ::v-deep .hr {
 	   margin-top: 20px;margin-bottom: 20px; border: 0; border-top: 1px solid #e5e5e5;
 	    }
-	    img { max-width: 35%;
-	    }
 	  p {margin: 0 0 10px}
 	  em {
 	      font-style: italic; font-weight: inherit;
@@ -225,7 +223,7 @@ code:empty {display: none;
 	  padding: 6px 13px;border: 1px solid #e5e5e5;
 	    }
 	    table th, ::v-deep .table .th {
-	      font-weight: 600;background-color: #eee;
+	      font-weight: 600;
 	    }
 	    .hljs[class*=language-]:before {
 	    position: absolute; z-index: 3;top: .8em; right: 1em; font-size: .8em; color: #999;

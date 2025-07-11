@@ -34,7 +34,8 @@
 		{ "path" : "pages/book/overdue" },
 		{ "path" : "pages/points/balance" },
 		{ "path" : "pages/points/history" },
-		{ "path" : "pages/points/checkin" }
+		{ "path" : "pages/points/checkin" },
+		{ "path" : "pages/points/mall" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",

@@ -228,7 +228,6 @@ export default {
 	// 教室状态查询筛选项
 	fetchClassroomOptions () {
 		let url = `/edusys/classroom/status/options`
-		// url = `https://apifoxmock.com/m1/3906316-3540911-default/wap/edusys/classroom/status/options`
 		return request(url, `GET`)
 	},
 	// 教室借用状态查询
@@ -420,7 +419,14 @@ export default {
 	fetchUserPointsBalanceHistory (page = 1, type = '', bizType = '') {
 		return request(`/points/balance/history?page=${page}&type=${type}&bizType=${bizType}`)
 	},
-	userPointsExchaneGoods (goodsId) {
-		return request(`/points/exchangeGoods?goodsId=${goodsId}`, 'POST')
+	userPointsExchaneGoods (goodsId, name = '', mobile = '', address = '') {
+		const data = { goodsId, name, mobile, address }
+		return request(`/points/exchangeGoods`, 'POST', data)
+	},
+	fetchPointsMallGoods (size = 10) {
+		return request('/points/mall')
+	},
+	fetchPoitsMallGoodsDetail (id) {
+		return request(`/points/mall/goods/${id}`)
 	}
 }
