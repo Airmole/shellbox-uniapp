@@ -22,6 +22,12 @@
 			</view>
 			<!-- 明细 -->
 			<view class="cu-list menu sm-border card-menu margin-top-lg">
+				<navigator url="/pages/points/mall" class="cu-item arrow" :render-link="false">
+				    <view class="content">
+				        <text class="cuIcon-shop text-blue"></text>
+				        <text class="text-grey">积分兑换商场</text>
+				    </view>
+				</navigator>
 				<!-- #ifndef MP-QQ -->
 			    <view v-if="isReleaseEnv" class="cu-item arrow" @click="goRecharge">
 			        <view class="content">
@@ -101,6 +107,7 @@
 						</view>
 					</view>
 				</view>
+				<navigator url="/pages/points/mall" class="text-center text-blue"><text>更多积分商品兑换...</text></navigator>
 			</template>
 		</template>
 		

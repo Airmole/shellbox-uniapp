@@ -10,7 +10,7 @@
 		<swiper class="screen-swiper round-dot" :indicator-dots="true" :circular="true" :autoplay="true" interval="5000"
 		 duration="500">
 			<swiper-item v-for="(item,index) in 1" :key="index">
-				<image :src="'https://ossweb-img.qq.com/images/lol/web201310/skin/big3900'+index+ '.jpg'" mode="aspectFill"></image>
+				<image :src="'https://r2.airmole.cn/i/2025/07/13/1c3m9b-mf.jpeg'" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 		
@@ -60,7 +60,7 @@
 						</view>
 					    <view class="flex-twice text-left padding-sm">
 							<view class="text-title text-xl margin-top-sm">{{goodsDetail.title}}</view>
-							<view class="margin-top-sm">需<text class="text-xxl text-yellow margin-lr-xs">{{goodsDetail.price}}<text class="iconfont icon-shell"></text></text>可兑换</view>
+							<view class="margin-top-sm"><text class="text-xxl text-yellow margin-lr-xs">{{goodsDetail.price}}<text class="iconfont icon-shell"></text></text>可兑换</view>
 							<view class="margin-top-sm">
 								<view v-if="goodsDetail.type==0" class="cu-tag line-green">虚拟商品</view>
 								<view v-if="goodsDetail.type==1" class="cu-tag line-green">实物商品</view>
@@ -78,7 +78,34 @@
 				</view>
 			</view>
 		</view>
-
+			
+		<view class="cu-modal" :class="showAddressModal?'show':''" style="z-index: 998;">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">收件信息</view>
+					<view class="action" @tap="hideAddressModal"> <text class="cuIcon-close text-red"></text></view>
+				</view>
+				<view class="padding-xl bg-white">
+					<view class="cu-form-group margin-top text-left">
+						<view class="title">收件姓名</view>
+						<input placeholder="收快递的姓名" name="name" v-model="addressForm.name"></input>
+					</view>
+					<view class="cu-form-group margin-top text-left">
+						<view class="title">收件电话</view>
+						<input placeholder="收快递的联系电话" name="mobile" type="tel" v-model="addressForm.mobile"></input>
+					</view>
+					<view class="cu-form-group margin-top text-left">
+						<textarea maxlength="254" v-model="addressForm.address" placeholder="快递配送地址"></textarea>
+					</view>
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn line-green text-green" @tap="hideAddressModal">取消</button>
+						<button class="cu-btn bg-green margin-left" @tap="submitExchangeGoods">确定</button>
+					</view>
+				</view>
+			</view>
+		</view>
 		
 	</view>
 </template>
@@ -95,6 +122,12 @@
 				load: true,
 				showGoodsModal: false,
 				goodsDetail: '',
+				showAddressModal: false,
+				addressForm: {
+					name: '',
+					mobile: '',
+					address: '天津市宝坻区京津新城珠江北环东路1号北京科技大学天津学院',
+				},
 			};
 		},
 		onLoad() {
@@ -107,6 +140,9 @@
 			uni.hideLoading()
 		},
 		methods: {
+			hideAddressModal () {
+				this.showAddressModal = false
+			},
 			hideGoodsModal () {
 				this.showGoodsModal = false
 			},
@@ -122,15 +158,40 @@
 			previewImage (imageUrl) {
 				uni.previewImage({ urls: [imageUrl] })
 			},
-			exchangeGoods() {
+			exchangeGoods () {
+				// 虚拟商品兑换，无需填写收件信息
+				if (this.goodsDetail.type == 0) {
+					this.submitExchangeGoods()
+					return
+				}
+				// 实物商品兑换,需要填写收件信息
+				if (this.goodsDetail.type == 1) {
+					this.showAddressModal = true
+					return
+				}
+			},
+			submitExchangeGoods() {
 				const _this = this
+				if (_this.goodsDetail.type == 1 && _this.addressForm.name.length <= 0) {
+					uni.showModal({ content: '收件姓名不可为空'})
+					return
+				}
+				if (_this.goodsDetail.type == 1 && _this.addressForm.mobile.length <= 0) {
+					uni.showModal({ content: '收件电话不可为空'})
+					return
+				}
 				uni.showModal({
 					title: '提示',
 					content: `确认要兑换【${_this.goodsDetail.title}】吗？`,
 					success: function (confirmRes) {
 						if (confirmRes.confirm) {
 							uni.showLoading({ title: '正在为你兑换中...' })
-							api.userPointsExchaneGoods(_this.goodsDetail.id).then(res => {
+							api.userPointsExchaneGoods(
+								_this.goodsDetail.id,
+								_this.addressForm.name,
+								_this.addressForm.mobile,
+								_this.addressForm.address
+							).then(res => {
 								uni.hideLoading()
 								uni.showModal({ content: res.data.message, showCancel: false})
 							}).catch(error => {
