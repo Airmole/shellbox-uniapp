@@ -22,7 +22,7 @@
 			</view>
 			<!-- 明细 -->
 			<view class="cu-list menu sm-border card-menu margin-top-lg">
-				<navigator url="/pages/points/mall" class="cu-item arrow" :render-link="false">
+				<navigator v-if="isReleaseEnv" url="/pages/points/mall" class="cu-item arrow" :render-link="false">
 				    <view class="content">
 				        <text class="cuIcon-shop text-blue"></text>
 				        <text class="text-grey">积分兑换商场</text>
