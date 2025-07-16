@@ -131,7 +131,7 @@
 		data() {
 			return {
 				isReleaseEnv: false,
-				isLogined: false,
+				isLogined: true,
 				list: [],
 				tabCur: 0,
 				mainCur: 0,
