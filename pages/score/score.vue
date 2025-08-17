@@ -442,9 +442,9 @@
 							data: []
 						},
 						{
-							name: "加权平均法",
+							name: "加权平均分",
 							data: []
-						},
+						}
 					]
 				}
 				for (let semesterIndex in score.data) {

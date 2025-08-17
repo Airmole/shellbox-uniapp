@@ -12,12 +12,12 @@
 				<form>
 					<view class="cu-form-group round margin-top-xl">
 						<view class="title">账号</view>
-						<input v-model="loginForm.account" type="number" placeholder="统一身份认证系统账号(学号/工号)" name="account"
+						<input v-model="loginForm.account" type="number" placeholder="统一身份认证账号(学号/教职工号)" name="account"
 							maxlength="10" focus="true" confirm-type="next" @input="accountInput" />
 					</view>
 					<view class="cu-form-group round margin-tb-xl">
 						<view class="title">密码</view>
-						<input v-model="loginForm.password" password="true" placeholder="统一身份认证密码或教务系统密码"
+						<input v-model="loginForm.password" password="true" placeholder="仅支持统一身份认证密码"
 							name="password" />
 					</view>
 				</form>
@@ -33,11 +33,22 @@
 		
 		<view style="position: fixed;bottom: 0;width: 100%;" class="margin-tb-sm">
 			<view class="flex justify-center">
-				<view @tap="goLoginPasswordArticle" class="bg-white padding-tb-xs padding-lr-sm round">
+				<view @tap="helpModal" class="bg-white padding-tb-xs padding-lr-sm round">
 					<text class="cuIcon-question"></text> 登录账号密码相关疑问
 				</view>
 			</view>
 		</view>
+		<view class="cu-modal" :class="showHelpModal?'show':''" style="z-index: 99;">
+			<view class="cu-dialog">
+				<view class="bg-img padding-sm text-center">
+					<image @tap="previewHelp" :src="helpImage" mode="widthFix"></image>
+				</view>
+				<view class="cu-bar bg-white">
+					<view class="action margin-0 flex-sub  solid-left" @tap="helpModal">我知道了</view>
+				</view>
+			</view>
+		</view>
+
 		
 		<view class="cu-modal" :class="isLoading?'show':''">
 			<view class="cu-dialog" style="width: 120px; height: 120px;">
@@ -58,9 +69,12 @@
 	import { useAppStore } from '@/stores/app.js'
 	const { setAppAuth } = useAppStore()
 	const loadingUrl = 'https://store2018.muapp.cn/images/weapp/loading_cat.gif'
+	const helpImage = 'https://r2.airmole.cn/i/2025/08/17/t9fix-x1.jpg'
 	const logoUrl = app.globalData.logoImageUrl
 	const isLoading = ref(false)
+	const showHelpModal = ref(false)
 	const bgImgUrl = ref('')
+	let loginFailureCount = ref(0)
 	const loginForm = ref({
 		account: '',
 		password: ''
@@ -108,7 +122,11 @@
 			uni.switchTab({ url: '/pages/index/index' })
 		}).catch(err => {
 			console.log(err)
-			uni.showToast({ title: err.data.message, icon: 'none'})
+			loginFailureCount.value = loginFailureCount.value + 1
+			if (loginFailureCount.value == 2) helpModal()
+			const errorMessage = formatErrorMessage(err.data)
+			console.log(errorMessage)
+			uni.showToast({ title: errorMessage, icon: 'none'})
 		}).finally(()=> {
 			isLoading.value = false
 		})
@@ -122,21 +140,33 @@
 		})
 	}
 	
-	function goLoginPasswordArticle () {
-		// #ifdef MP-WEIXIN
-		try {
-			wx.openOfficialAccountArticle({url: `https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug`})
-		} catch (error) {
-			uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug') })
+	
+	function helpModal () {
+		showHelpModal.value = !showHelpModal.value
+	}
+	
+	function previewHelp () {
+		uni.previewImage({ urls: [helpImage] })
+	}
+	
+	function formatErrorMessage (data) {
+		if (data && data.errors) {
+			let message = ''
+			for (let key in data.errors) {
+				message = key + data.errors[key] + ';'
+			}
+			return message
 		}
-		// #endif
-		// #ifdef MP-QQ
-		this.copyText('https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug')
-		// #endif
-		// #ifdef H5
-		uni.showLoading({ title: '加载中...' })
-		window.location.href = 'https://mp.weixin.qq.com/s/PN_bh36xl_hsatemP1ARug'
-		// #endif
+		if (data && data.message) return data.message
+		if (data && data.msg) return data.msg
+		if (typeof data == 'string') return data
+		if (typeof data == 'object' && data !== null) {
+			let message = ''
+			for (let key in data.errors) {
+				message = key + data.errors[key] + ';'
+			}
+			return message
+		}
 	}
 </script>
 

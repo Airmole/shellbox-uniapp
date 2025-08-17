@@ -1,7 +1,8 @@
 const BASE_URL = 'http://localhost/wap'
 const MOCK_URL = 'https://mock.apifox.com/m1/3906316-0-default/wap'
 const TEST_URL = 'https://dev-api.shellbox.ustb.tj.cn/wap'
-const API_ENV = 'local' // local、mock、test
+const PROD_URL = 'https://api.shellbox.ustb.tj.cn/wap'
+const API_ENV = 'prod' // local、mock、test、prod
 
 const request = (url, method = 'GET', data = {}, isUpload = false) => {
 	return new Promise((resolve, reject) => {
@@ -10,6 +11,7 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 		if (API_ENV === 'test') baseUrl = TEST_URL
 		if (API_ENV === 'mock') baseUrl = MOCK_URL
 		if (API_ENV === 'local') baseUrl = BASE_URL
+		if (API_ENV === 'prod') baseUrl = PROD_URL
 		if (url.indexOf('http://') === 0 || url.indexOf('https://') === 0) baseUrl = ''
 		
 		if (!isUpload) {
