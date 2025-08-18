@@ -111,7 +111,9 @@
 
 	watch(courses, (newValue) => {
 		const dayIndex = (new Date()).getDay() > 0 ? ((new Date()).getDay() - 1) : (newValue.table.length - 1)
-		todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
+		if (newValue.table[dayIndex]) {
+			todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
+		}
 	})
 
 	const isVip = ref(false)
