@@ -5,6 +5,7 @@
 		</cu-custom>
 		<wu-calendar
 			:useToday="true"
+			:date="checkedDate"
 			type="month"
 			mode="single"
 			color="#3c9cff"
@@ -129,15 +130,19 @@
 					this.monthCourses = res.data
 					const selected = this.formatCourseToSelected(res.data)
 					this.selected = selected
-					if (!isMonthChange) {
-						const checkedDateIndex = ((new Date()).getDate() - 1)
-						const date = new Date()
-						const year = date.getFullYear()
-						const month = date.getMonth() + 1
-						const day = date.getDate()
-						this.checkedDate = `${year}-${month}-${day}`
-						this.checkedDateCourses = res.data[checkedDateIndex]
+					if (!isMonthChange && selected.length) {
+						const checkedDate = selected[0].date
+						let checkedDateIndex = null
+						for (var index = 0; index < res.data.length; index++) {
+							var element = res.data[index]
+							if (element.date == checkedDate) {
+								checkedDateIndex = index
+								break
+							}
+						}
+						this.checkedDate = checkedDate
 						this.checkedDateIndex = checkedDateIndex
+						this.checkedDateCourses = res.data[checkedDateIndex]
 					}
 					uni.hideLoading()
 				})
@@ -166,11 +171,20 @@
 					return
 				}
 				
-				const checkedDateIndex = e.date - 1
+				const fullDate = e.fulldate
+				let checkedDateIndex = null
+				for (var index = 0; index < this.monthCourses.length; index++) {
+					var element = this.monthCourses[index];
+					if (element.date == fullDate) {
+						checkedDateIndex = index
+						break
+					}
+				}
+				
 				const dayCourse = this.monthCourses[checkedDateIndex]
-				this.checkedDate = e.fulldate
+				this.checkedDate = fullDate
 				this.checkedDateIndex = checkedDateIndex
-				this.checkedDateCourses = this.monthCourses[checkedDateIndex]
+				this.checkedDateCourses = dayCourse
 			},
 			monthChange (e) {
 				if (!this.isLogined) {
