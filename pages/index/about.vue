@@ -72,7 +72,7 @@
 						如果贝壳小盒子在您的校园生活中确实有帮助到您，并且在不影响您正常生活消费的情况下有心打赏，那么不胜感激。您可以在打赏附言留下您的称呼，我会将您的支持永久展示到赞助榜
 					</view>
 					<view class="text-center margin-xs">
-						<image @tap="previewImage('https://r2.airmole.cn/i/2024/11/30/1bdnal-fm.webp')" :show-menu-by-longpress="true" style="height: 220rpx;width: 220rpx;" src="https://rr2.airmole.cnet/i/2024/11/30/1bdnal-fm.webp" mode="aspectFill"></image>
+						<image @tap="previewImage('https://r2.airmole.cn/i/2024/11/30/1bdnal-fm.webp')" :show-menu-by-longpress="true" style="height: 220rpx;width: 220rpx;" src="https://r2.airmole.cn/i/2024/11/30/1bdnal-fm.webp" mode="aspectFill"></image>
 						<br/><text v-if="isWechatH5">长按识别赞赏码</text><text v-else>微信赞赏码</text>
 					</view>
 				</view>
