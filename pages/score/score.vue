@@ -164,6 +164,15 @@
 			</view>
 			<view class="margin-tb-xs"></view>
 			<!-- AI总结建议按钮 -->
+			<view class="ai-suggestion-section" v-if="score && score.length > 0">
+				<button class="ai-btn" @click="getAISuggestion" :disabled="isLoadingAI">
+					<text class="ai-btn-text">{{ isLoadingAI ? 'AI分析中...' : 'AI总结建议' }}</text>
+				</button>
+				<view class="ai-result" v-if="aiSuggestion">
+					<view class="ai-title">AI学业分析建议</view>
+					<text class="ai-content">{{ aiSuggestion }}</text>
+				</view>
+			</view>
 			<view @click="fetchScoreSuggestion" class="cu-bar bg-gradual-blue foot ai-suggestion-bar">
 				<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结&建议</text></view>
 			</view>
@@ -274,7 +283,7 @@
 					<view class="text-center text-sm">
 						<text class="iconfont icon-hunyuan"></text> 以下内容由腾讯混元AI大模型生成，不代表贝壳小盒子立场！
 					</view>
-					<scroll-view scroll-y="true" style="height: 480rpx;">
+					<scroll-view scroll-y="true" style="height: 1000rpx;" class="padding">
 						<template v-for="(sug, index) in suggestion.Choices" :key="index">
 							<ua-markdown :source="sug.Message.Content" />
 						</template>
@@ -549,16 +558,74 @@
 					return
 				}
 				
-				uni.showLoading({
-					title: '大约需要十几秒钟，请您耐心等待...'
+				if (!this.score || !this.score.data || this.score.data.length === 0) {
+					uni.showToast({ title: '请先查询成绩数据', icon: 'none'})
+					return
+				}
+				
+				uni.showLoading({ title: 'AI分析中请稍候...'})
+				
+				// 使用新的SSE接口
+				this.fetchScoreSuggestionSSE()
+			},
+			
+			fetchScoreSuggestionSSE() {
+				let aiContent = ''
+				
+				// 监听数据流
+				const requestTask = uni.request({
+					url: 'https://api-eo.airmole.cn/api/shellboxScoreSuggestion',
+					method: 'POST',
+					data: this.score,
+					enableChunked: true,
+					success: (res) => {
+						// 请求完成
+					},
+					fail: (error) => {
+						console.error('SSE连接失败', error)
+						uni.hideLoading()
+						uni.showToast({
+							title: 'AI分析失败，请重试',
+							icon: 'none'
+						})
+					}
 				})
-				api.fetchScoreSuggestion().then(res => {
-					this.suggestion = res.data.data
-					uni.hideLoading()
-					this.showSuggestionModal()
-				}).catch(error => {
-					console.log(error)
-					uni.hideLoading()
+				
+				// 监听数据块
+				requestTask.onChunkReceived((res) => {
+					const decoder = new TextDecoder('utf-8')
+					const chunk = decoder.decode(new Uint8Array(res.data))
+					
+					// 处理SSE数据格式
+					const lines = chunk.split('\n')
+					for (let line of lines) {
+						if (line.startsWith('data: ')) {
+							const data = line.substring(6).trim()
+							
+							if (data === '[DONE]') {
+								// 数据接收完成
+								this.suggestion = {
+									Choices: [{
+										Message: {
+											Content: aiContent
+										}
+									}]
+								}
+								uni.hideLoading()
+								this.showSuggestionModal()
+								return
+							}
+							
+							try {
+								const jsonData = JSON.parse(data)
+								if (jsonData.choices && jsonData.choices[0] && jsonData.choices[0].delta && jsonData.choices[0].delta.content) {
+									aiContent += jsonData.choices[0].delta.content
+								}
+							} catch (e) {
+								console.log('解析JSON失败', data)
+							}
+						}
+					}
 				})
 			}
 		}
