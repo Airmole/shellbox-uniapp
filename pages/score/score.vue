@@ -604,6 +604,7 @@
 				})
 				
 				// 监听数据块
+				let count = 0;
 				requestTask.onChunkReceived((res) => {
 					const decoder = new TextDecoder('utf-8')
 					const chunk = decoder.decode(new Uint8Array(res.data))
@@ -613,12 +614,9 @@
 					for (let line of lines) {
 						if (line.startsWith('data: ')) {
 							const data = line.substring(6).trim()
-							
 							if (data === '[DONE]') {
 								// 数据接收完成
 								this.suggestion = aiContent
-								uni.hideLoading()
-								this.showSuggestionModal()
 								// 标记接收完成
 								this.finishReceiving()
 								return
@@ -627,6 +625,11 @@
 							try {
 								const jsonData = JSON.parse(data)
 								if (jsonData.choices && jsonData.choices[0] && jsonData.choices[0].delta && jsonData.choices[0].delta.content) {
+									if (count === 0) {
+										uni.hideLoading()
+										this.showSuggestionModal()
+										count = count + 1
+									}
 									const newContent = jsonData.choices[0].delta.content
 									aiContent += newContent
 									this.suggestion = aiContent
@@ -687,7 +690,7 @@
 						this.scrollToBottom()
 					}
 					// 如果还在接收中但队列为空，继续等待
-				}, 10) // 每50ms显示一个字符
+				}, 10) // 每10ms显示一个字符
 			},
 			
 			// 标记接收完成
@@ -726,7 +729,7 @@
 						// 最后确保滚动到底部
 						_this.scrollToBottom()
 					}
-				}, 50) // 每50ms显示一个字符，可以调整速度
+				}, 10) // 每10ms显示一个字符，可以调整速度
 			},
 			
 			// 停止打字机效果
@@ -744,7 +747,6 @@
 			// 滚动到底部
 			scrollToBottom() {
 				this.scrollTop = this.scrollTop + 100
-				console.log(this.scrollTop)
 			}
 		}
 	}
