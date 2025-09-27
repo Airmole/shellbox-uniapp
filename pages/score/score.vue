@@ -284,9 +284,8 @@
 						<text class="iconfont icon-hunyuan"></text> 以下内容由腾讯混元AI大模型生成，不代表贝壳小盒子立场！
 					</view>
 					<scroll-view scroll-y="true" style="height: 1000rpx;" class="padding">
-						<template v-for="(sug, index) in suggestion.Choices" :key="index">
-							<ua-markdown :source="sug.Message.Content" />
-						</template>
+						<ua-markdown :source="displayedSuggestion" />
+						<text v-if="isTyping" class="typewriter-cursor">|</text>
 					</scroll-view>
 				</view>
 			</view>
@@ -327,6 +326,9 @@
 				cWidth: 750,
 				cHeight: 500,
 				suggestion: '',
+				displayedSuggestion: '', // 打字机效果显示的内容
+				typewriterTimer: null, // 打字机定时器
+				isTyping: false, // 是否正在打字
 				showChart: true
 			}
 		},
@@ -551,6 +553,16 @@
 			showSuggestionModal() {
 				this.displaySuggestionModal = !this.displaySuggestionModal
 				this.showChart = !this.displaySuggestionModal
+				
+				// 如果是打开模态框且有建议内容，启动打字机效果
+				if (this.displaySuggestionModal && this.suggestion && !this.isTyping) {
+					this.startTypewriter()
+				}
+				
+				// 如果是关闭模态框，停止打字机效果
+				if (!this.displaySuggestionModal) {
+					this.stopTypewriter()
+				}
 			},
 			fetchScoreSuggestion() {
 				if (this.suggestion !== '') {
@@ -604,15 +616,11 @@
 							
 							if (data === '[DONE]') {
 								// 数据接收完成
-								this.suggestion = {
-									Choices: [{
-										Message: {
-											Content: aiContent
-										}
-									}]
-								}
+								this.suggestion = aiContent
 								uni.hideLoading()
 								this.showSuggestionModal()
+								// 启动打字机效果
+								this.startTypewriter()
 								return
 							}
 							
@@ -620,6 +628,8 @@
 								const jsonData = JSON.parse(data)
 								if (jsonData.choices && jsonData.choices[0] && jsonData.choices[0].delta && jsonData.choices[0].delta.content) {
 									aiContent += jsonData.choices[0].delta.content
+									console.log(jsonData.choices[0].delta.content)
+									this.suggestion = aiContent
 								}
 							} catch (e) {
 								console.log('解析JSON失败', data)
@@ -627,6 +637,42 @@
 						}
 					}
 				})
+			},
+			
+			// 打字机效果方法
+			startTypewriter() {
+				if (!this.suggestion) return
+				
+				this.displayedSuggestion = ''
+				this.isTyping = true
+				let index = 0
+				
+				// 清除之前的定时器
+				if (this.typewriterTimer) {
+					clearInterval(this.typewriterTimer)
+				}
+				
+				this.typewriterTimer = setInterval(() => {
+					if (index < this.suggestion.length) {
+						this.displayedSuggestion += this.suggestion[index]
+						index++
+					} else {
+						// 打字完成
+						clearInterval(this.typewriterTimer)
+						this.isTyping = false
+						this.typewriterTimer = null
+					}
+				}, 50) // 每50ms显示一个字符，可以调整速度
+			},
+			
+			// 停止打字机效果
+			stopTypewriter() {
+				if (this.typewriterTimer) {
+					clearInterval(this.typewriterTimer)
+					this.typewriterTimer = null
+				}
+				this.isTyping = false
+				this.displayedSuggestion = this.suggestion
 			}
 		}
 	}
@@ -642,5 +688,23 @@
 		border-top-right-radius: 50rpx;
 		border-top-left-radius: 50rpx;
 		min-height: 60rpx;
+	}
+
+	/* 打字机光标样式 */
+	.typewriter-cursor {
+		display: inline-block;
+		font-size: 32rpx;
+		color: #007aff;
+		animation: blink 1s infinite;
+		margin-left: 4rpx;
+	}
+
+	@keyframes blink {
+		0%, 50% {
+			opacity: 1;
+		}
+		51%, 100% {
+			opacity: 0;
+		}
 	}
 </style>
