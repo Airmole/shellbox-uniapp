@@ -163,10 +163,12 @@
 				</view>
 			</view>
 			<view class="margin-tb-xs"></view>
+	
 			<!-- AI总结建议按钮 -->
 			<view @click="fetchScoreSuggestion" class="cu-bar bg-gradual-blue foot ai-suggestion-bar">
 				<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结建议</text></view>
 			</view>
+			
 		</template>
 		<template v-else>
 			<tips tips="查询您的成绩分数需登录账号" image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif" :showButton="true" buttonText="现在登录"
@@ -685,7 +687,7 @@
 						this.scrollToBottom()
 					}
 					// 如果还在接收中但队列为空，继续等待
-				}, 50) // 每50ms显示一个字符
+				}, 10) // 每50ms显示一个字符
 			},
 			
 			// 标记接收完成
