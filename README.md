@@ -19,9 +19,9 @@
 
 ## 用户社群
 
-|微信群|QQ群(662675925)|微信公众号(USTBShellBox)|
-| ----|----|-------|
-| <img src="https://r2.airmole.cn/images/weapp/wechat_group.png?t=1" style="width:160px"/> | <img src="https://r2.airmole.cn/images/weapp/qq_group.png" style="width:160px"/>|<img src="https://rr2.airmole.cnet/i/2024/11/25/1c3f3u-ft.png" style="width:160px"/>|
+|QQ群(662675925)|微信公众号(USTBShellBox)|
+| ----|-------|
+| <img src="https://r2.airmole.cn/images/weapp/qq_group.png" style="width:160px"/>|<img src="https://r2.airmole.cn/i/2024/11/25/1c3f3u-ft.png" style="width:160px"/>|
 
 ## 数据来源
 
