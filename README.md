@@ -23,7 +23,6 @@
 | ----|----|-------|
 | <img src="https://r2.airmole.cn/images/weapp/wechat_group.png?t=1" style="width:160px"/> | <img src="https://r2.airmole.cn/images/weapp/qq_group.png" style="width:160px"/>|<img src="https://rr2.airmole.cnet/i/2024/11/25/1c3f3u-ft.png" style="width:160px"/>|
 
-
 ## 数据来源
 
 - 课表、成绩等教务信息数据来源于[学校教务网](http://jw.bkty.top:89/jsxsd)
@@ -41,6 +40,17 @@
 - [使用操作说明](https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w)
 - [主要功能页面路径及参数](https://docs.qq.com/doc/DREd0bHpKS0tuTFVI)
 - [用户FAQ(常见问题解答)](https://docs.qq.com/doc/DREhocFliTUFRS0dt)
+
+## 打包发行
+
+目前主要维护H5+微信小程序平台
+打包发行微信小程序平台时需注意：因AI分析总结成绩功能接入了SSE接口用到了TextDecoder解码处理返回数据，在微信开发者工具模拟器环境下支持TextDdecoder，但是手机端真机并未支持，因此需要在HBuilder打包编译完成后，再次手动修改score页面的代码，手动引入TextDecoder函数代码，如下图所示：
+
+![iShot_2025-09-27_22.22.17.png](https://r2.airmole.cn/i/2025/09/27/1c5p8m-6t.png)
+
+修改完成后，在手机端预览测试成绩查询、AI成绩总计功能是否正常，确认无误后上传提交体验版，提审发布新版本！
+
+- [wechat-miniprogram-textdecoder](https://github.com/Airmole/wechat-miniprogram-textdecoder)
 
 ## 开源项目参考使用
 
