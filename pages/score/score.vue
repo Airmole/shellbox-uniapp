@@ -164,17 +164,8 @@
 			</view>
 			<view class="margin-tb-xs"></view>
 			<!-- AI总结建议按钮 -->
-			<view class="ai-suggestion-section" v-if="score && score.length > 0">
-				<button class="ai-btn" @click="getAISuggestion" :disabled="isLoadingAI">
-					<text class="ai-btn-text">{{ isLoadingAI ? 'AI分析中...' : 'AI总结建议' }}</text>
-				</button>
-				<view class="ai-result" v-if="aiSuggestion">
-					<view class="ai-title">AI学业分析建议</view>
-					<text class="ai-content">{{ aiSuggestion }}</text>
-				</view>
-			</view>
 			<view @click="fetchScoreSuggestion" class="cu-bar bg-gradual-blue foot ai-suggestion-bar">
-				<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结&建议</text></view>
+				<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结建议</text></view>
 			</view>
 		</template>
 		<template v-else>
@@ -283,7 +274,7 @@
 					<view class="text-center text-sm">
 						<text class="iconfont icon-hunyuan"></text> 以下内容由腾讯混元AI大模型生成，不代表贝壳小盒子立场！
 					</view>
-					<scroll-view scroll-y="true" style="height: 1000rpx;" class="padding">
+					<scroll-view scroll-y="true" style="height: 1000rpx;" class="padding" :scroll-top="scrollTop">
 						<ua-markdown :source="displayedSuggestion" />
 						<text v-if="isTyping" class="typewriter-cursor">|</text>
 					</scroll-view>
@@ -329,6 +320,10 @@
 				displayedSuggestion: '', // 打字机效果显示的内容
 				typewriterTimer: null, // 打字机定时器
 				isTyping: false, // 是否正在打字
+				typewriterQueue: [], // 打字机内容队列
+				currentIndex: 0, // 当前打字位置
+				receivingFinished: false, // 是否接收完成
+				scrollTop: 0, // scroll-view滚动位置
 				showChart: true
 			}
 		},
@@ -584,6 +579,9 @@
 			fetchScoreSuggestionSSE() {
 				let aiContent = ''
 				
+				// 重置打字机状态
+				this.resetTypewriter()
+				
 				// 监听数据流
 				const requestTask = uni.request({
 					url: 'https://api-eo.airmole.cn/api/shellboxScoreSuggestion',
@@ -619,17 +617,20 @@
 								this.suggestion = aiContent
 								uni.hideLoading()
 								this.showSuggestionModal()
-								// 启动打字机效果
-								this.startTypewriter()
+								// 标记接收完成
+								this.finishReceiving()
 								return
 							}
 							
 							try {
 								const jsonData = JSON.parse(data)
 								if (jsonData.choices && jsonData.choices[0] && jsonData.choices[0].delta && jsonData.choices[0].delta.content) {
-									aiContent += jsonData.choices[0].delta.content
-									console.log(jsonData.choices[0].delta.content)
+									const newContent = jsonData.choices[0].delta.content
+									aiContent += newContent
 									this.suggestion = aiContent
+									
+									// 将新内容添加到打字机队列
+									this.addToTypewriterQueue(newContent)
 								}
 							} catch (e) {
 								console.log('解析JSON失败', data)
@@ -639,13 +640,67 @@
 				})
 			},
 			
-			// 打字机效果方法
+			// 重置打字机状态
+			resetTypewriter() {
+				this.displayedSuggestion = ''
+				this.typewriterQueue = []
+				this.currentIndex = 0
+				this.isTyping = false
+				this.receivingFinished = false
+				if (this.typewriterTimer) {
+					clearInterval(this.typewriterTimer)
+					this.typewriterTimer = null
+				}
+			},
+			
+			// 添加内容到打字机队列
+			addToTypewriterQueue(content) {
+				this.typewriterQueue.push(...content.split(''))
+				
+				// 如果打字机还没开始，启动它
+				if (!this.isTyping && !this.typewriterTimer) {
+					this.startRealtimeTypewriter()
+				}
+			},
+			
+			// 启动实时打字机效果
+			startRealtimeTypewriter() {
+				this.isTyping = true
+				
+				this.typewriterTimer = setInterval(() => {
+					if (this.currentIndex < this.typewriterQueue.length) {
+						this.displayedSuggestion += this.typewriterQueue[this.currentIndex]
+						this.currentIndex++
+						
+						// 每输出几个字符就滚动到底部
+						if (this.currentIndex % 30 === 0) {
+							this.scrollToBottom()
+						}
+					} else if (this.receivingFinished && this.currentIndex >= this.typewriterQueue.length) {
+						// 所有内容都打字完成且接收完成
+						clearInterval(this.typewriterTimer)
+						this.isTyping = false
+						this.typewriterTimer = null
+						// 最后确保滚动到底部
+						this.scrollToBottom()
+					}
+					// 如果还在接收中但队列为空，继续等待
+				}, 50) // 每50ms显示一个字符
+			},
+			
+			// 标记接收完成
+			finishReceiving() {
+				this.receivingFinished = true
+			},
+			
+			// 打字机效果方法（用于重播）
 			startTypewriter() {
 				if (!this.suggestion) return
 				
 				this.displayedSuggestion = ''
 				this.isTyping = true
 				let index = 0
+				const _this = this
 				
 				// 清除之前的定时器
 				if (this.typewriterTimer) {
@@ -653,14 +708,21 @@
 				}
 				
 				this.typewriterTimer = setInterval(() => {
-					if (index < this.suggestion.length) {
-						this.displayedSuggestion += this.suggestion[index]
+					if (index < _this.suggestion.length) {
+						_this.displayedSuggestion += _this.suggestion[index]
 						index++
+						
+						// 每输出几个字符就滚动到底部
+						if (index % 30 === 0) {
+							_this.scrollToBottom()
+						}
 					} else {
 						// 打字完成
-						clearInterval(this.typewriterTimer)
-						this.isTyping = false
-						this.typewriterTimer = null
+						clearInterval(_this.typewriterTimer)
+						_this.isTyping = false
+						_this.typewriterTimer = null
+						// 最后确保滚动到底部
+						_this.scrollToBottom()
 					}
 				}, 50) // 每50ms显示一个字符，可以调整速度
 			},
@@ -673,6 +735,14 @@
 				}
 				this.isTyping = false
 				this.displayedSuggestion = this.suggestion
+				// 确保滚动到底部
+				this.scrollToBottom()
+			},
+			
+			// 滚动到底部
+			scrollToBottom() {
+				this.scrollTop = this.scrollTop + 100
+				console.log(this.scrollTop)
 			}
 		}
 	}
