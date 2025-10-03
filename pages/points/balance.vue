@@ -28,14 +28,12 @@
 				        <text class="text-grey">积分兑换商场</text>
 				    </view>
 				</navigator>
-				<!-- #ifndef MP-QQ -->
 			    <view v-if="isReleaseEnv" class="cu-item arrow" @click="goRecharge">
 			        <view class="content">
 			            <text class="cuIcon-moneybag text-blue"></text>
 			            <text class="text-grey">金贝壳积分充值</text>
 			        </view>
 			    </view>
-				<!-- #endif -->
 			    <navigator url="/pages/points/history" class="cu-item arrow" :render-link="false">
 			        <view class="content">
 			            <text class="cuIcon-list text-blue"></text>
@@ -70,18 +68,8 @@
 					</view>
 					<view class="cu-item">
 						<view class="content">
-							<text class="cuIcon-squarecheck text-blue"></text>
-							<text class="text-grey" :decode="true">3.&nbsp;访问黄金价格小程序</text>
-						</view>
-						 <view class="action">
-							<button v-if="!data.todayVisitGold" @click="visitGoldWeapp" class="cu-btn round bg-gradual-blue shadow sm"><text>去访问</text></button>
-							<button v-else class="cu-btn round bg-grey shadow sm"><text>已完成</text></button>
-						</view>
-					</view>
-					<view class="cu-item">
-						<view class="content">
 							<text class="cuIcon-profile text-blue"></text>
-							<text class="text-grey" :decode="true">4.&nbsp;完善资料得积分(仅限首次)</text>
+							<text class="text-grey" :decode="true">3.&nbsp;完善资料得积分(仅限首次)</text>
 						</view>
 						 <view class="action">
 							<button v-if="!data.profileUpdated" @click="goProfileUpdate" class="cu-btn round bg-gradual-blue shadow sm"><text></text>去补充</button>
@@ -184,7 +172,7 @@
 			    videoAd.onLoad(() => { this.fetchVideoAdFinished = true })
 			    videoAd.onError((err) => {
 				    this.fetchVideoAdFinished = false
-				    console.error('激励视频光告加载失败', err)
+				    console.error('激励视频广告加载失败', err)
 				    uni.showModal({ title: err, showCancel: false })
 			    })
 			    videoAd.onClose((res) => {
@@ -223,16 +211,6 @@
 			},
 			goCheckin () {
 				uni.navigateTo({ url: '/pages/points/checkin' })
-			},
-			visitGoldWeapp () {
-				// #ifndef MP-WEIXIN
-				uni.showToast({ title: '仅支持微信小程序端' , icon: 'none'})
-				return
-				// #endif
-				
-				// #ifdef MP-WEIXIN
-				uni.navigateToMiniProgram({ appId: 'wxb0107143d31f1b7c', extraData: { userCode: this.usercode.account }})
-				// #endif
 			},
 			showVideoAds () {
 				// #ifndef MP

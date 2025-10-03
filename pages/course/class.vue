@@ -134,12 +134,15 @@
 						  <text :class="`text-blue cuIcon-${showAllOption?'fold':'unfold'}`">{{showAllOption?'收起':'展示'}}更多筛选项</text>
 						</view>
 						<view class="cu-item">
-							<view class="content"></view>
+							<view class="content">
+								<button v-if="classCourses !== ''" @click="exportXlsx" class="cu-btn round bg-gradual-blue shadow"><text
+										class="cuIcon-down"></text> 下载</button>
+							</view>
 							<view class="action">
 								<button @click="resetOptionsForm" class="cu-btn round bg-red shadow margin-lr"><text
-										class="cuIcon-refresh"></text> 重置</button>
+										class="cuIcon cuIcon-refresh"></text> 重置</button>
 								<button @click="fetchClassCourse" class="cu-btn round bg-green shadow"><text
-										class="cuIcon-search"></text> 查询</button>
+										class="cuIcon cuIcon-search"></text> 查询</button>
 							</view>
 						</view>
 					</template>
@@ -196,6 +199,7 @@
 	import api from '@/request/api.js'
 	import courseTable from './components/courseTable.vue'
 	let interstitialAd = null
+	let videoAd = null
 	export default {
 		components: { courseTable },
 		data() {
@@ -256,6 +260,26 @@
 			this.generateDayOfWeekOption()
 			this.fetchOptions(options.keyword)
 			this.fetchProfessionOptions()
+			
+			// #ifdef MP
+			const adUnitId = 'adunit-6eaa05f3467dce0c'
+			const _this = this
+			if (uni.createRewardedVideoAd) {
+				videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId })
+				videoAd.onLoad()
+				videoAd.onError((err) => {
+					console.error('激励视频广告加载失败', err)
+					uni.showModal({ title: err, showCancel: false })
+				})
+				videoAd.onClose((res) => {
+					if (res.isEnded) {
+						api.exportClassCourse(this.classCourses)
+					} else {
+						uni.showToast({ title: '广告中断，无法导出课表', icon: 'none'})
+					}
+				})
+			}
+			// #endif
 		},
 		onShow() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
@@ -420,6 +444,37 @@
 				this.dayOfWeekStartIndex = -1
 				this.dayOfWeekEndIndex = -1
 				this.fetchOptions()
+			},
+			exportXlsx () {
+				// #ifdef H5
+				api.exportClassCourse(this.classCourses)
+				// #endif
+				// #ifdef MP-WEIXIN
+				if (!this.isVip) {
+					uni.showModal({
+							title: '会员功能',
+							content: '非VIP会员导出课表需要观看广告!',
+							cancelText: '取消导出',
+							confirmText: '观看广告',
+							success: function (res) {
+								if (res.confirm) {
+									if (videoAd) {
+									  videoAd.show().catch(() => {
+										// 失败重试
+										videoAd.load()
+										  .then(() => videoAd.show()).catch(err => {
+											console.error('激励视频 广告显示失败', err)
+											uni.showModal({ title: err, showCancel: false })
+										  })
+									  })
+									}
+								}
+							}
+						})
+				} else {
+					api.exportClassCourse(this.classCourses)
+				}
+				// #endif
 			}
 		},
 		onShareAppMessage() {

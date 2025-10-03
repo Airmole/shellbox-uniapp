@@ -4,18 +4,24 @@
 			<view>我的课表</view>
 		</cu-custom>
 		<view class="flex justify-center">
-			<picker @change="semesterChange" :value="semesterIndex" :range="semesterOptions" range-key="name">
-				<view class="picker cu-tag line-blue round margin-lr-sm margin-tb-xs">
-					{{(semesterOptions.length>0&&semesterIndex>-1)?semesterOptions[semesterIndex].name:''}} 学年 <text
-						class="cuIcon-right"></text>
-				</view>
-			</picker>
-			<picker @change="weekChange" :value="weekIndex" :range="weekOptions" range-key="name">
-				<view class="picker cu-tag line-blue round margin-lr-sm margin-tb-xs">
-					{{(weekOptions.length>0&&weekIndex>-1)?weekOptions[weekIndex].name:'整学期'}} <text
-						class="cuIcon-right"></text>
-				</view>
-			</picker>
+			<view class="flex-sub"></view>
+			<view class="flex-sub flex justify-center align-center">
+				<picker @change="semesterChange" :value="semesterIndex" :range="semesterOptions" range-key="name">
+					<view class="picker cu-tag line-blue round margin-lr-sm margin-tb-xs">
+						{{(semesterOptions.length>0&&semesterIndex>-1)?semesterOptions[semesterIndex].name:''}} 学年 <text
+							class="cuIcon-right"></text>
+					</view>
+				</picker>
+				<picker @change="weekChange" :value="weekIndex" :range="weekOptions" range-key="name">
+					<view class="picker cu-tag line-blue round margin-lr-sm margin-tb-xs">
+						{{(weekOptions.length>0&&weekIndex>-1)?weekOptions[weekIndex].name:'整学期'}} <text
+							class="cuIcon-right"></text>
+					</view>
+				</picker>
+			</view>
+			<view class="flex-sub flex justify-end margin-right-xs margin-top-xs">
+				<view @tap="exportXlsx" class='cu-tag bg-gradual-green round'><text class="cuIcon cuIcon-down"></text>导出</view>
+			</view>
 		</view>
 		
 		<courseTable v-if="isLogined" :columnTitles="courseData.columnTitle" :table="courseData.table" :tips="courseData.tips"></courseTable>
@@ -47,6 +53,7 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
+	let videoAd = null
 	export default {
 		components: {
 			courseTable
@@ -76,6 +83,26 @@
 			
 			this.fetchCourseOptions(semester, week)
 			this.fetchCourse(semester, week)
+			
+			// #ifdef MP
+			const adUnitId = 'adunit-6eaa05f3467dce0c'
+			const _this = this
+			if (uni.createRewardedVideoAd) {
+				videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId })
+			    videoAd.onLoad()
+			    videoAd.onError((err) => {
+				    console.error('激励视频广告加载失败', err)
+				    uni.showModal({ title: err, showCancel: false })
+			    })
+			    videoAd.onClose((res) => {
+					if (res.isEnded) {
+						_this.exportXlsxAction()
+					} else {
+						uni.showToast({ title: '广告中断，无法导出课表', icon: 'none'})
+					}
+				})
+			}
+			// #endif
 		},
 		methods: {
 			semesterChange(e) {
@@ -105,9 +132,7 @@
 				})
 			},
 			fetchCourse(semester = '', week = '') {
-				uni.showLoading({
-					title: '加载中...'
-				})
+				uni.showLoading({ title: '加载中...'})
 				api.fetchSemesterCourse(semester, week).then(res => {
 					this.courseData = res.data
 					console.log(this.courseData)
@@ -116,9 +141,53 @@
 					uni.hideLoading()
 					console.log('获取学期课表失败', error)
 					uni.showToast({ title: '获取失败，建议重新登录', icon: 'none' })
-					/* if (error.data.message === '账号未登录') {
-						window.location.reload()
-					} */
+				})
+			},
+			exportXlsx () {
+				// #ifdef H5
+				this.exportXlsxAction()
+				// #endif
+				// #ifdef MP-WEIXIN
+				if (!this.isVip) {
+					uni.showModal({
+						title: '会员功能',
+						content: '非VIP会员导出课表需要观看广告!',
+						cancelText: '取消导出',
+						confirmText: '观看广告',
+						success: function (res) {
+							if (res.confirm) {
+								if (videoAd) {
+								  videoAd.show().catch(() => {
+									// 失败重试
+									videoAd.load()
+									  .then(() => videoAd.show()).catch(err => {
+										console.error('激励视频 广告显示失败', err)
+										uni.showModal({ title: err, showCancel: false })
+									  })
+								  })
+								}
+							}
+						}
+					})
+				} else {
+					this.exportXlsxAction()
+				}
+				// #endif
+			},
+			exportXlsxAction () {
+				const _this = this
+				const semester = this.semesterOptions[this.semesterIndex].name
+				const week = this.weekOptions[this.weekIndex].name
+				uni.showModal({
+					title: '注意',
+					content: `您确认要导出当前选择的${semester}学期${week}个人课表吗？如需导出整学期课表Excel文件，请先选择全部周次！`,
+					cancelText: '重新选择',
+					confirmText: '确认导出',
+					success: function (res) {
+						if (res.confirm) {
+							api.exportSemesterCourse(_this.courseData)
+						}
+					}
 				})
 			}
 		}

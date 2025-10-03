@@ -1,63 +1,68 @@
 <template>
-	<cu-custom bgColor="bg-green" class="text-white" :isBack="true">
-		<block slot="backText">返回</block>
-		<view>联系电话 - 贝壳小盒子</view>
-	</cu-custom>
+	<view>
 
-	<view class="cu-bar bg-white search fixed" :style="`top:${CustomBar}px;`">
-		<view class="search-form round">
-			<text class="cuIcon-search"></text>
-			<input type="text" :value="keyword" placeholder="输入搜索的关键词" @input="searchInput"></input>
-		</view>
-		<view class="action">
-			<button @tap="clearSearch" class="cu-btn bg-gradual-green shadow-blur round">清空筛选</button>
-		</view>
-	</view>
+		<cu-custom bgColor="bg-green" class="text-white" :isBack="true">
+			<block slot="backText">返回</block>
+			<view>联系电话 - 贝壳小盒子</view>
+		</cu-custom>
 
-	<scroll-view scroll-y class="indexes" :scroll-into-view="`indexes-${listCurID}`"
-		:style="[{height:'calc(100vh - '+ CustomBar + 'px - 50px)'}]" :scroll-with-animation="true"
-		:enable-back-to-top="true">
-		<template v-for="(item,index) in telLists" :key="index">
-			<view :class="`padding indexItem-${telLists[index]}`" v-if="telLists[index].length>0"
-				:id="`indexes-${index}`" :data-index="`${index}`">{{index}}</view>
-			<view class="cu-list menu-avatar no-padding">
-				<template v-for="(tel, sub) in item" :key="sub">
-					<view class="cu-item" :data-tel="tel.tel" @longtap="copyTel">
-						<view class="cu-avatar lg round bg-green text-cut">
-							<text class="avatar-text">{{tel.name.slice(0, 4)}}</text>
-						</view>
-						<view class="content">
-							<view class="text-grey">
-								<text class="text-abc">{{tel.name}}</text>
+		<view class="cu-bar bg-white search fixed" :style="`top:${CustomBar}px;`">
+			<view class="search-form round">
+				<text class="cuIcon-search"></text>
+				<input type="text" :value="keyword" placeholder="输入搜索的关键词" @input="searchInput"></input>
+			</view>
+			<view class="action">
+				<button @tap="clearSearch" class="cu-btn bg-gradual-green shadow-blur round">清空筛选</button>
+			</view>
+		</view>
+
+		<scroll-view scroll-y class="indexes" :scroll-into-view="`indexes-${listCurID}`"
+			:style="[{height:'calc(100vh - '+ CustomBar + 'px - 50px)'}]" :scroll-with-animation="true"
+			:enable-back-to-top="true">
+			<template v-for="(item,index) in list" :key="index">
+				<view :class="`padding indexItem-${item.name}`" :id="`indexes-${item.name}`" :data-index="item.name"
+					v-if="telLists[item.name] && telLists[item.name].length">{{item.name}}</view>
+				<view class="cu-list menu-avatar no-padding" v-if="telLists[item.name]">
+					<template v-for="(tel, sub) in telLists[item.name]" :key="sub">
+						<view class="cu-item" :data-tel="tel.tel" @longtap="copyTel">
+							<view class="cu-avatar lg round bg-green text-cut">
+								<text class="avatar-text">{{tel.name.slice(0, 4)}}</text>
 							</view>
-							<view class="text-gray text-sm">
-								022-{{tel.tel}}
+							<view class="content">
+								<view class="text-grey">
+									<text class="text-abc">{{tel.name}}</text>
+								</view>
+								<view class="text-gray text-sm">
+									022-{{tel.tel}}
+								</view>
+							</view>
+							<view class="action text-xxl margin-right-xl padding-right-xl">
+								<text :data-tel='tel.tel' @tap='callPhone' class="cuIcon-phone text-green"></text>								
 							</view>
 						</view>
-						<view :data-tel='tel.tel' @tap='callPhone' class="action text-xxl margin-right-xl padding-right-xl">
-							<text class="cuIcon-phone text-green"></text></view>
-					</view>
+					</template>
+				</view>
+			</template>
+			<view class="margin-tb-xl padding-tb-xl"></view>
+		</scroll-view>
+
+		<view class="indexBar" :style="[{height:'calc(100vh - ' + CustomBar + 'px - 50px)'}]">
+			<view class="indexBar-box" @touchstart="tStart" @touchend="tEnd" @touchmove.stop="tMove">
+				<template v-for="(item,index) in list" :key="index">
+					<view class="indexBar-item" :id="index" @touchstart="getCur"
+						@touchend="setCur"> {{item.name}}</view>
 				</template>
 			</view>
-		</template>
-		<view class="margin-tb-xl padding-tb-xl"></view>
-	</scroll-view>
-	
-	<view class="indexBar" :style="[{height:'calc(100vh - ' + CustomBar + 'px - 50px)'}]">
-		<view class="indexBar-box" @touchstart="tStart" @touchend="tEnd" @touchmove.stop="tMove">
-			<view class="indexBar-item" v-for="(item, index) in list" :key="index" :id="index" @touchstart="getCur"
-				@touchend="setCur">{{list[index]}}</view>
 		</view>
-	</view>
-	<!--选择显示-->
-	<view v-show="!hidden" class="indexToast">
-		{{listCur}}
+		<!--选择显示-->
+		<view v-show="!hidden" class="indexToast">
+			{{listCur}}
+		</view>
 	</view>
 </template>
 
 <script>
 	const app = getApp()
-	import { getCurrentInstance } from "vue"
 	import api from '@/request/api.js'
 	let interstitialAd = null
 	export default {
@@ -71,25 +76,35 @@
 				keyword: '',
 				backLists: {},
 				telLists: '',
-				list: []
+				list: [],
+				listCur: ''
 			}
 		},
 		onLoad(option) {
 			this.isVip = app.globalData.isVip
 			// #ifdef MP-WEIXIN
-			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
+			if (wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({
+				adUnitId: 'adunit-c142eaf344ea8f4b'
+			})
 			// #endif
 			// #ifdef MP-QQ
-			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '8fe9b8e7191346a2ffb0c20c6bf3e0cf' })
+			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({
+				adUnitId: '8fe9b8e7191346a2ffb0c20c6bf3e0cf'
+			})
 			// #endif
-			uni.showLoading({ title: '加载中...' })
-			let list = [];
+
+			uni.showLoading({
+				title: '加载中...'
+			})
+			let list = [{}];
 			for (let i = 0; i < 26; i++) {
-				list[i] = String.fromCharCode(65 + i)
+				list[i] = {};
+				list[i].name = String.fromCharCode(65 + i);
 			}
-			this.list = list
-			this.listCur = 'B'
-			
+			this.list = list;
+			this.listCur = list[0].name;
+			this.fetchContactList(option)
+
 			var _this = this
 			uni.getSystemInfo({
 				success(e) {
@@ -114,26 +129,23 @@
 					// #endif
 				}
 			})
-			this.inital(option)
 		},
-		onReady() {
-			let _this = this
+		onReady(option) {
+			let that = this;
 			uni.createSelectorQuery().select('.indexBar-box').boundingClientRect(function(res) {
-				_this.boxTop = res.top
+				that.boxTop = res.top
 			}).exec();
 			uni.createSelectorQuery().select('.indexes').boundingClientRect(function(res) {
-				_this.barTop = res.top
+				that.barTop = res.top
 			}).exec()
+			this.fetchContactList(option)
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
-			inital(option) {
-				this.fetchContactList(option)
-			},
 			//获取文字信息
 			getCur(e) {
 				this.hidden = false
-				this.listCur = this.list[e.target.id]
+				this.listCur = this.list[e.target.id].name
 			},
 			setCur(e) {
 				this.hidden = true
@@ -144,6 +156,7 @@
 				let y = e.touches[0].clientY,
 					offsettop = this.boxTop,
 					that = this;
+				
 				//判断选择区域,只有在选择区才会生效
 				if (y > offsettop) {
 					let num = parseInt((y - offsettop) / 20);
@@ -158,12 +171,15 @@
 			tEnd() {
 				this.hidden = true;
 				this.listCurID = this.listCur
+				if (!this.telLists[this.listCur]) {
+					uni.showToast({ title: `没有${this.listCur}拼音字母开头的单位`, icon: 'none' })
+				}
 			},
 			indexSelect(e) {
-				let that = this
-				let barHeight = this.barHeight
-				let list = this.list
-				let scrollY = Math.ceil(list.length * e.detail.y / barHeight)
+				let that = this;
+				let barHeight = this.barHeight;
+				let list = this.list;
+				let scrollY = Math.ceil(list.length * e.detail.y / barHeight);
 				for (let i = 0; i < list.length; i++) {
 					if (scrollY < i + 1) {
 						that.listCur = list[i].name;
@@ -211,42 +227,56 @@
 				uni.setClipboardData({
 					data: tel,
 					success() {
-						uni.showToast({ title: '已复制到粘贴版', icon: 'success'})
+						uni.showToast({
+							title: '已复制到粘贴版',
+							icon: 'success'
+						})
 					}
 				})
 			},
 			fetchContactList(option) {
 				api.getSchoolContact().then(res => {
-					const lists = this.format2list(res.data.data)
+					const {
+						lists
+					} = this.format2list(res.data.data)
 					this.backLists = lists
 					this.telLists = lists
 					uni.hideLoading()
 					if (option && option.keyword) {
-						this.searchInput({detail: { value: option.keyword }})
+						this.searchInput({
+							detail: {
+								value: option.keyword
+							}
+						})
 					}
 				}).catch(res => {
 					uni.hideLoading()
-					uni.showToast({ title: res.data.message, icon: 'none' })
+					uni.showToast({
+						title: res.toString(),
+						icon: 'none'
+					})
 				})
 			},
 			format2list(array) {
-				let list = {}
+				let lists = {}
 				array.forEach(element => {
-					if (!list[element.sortname]) list[element.sortname] = []
-					list[element.sortname].push({
+					if (!lists[element.sortname]) lists[element.sortname] = []
+					lists[element.sortname].push({
 						name: element.name,
 						tel: element.tel
 					})
 				})
-				return list
+				return {
+					lists
+				}
 			}
 		},
 		onShareAppMessage() {
 			let text = ``
 			if (this.keyword) text = `【${this.keyword}...】`
 			let data = {
-			  title: `${text}联系电话 - 贝壳小盒子`,
-			  path: `/pages/school/contact?keyword=${this.keyword}`
+				title: `${text}联系电话 - 贝壳小盒子`,
+				path: `/pages/school/contact?keyword=${this.keyword}`
 			}
 			return data
 		},
@@ -264,7 +294,7 @@
 
 <style>
 	page {
-		padding-top: 100rpx;
+		padding-top: 100upx;
 	}
 
 	.indexes {
@@ -275,7 +305,7 @@
 		position: fixed;
 		right: 0px;
 		bottom: 0px;
-		padding: 20rpx 20rpx 20rpx 60rpx;
+		padding: 20upx 20upx 20upx 60upx;
 		display: flex;
 		align-items: center;
 	}
@@ -289,8 +319,9 @@
 		box-shadow: 0 0 20upx rgba(0, 0, 0, 0.1);
 		border-radius: 10upx;
 	}
-	
+
 	@media (prefers-color-scheme: dark) {
+
 		/* DarkMode 下的样式 start */
 		.indexBar .indexBar-box {
 			width: 40upx;
@@ -301,6 +332,7 @@
 			box-shadow: 0 0 20upx rgba(0, 0, 0, 0.1);
 			border-radius: 10upx;
 		}
+
 		/* DarkMode 下的样式 end */
 	}
 

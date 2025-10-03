@@ -11,7 +11,7 @@
 				<view class="border-right tb-height text-center flex justify-center align-center"
 					:style="{width: `${columnTitleWidth}px`}">
 					<view class="text-gray">
-						{{rowTitles[rowIdx][0]}}<br />~<br />{{rowTitles[rowIdx][1]}}</view>
+						{{rowTitles[rowIdx][0]}}<br/>~<br/>{{rowTitles[rowIdx][1]}}</view>
 				</view>
 				<view
 					v-for="(day, dayIdx) in columnTitles"
@@ -79,7 +79,7 @@
 									width: `${itemWidth}px`,
 									margin: '1px 0',
 									overflow: 'clip',
-									borderBottom:idc === 4 ? '' : '1px solid white'
+									borderBottom:idx === 4 ? '' : '1px solid white'
 								}"
 							>
 								<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>

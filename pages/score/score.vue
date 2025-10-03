@@ -69,13 +69,12 @@
 						</view>
 					</view>
 					<view class="cu-item">
-						<view class="content">
-						</view>
+						<view class="content"></view>
 						<view class="action">
 							<button @click="resetOptionsForm" class="cu-btn round bg-red shadow margin-lr"><text
-									class="cuIcon-refresh"></text> 重置</button>
+									class="cuIcon cuIcon-refresh"></text> 重置</button>
 							<button @click="fetchScore" class="cu-btn round bg-green shadow"><text
-									class="cuIcon-search"></text> 查询</button>
+									class="cuIcon cuIcon-search"></text> 查询</button>
 						</view>
 					</view>
 				</template>
@@ -164,9 +163,12 @@
 			</view>
 			<view class="margin-tb-xs"></view>
 	
-			<!-- AI总结建议按钮 -->
-			<view @click="fetchScoreSuggestion" class="cu-bar bg-gradual-blue foot ai-suggestion-bar">
-				<view class="content"><text class="iconfont icon-hunyuan"></text><text>&nbsp;AI总结建议</text></view>
+			<!-- 底部操作栏 -->
+			<view class="cu-bar bg-gradual-blue border foot ai-suggestion-bar">
+				<view class="bg-white flex margin-xs padding-xs justify-start round" style="width: 100%;">
+					<view @click="fetchScoreSuggestion" class='cu-tag round bg-gradual-blue'>AI总结建议</view>
+					<view v-if="score !== ''" @click="exportXlsx" class='cu-tag round bg-gradual-blue'><text class="cuIcon cuIcon-down"></text> 下载</view>
+				</view>
 			</view>
 			
 		</template>
@@ -294,6 +296,7 @@
 	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js'
 	var uChartsInstance = {}
 	let interstitialAd = null
+	let videoAd = null
 	export default {
 		data() {
 			return {
@@ -349,6 +352,26 @@
 
 			this.fetchOptions()
 			this.fetchScore()
+			
+			// #ifdef MP
+			const adUnitId = 'adunit-6eaa05f3467dce0c'
+			const _this = this
+			if (uni.createRewardedVideoAd) {
+				videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId })
+				videoAd.onLoad()
+				videoAd.onError((err) => {
+					console.error('激励视频广告加载失败', err)
+					uni.showModal({ title: err, showCancel: false })
+				})
+				videoAd.onClose((res) => {
+					if (res.isEnded) {
+						api.exportScoreXlsx(this.score)
+					} else {
+						uni.showToast({ title: '广告中断，无法导出课表', icon: 'none'})
+					}
+				})
+			}
+			// #endif
 		},
 		onReady() {
 			this.cWidth = uni.upx2px(750)
@@ -577,7 +600,6 @@
 				// 使用新的SSE接口
 				this.fetchScoreSuggestionSSE()
 			},
-			
 			fetchScoreSuggestionSSE() {
 				let aiContent = ''
 				
@@ -644,7 +666,6 @@
 					}
 				})
 			},
-			
 			// 重置打字机状态
 			resetTypewriter() {
 				this.displayedSuggestion = ''
@@ -657,7 +678,6 @@
 					this.typewriterTimer = null
 				}
 			},
-			
 			// 添加内容到打字机队列
 			addToTypewriterQueue(content) {
 				this.typewriterQueue.push(...content.split(''))
@@ -667,11 +687,9 @@
 					this.startRealtimeTypewriter()
 				}
 			},
-			
 			// 启动实时打字机效果
 			startRealtimeTypewriter() {
 				this.isTyping = true
-				
 				this.typewriterTimer = setInterval(() => {
 					if (this.currentIndex < this.typewriterQueue.length) {
 						this.displayedSuggestion += this.typewriterQueue[this.currentIndex]
@@ -692,12 +710,10 @@
 					// 如果还在接收中但队列为空，继续等待
 				}, 10) // 每10ms显示一个字符
 			},
-			
 			// 标记接收完成
 			finishReceiving() {
 				this.receivingFinished = true
 			},
-			
 			// 打字机效果方法（用于重播）
 			startTypewriter() {
 				if (!this.suggestion) return
@@ -731,7 +747,6 @@
 					}
 				}, 10) // 每10ms显示一个字符，可以调整速度
 			},
-			
 			// 停止打字机效果
 			stopTypewriter() {
 				if (this.typewriterTimer) {
@@ -743,10 +758,40 @@
 				// 确保滚动到底部
 				this.scrollToBottom()
 			},
-			
 			// 滚动到底部
 			scrollToBottom() {
 				this.scrollTop = this.scrollTop + 100
+			},
+			exportXlsx () {
+				// #ifdef H5
+				api.exportScoreXlsx(this.score)
+				// #endif
+				// #ifdef MP-WEIXIN
+				if (!this.isVip) {
+					uni.showModal({
+							title: '会员功能',
+							content: '非VIP会员导出成绩需要观看广告!',
+							cancelText: '取消导出',
+							confirmText: '观看广告',
+							success: function (res) {
+								if (res.confirm) {
+									if (videoAd) {
+									  videoAd.show().catch(() => {
+										// 失败重试
+										videoAd.load()
+										  .then(() => videoAd.show()).catch(err => {
+											console.error('激励视频 广告显示失败', err)
+											uni.showModal({ title: err, showCancel: false })
+										  })
+									  })
+									}
+								}
+							}
+						})
+				} else {
+					api.exportScoreXlsx(this.score)
+				}
+				// #endif
 			}
 		}
 	}
@@ -759,8 +804,8 @@
 	}
 
 	.ai-suggestion-bar {
-		border-top-right-radius: 50rpx;
-		border-top-left-radius: 50rpx;
+		border-top-right-radius: 30rpx;
+		border-top-left-radius: 30rpx;
 		min-height: 60rpx;
 	}
 

@@ -48,6 +48,10 @@
 
 ![iShot_2025-09-27_22.22.17.png](https://r2.airmole.cn/i/2025/09/27/1c5p8m-6t.png)
 
+```javascript
+import TextDecoder from '../../common/utils/miniprogram-text-decoder';
+```
+
 修改完成后，在手机端预览测试成绩查询、AI成绩总计功能是否正常，确认无误后上传提交体验版，提审发布新版本！
 
 - [wechat-miniprogram-textdecoder](https://github.com/Airmole/wechat-miniprogram-textdecoder)
