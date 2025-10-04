@@ -294,6 +294,7 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import {initalVideoAd, startPlayVideoAd} from '../../common/utils/mpAd.js'
 	import uCharts from '@/uni_modules/qiun-data-charts/js_sdk/u-charts/u-charts.js'
 	var uChartsInstance = {}
 	let interstitialAd = null
@@ -353,26 +354,6 @@
 
 			this.fetchOptions()
 			this.fetchScore()
-			
-			// #ifdef MP
-			const adUnitId = 'adunit-6eaa05f3467dce0c'
-			const _this = this
-			if (uni.createRewardedVideoAd) {
-				videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId })
-				videoAd.onLoad()
-				videoAd.onError((err) => {
-					console.error('激励视频广告加载失败', err)
-					uni.showModal({ title: err, showCancel: false })
-				})
-				videoAd.onClose((res) => {
-					if (res.isEnded) {
-						api.exportScoreXlsx(this.score)
-					} else {
-						uni.showToast({ title: '广告中断，无法导出成绩数据', icon: 'none'})
-					}
-				})
-			}
-			// #endif
 		},
 		onReady() {
 			this.cWidth = uni.upx2px(750)
@@ -586,6 +567,11 @@
 				}
 			},
 			fetchScoreSuggestion() {
+				if (videoAd) videoAd.destroy()
+				videoAd = initalVideoAd(this.fetchScoreSuggestionSSE, null, '获取成绩AI分析')
+				startPlayVideoAd(videoAd, this.fetchScoreSuggestionSSE, null, '非VIP会员用户使用AI分析总结成绩需观看广告', this.isVip)
+			},
+			fetchScoreSuggestionSSE() {
 				if (this.suggestion !== '') {
 					this.showSuggestionModal()
 					return
@@ -597,11 +583,6 @@
 				}
 				
 				uni.showLoading({ title: 'AI分析中请稍候...'})
-				
-				// 使用新的SSE接口
-				this.fetchScoreSuggestionSSE()
-			},
-			fetchScoreSuggestionSSE() {
 				let aiContent = ''
 				
 				// 重置打字机状态
@@ -764,44 +745,21 @@
 				this.scrollTop = this.scrollTop + 100
 			},
 			exportXlsx () {
-				// #ifdef H5
-				api.exportScoreXlsx(this.score)
-				// #endif
-				// #ifdef MP-WEIXIN
-				if (!this.isVip) {
-					uni.showModal({
-							title: '会员功能',
-							content: '非VIP会员导出成绩需要观看广告!',
-							cancelText: '取消导出',
-							confirmText: '观看广告',
-							success: function (res) {
-								if (res.confirm) {
-									if (videoAd) {
-									  videoAd.show().catch(() => {
-										// 失败重试
-										videoAd.load()
-										  .then(() => videoAd.show()).catch(err => {
-											console.error('激励视频 广告显示失败', err)
-											uni.showModal({ title: err, showCancel: false })
-										  })
-									  })
-									}
-								}
-							}
-						})
-				} else {
-					api.exportScoreXlsx(this.score)
-				}
-				// #endif
+				if (videoAd) videoAd.destroy()
+				videoAd = initalVideoAd(api.exportScoreXlsx, this.score, '导出成绩数据', 'adunit-2b2414afeb4f61a9')
+				startPlayVideoAd(videoAd, api.exportScoreXlsx, this.score, '非VIP会员用户导出成绩需要观看广告！', this.isVip)
 			},
 			exportEduScore () {
+				if (videoAd) videoAd.destroy()
 				uni.showActionSheet({
 				  itemList: ['导出成绩单Excel文件', '导出成绩单PDF文件'],
 				  success: (res) => {
 					if (res.tapIndex == 0) {
-						  api.exportScoreEduXlsx(this.score)
+						videoAd = initalVideoAd(api.exportScoreEduXlsx, this.score, '生成成绩单Excel', 'adunit-54bb088529671713')
+						startPlayVideoAd(videoAd, api.exportScoreEduXlsx, this.score, '非VIP会员用户下载成绩单需要观看广告！', this.isVip)
 					} else {
-						api.exportScoreEduPdf(this.score)
+						videoAd = initalVideoAd(api.exportScoreEduPdf, this.score, '生成成绩单PDF', 'adunit-5db9338d4014db47')
+						startPlayVideoAd(videoAd, api.exportScoreEduPdf, this.score, '非VIP会员用户下载成绩单需要观看广告！', this.isVip)
 					}
 				  }
 				})

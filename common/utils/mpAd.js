@@ -1,9 +1,8 @@
-export function initalVideoAd (callback, callbackData, actionText = '完成操作') {
+export function initalVideoAd (callback, callbackData, actionText = '完成操作', adUnitId = 'adunit-6eaa05f3467dce0c') {
 	console.log('initalVideoAd data', callbackData)
 	// #ifdef MP-WEIXIN
-	const adUnitId = 'adunit-6eaa05f3467dce0c'
 	if (uni.createRewardedVideoAd) {
-		let videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId })
+		let videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId, multiton: true })
 		videoAd.onLoad()
 		videoAd.onError((err) => {
 			console.error('激励视频广告加载失败', err)
