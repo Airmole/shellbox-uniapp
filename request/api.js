@@ -1,4 +1,4 @@
-import { request, requestDomain } from './index.js'
+import { request, requestDomain, getOfficeViewerUrl } from './index.js'
 import { httpBuildQuery } from '../common/utils/tools.js'
 
 export default {
@@ -10,10 +10,6 @@ export default {
 		// #ifdef MP-QQ
 		return request('/qqapp/login/code', 'POST', data)
 		// #endif
-	},
-	// 获取下载服务器生成文件
-	getOfficeViewerUrl(url) {
-		return  `https://view.officeapps.live.com/op/view.aspx?src=${url}`
 	},
 	// 获取菜单列表
 	fetchMenuList: () => {
@@ -46,15 +42,15 @@ export default {
 	exportSemesterCourse (course) {
 		uni.showLoading({ title: '加载中...'})
 		return request(`/edusys/course/semester/xlsx`, 'POST', course).then((exportRes) => {
-			uni.hideLoading()
 			const downloadUrl = exportRes.data.url
 			// #ifdef H5
-			window.open(this.getOfficeViewerUrl(downloadUrl));
+			window.open(getOfficeViewerUrl(downloadUrl));
 			// #endif
 			// #ifdef MP
 			uni.downloadFile({
 			  url: downloadUrl,
 			  success: function (dlRes) {
+				uni.hideLoading()
 				const tempFilePath = dlRes.tempFilePath
 				uni.openDocument({ filePath: tempFilePath, fileType: 'xlsx', showMenu: true })
 			  }
@@ -100,15 +96,15 @@ export default {
 	exportScoreXlsx (score) {
 		uni.showLoading({ title: '加载中...'})
 		return request(`/edusys/score/xlsx`, 'POST', score).then((exportRes) => {
-			uni.hideLoading()
 			const downloadUrl = exportRes.data.url
 			// #ifdef H5
-			window.open(this.getOfficeViewerUrl(downloadUrl));
+			window.open(getOfficeViewerUrl(downloadUrl));
 			// #endif
 			// #ifdef MP
 			uni.downloadFile({
 			  url: downloadUrl,
 			  success: function (dlRes) {
+				uni.hideLoading()
 				const tempFilePath = dlRes.tempFilePath
 				uni.openDocument({ filePath: tempFilePath, fileType: 'xlsx', showMenu: true })
 			  }
@@ -116,7 +112,55 @@ export default {
 			// #endif
 		}).catch(error => {
 			uni.hideLoading()
-			console.log('导出班级课表失败', error)
+			console.log('导出成绩单失败', error)
+			uni.showToast({ title: '获取失败', icon: 'none' })
+		})
+	},
+	// 导出教务成绩单xlsx
+	exportScoreEduXlsx (score) {
+		uni.showLoading({ title: '加载中...'})
+		return request(`/edusys/score/edu/xlsx`, 'POST', score).then((exportRes) => {
+			const downloadUrl = exportRes.data.url
+			// #ifdef H5
+			window.open(getOfficeViewerUrl(downloadUrl));
+			// #endif
+			// #ifdef MP
+			uni.downloadFile({
+			  url: downloadUrl,
+			  success: function (dlRes) {
+				uni.hideLoading()
+				const tempFilePath = dlRes.tempFilePath
+				uni.openDocument({ filePath: tempFilePath, fileType: 'xlsx', showMenu: true })
+			  }
+			})
+			// #endif
+		}).catch(error => {
+			uni.hideLoading()
+			console.log('导出教务成绩单失败', error)
+			uni.showToast({ title: '获取失败', icon: 'none' })
+		})
+	},
+	// 导出教务成绩单pdf
+	exportScoreEduPdf (score) {
+		uni.showLoading({ title: '加载中...'})
+		return request(`/edusys/score/edu/pdf`, 'POST', score).then((exportRes) => {
+			const downloadUrl = exportRes.data.url
+			// #ifdef H5
+			window.open(downloadUrl);
+			// #endif
+			// #ifdef MP
+			uni.downloadFile({
+			  url: downloadUrl,
+			  success: function (dlRes) {
+				uni.hideLoading()
+				const tempFilePath = dlRes.tempFilePath
+				uni.openDocument({ filePath: tempFilePath, fileType: 'pdf', showMenu: true })
+			  }
+			})
+			// #endif
+		}).catch(error => {
+			uni.hideLoading()
+			console.log('导出教务成绩单失败', error)
 			uni.showToast({ title: '获取失败', icon: 'none' })
 		})
 	},
@@ -188,18 +232,18 @@ export default {
 		return request(`/edusys/course/class/course?${queryString}`, `GET`)
 	},
 	// 导出班级课表,
-	exportClassCourse (courses) {
+	exportClassCourse(courses) {
 		uni.showLoading({ title: '加载中...'})
 		return request(`/edusys/course/class/course/xlsx`, 'POST', courses).then((exportRes) => {
-			uni.hideLoading()
 			const downloadUrl = exportRes.data.url
 			// #ifdef H5
-			window.open(this.getOfficeViewerUrl(downloadUrl));
+			window.open(getOfficeViewerUrl(downloadUrl));
 			// #endif
 			// #ifdef MP
 			uni.downloadFile({
 			  url: downloadUrl,
 			  success: function (dlRes) {
+				uni.hideLoading()
 				const tempFilePath = dlRes.tempFilePath
 				uni.openDocument({ filePath: tempFilePath, fileType: 'xlsx', showMenu: true })
 			  }
@@ -246,15 +290,15 @@ export default {
 	exportTeacherCourse(course) {
 		uni.showLoading({ title: '加载中...'})
 		return request(`/edusys/course/teacher/course/xlsx`, 'POST', course).then((exportRes) => {
-			uni.hideLoading()
 			const downloadUrl = exportRes.data.url
 			// #ifdef H5
-			window.open(this.getOfficeViewerUrl(downloadUrl));
+			window.open(getOfficeViewerUrl(downloadUrl));
 			// #endif
 			// #ifdef MP
 			uni.downloadFile({
 			  url: downloadUrl,
 			  success: function (dlRes) {
+				uni.hideLoading()
 				const tempFilePath = dlRes.tempFilePath
 				uni.openDocument({ filePath: tempFilePath, fileType: 'xlsx', showMenu: true })
 			  }
@@ -305,15 +349,15 @@ export default {
 	exportLessonCourse(course) {
 		uni.showLoading({ title: '加载中...'})
 		return request(`/edusys/course/lesson/course/xlsx`, 'POST', course).then((exportRes) => {
-			uni.hideLoading()
-			const downloadUrl = this.getDownloadFileUrl(exportRes.data.filepath)
+			const downloadUrl = exportRes.data.url
 			// #ifdef H5
-			window.open(downloadUrl);
+			window.open(getOfficeViewerUrl(downloadUrl))
 			// #endif
 			// #ifdef MP
 			uni.downloadFile({
 			  url: downloadUrl,
 			  success: function (dlRes) {
+				uni.hideLoading()
 				const tempFilePath = dlRes.tempFilePath
 				uni.openDocument({ filePath: tempFilePath, fileType: 'xlsx', showMenu: true })
 			  }
@@ -321,7 +365,7 @@ export default {
 			// #endif
 		}).catch(error => {
 			uni.hideLoading()
-			console.log('导出教师课表失败', error)
+			console.log('导出课程课表失败', error)
 			uni.showToast({ title: '获取失败', icon: 'none' })
 		})
 	},

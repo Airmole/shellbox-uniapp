@@ -166,8 +166,9 @@
 			<!-- 底部操作栏 -->
 			<view class="cu-bar bg-gradual-blue border foot ai-suggestion-bar">
 				<view class="bg-white flex margin-xs padding-xs justify-start round" style="width: 100%;">
-					<view @click="fetchScoreSuggestion" class='cu-tag round bg-gradual-blue'>AI总结建议</view>
-					<view v-if="score !== ''" @click="exportXlsx" class='cu-tag round bg-gradual-blue'><text class="cuIcon cuIcon-down"></text> 下载</view>
+					<view @click="fetchScoreSuggestion" class='cu-tag round bg-gradual-blue'>AI分析</view>
+					<view v-if="score !== ''" @click="exportXlsx" class='cu-tag round bg-gradual-blue'><text class="cuIcon cuIcon-down"></text> 导出数据</view>
+					<view v-if="score !== ''" @click="exportEduScore" class='cu-tag round bg-gradual-blue'><text class="cuIcon cuIcon-down"></text> 成绩单</view>
 				</view>
 			</view>
 			
@@ -367,7 +368,7 @@
 					if (res.isEnded) {
 						api.exportScoreXlsx(this.score)
 					} else {
-						uni.showToast({ title: '广告中断，无法导出课表', icon: 'none'})
+						uni.showToast({ title: '广告中断，无法导出成绩数据', icon: 'none'})
 					}
 				})
 			}
@@ -792,6 +793,18 @@
 					api.exportScoreXlsx(this.score)
 				}
 				// #endif
+			},
+			exportEduScore () {
+				uni.showActionSheet({
+				  itemList: ['导出成绩单Excel文件', '导出成绩单PDF文件'],
+				  success: (res) => {
+					if (res.tapIndex == 0) {
+						  api.exportScoreEduXlsx(this.score)
+					} else {
+						api.exportScoreEduPdf(this.score)
+					}
+				  }
+				})
 			}
 		}
 	}

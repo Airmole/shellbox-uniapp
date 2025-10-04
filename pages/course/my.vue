@@ -53,6 +53,7 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import courseTable from './components/courseTable.vue'
+	import { initalVideoAd, startPlayVideoAd } from '../../common/utils/mpAd.js'
 	let videoAd = null
 	export default {
 		components: {
@@ -84,25 +85,12 @@
 			this.fetchCourseOptions(semester, week)
 			this.fetchCourse(semester, week)
 			
-			// #ifdef MP
-			const adUnitId = 'adunit-6eaa05f3467dce0c'
 			const _this = this
-			if (uni.createRewardedVideoAd) {
-				videoAd = uni.createRewardedVideoAd({ adUnitId: adUnitId })
-			    videoAd.onLoad()
-			    videoAd.onError((err) => {
-				    console.error('激励视频广告加载失败', err)
-				    uni.showModal({ title: err, showCancel: false })
-			    })
-			    videoAd.onClose((res) => {
-					if (res.isEnded) {
-						_this.exportXlsxAction()
-					} else {
-						uni.showToast({ title: '广告中断，无法导出课表', icon: 'none'})
-					}
-				})
-			}
-			// #endif
+			videoAd = initalVideoAd(this.exportXlsxAction, {
+				_this,
+				callback: api.exportSemesterCourse,
+				callbackData: this.courseData,
+			}, '导出课表')
 		},
 		methods: {
 			semesterChange(e) {
@@ -144,48 +132,24 @@
 				})
 			},
 			exportXlsx () {
-				// #ifdef H5
-				this.exportXlsxAction()
-				// #endif
-				// #ifdef MP-WEIXIN
-				if (!this.isVip) {
-					uni.showModal({
-						title: '会员功能',
-						content: '非VIP会员导出课表需要观看广告!',
-						cancelText: '取消导出',
-						confirmText: '观看广告',
-						success: function (res) {
-							if (res.confirm) {
-								if (videoAd) {
-								  videoAd.show().catch(() => {
-									// 失败重试
-									videoAd.load()
-									  .then(() => videoAd.show()).catch(err => {
-										console.error('激励视频 广告显示失败', err)
-										uni.showModal({ title: err, showCancel: false })
-									  })
-								  })
-								}
-							}
-						}
-					})
-				} else {
-					this.exportXlsxAction()
-				}
-				// #endif
+				startPlayVideoAd(videoAd, this.exportXlsxAction, {
+					_this: this,
+					callback: api.exportSemesterCourse
+				}, '导出学期课表数据非会员用户需要观看广告！', this.isVip, '观看广告', '取消导出')
 			},
-			exportXlsxAction () {
-				const _this = this
-				const semester = this.semesterOptions[this.semesterIndex].name
-				const week = this.weekOptions[this.weekIndex].name
+			exportXlsxAction (params) {
+				const {_this, callback} = params
+				const semester = _this.semesterOptions[_this.semesterIndex].name
+				const week = _this.weekOptions[_this.weekIndex].name
 				uni.showModal({
 					title: '注意',
 					content: `您确认要导出当前选择的${semester}学期${week}个人课表吗？如需导出整学期课表Excel文件，请先选择全部周次！`,
 					cancelText: '重新选择',
 					confirmText: '确认导出',
 					success: function (res) {
+						console.log('_this.courseData', _this.courseData)
 						if (res.confirm) {
-							api.exportSemesterCourse(_this.courseData)
+							callback(_this.courseData)
 						}
 					}
 				})

@@ -13,6 +13,11 @@ const requestDomain = () => {
 	return baseUrl
 }
 
+// 获取下载服务器生成文件
+const getOfficeViewerUrl = (url) => {
+	return  `https://view.officeapps.live.com/op/view.aspx?src=${url}`
+}
+
 const request = (url, method = 'GET', data = {}, isUpload = false) => {
 	return new Promise((resolve, reject) => {
 		const auth = uni.getStorageSync('auth')
@@ -72,5 +77,6 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 
 export {
 	request,
-	requestDomain
+	requestDomain,
+	getOfficeViewerUrl
 }
