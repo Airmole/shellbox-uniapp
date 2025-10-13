@@ -13,9 +13,14 @@ const requestDomain = () => {
 	return baseUrl
 }
 
-// 获取下载服务器生成文件
+// 获取office在线预览链接
 const getOfficeViewerUrl = (url) => {
 	return  `https://view.officeapps.live.com/op/view.aspx?src=${url}`
+}
+
+// 获取PDF在线预览链接
+const getPdfViewerUrl = (url) => {
+	return `https://pdfviewer.airmole.cn/?url=${url}`
 }
 
 const request = (url, method = 'GET', data = {}, isUpload = false) => {
@@ -78,5 +83,6 @@ const request = (url, method = 'GET', data = {}, isUpload = false) => {
 export {
 	request,
 	requestDomain,
-	getOfficeViewerUrl
+	getOfficeViewerUrl,
+	getPdfViewerUrl
 }

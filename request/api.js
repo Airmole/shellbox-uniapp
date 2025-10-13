@@ -1,4 +1,4 @@
-import { request, requestDomain, getOfficeViewerUrl } from './index.js'
+import { request, requestDomain, getOfficeViewerUrl, getPdfViewerUrl } from './index.js'
 import { httpBuildQuery } from '../common/utils/tools.js'
 
 export default {
@@ -146,7 +146,7 @@ export default {
 		return request(`/edusys/score/edu/pdf`, 'POST', score).then((exportRes) => {
 			const downloadUrl = exportRes.data.url
 			// #ifdef H5
-			window.open(downloadUrl);
+			window.open(getPdfViewerUrl(downloadUrl));
 			// #endif
 			// #ifdef MP
 			uni.downloadFile({
@@ -591,5 +591,47 @@ export default {
 	},
 	fetchPoitsMallGoodsDetail (id) {
 		return request(`/points/mall/goods/${id}`)
+	},
+	// 学生财务收费相关接口
+	fetchFinasysProfile () {
+		return request('/finasys/profile', 'GET')
+	},
+	fetchFinasysFeeInfo (pageIndex = 0, pageSize = 10, showPaid = true) {
+		const params = { pageIndex, pageSize, showPaid }
+		const query = httpBuildQuery(params)
+		return request(`/finasys/fee?${query}`)
+	},
+	fetchFinasysCredit (pageIndex = 0, pageSize = 10, showPaid = true) {
+		const params = { pageIndex, pageSize, showPaid }
+		const query = httpBuildQuery(params)
+		return request(`/finasys/credit?${query}`)
+	},
+	fetchFinasysSubsidy (pageIndex = 0, pageSize = 10, showUnreleased = true) {
+		const params = { pageIndex, pageSize, showUnreleased }
+		const query = httpBuildQuery(params)
+		return request(`/finasys/subsidy?${query}`)
+	},
+	fetchFinasysTreePaidRecords (pageIndex = 0, pageSize = 10) {
+		const params = { pageIndex, pageSize }
+		const query = httpBuildQuery(params)
+		return request(`/finasys/paid?${query}`)
+	},
+	fetchFinasysOrder (pageIndex = 0, pageSize = 10) {
+		const params = { pageIndex, pageSize }
+		const query = httpBuildQuery(params)
+		return request(`/finasys/order?${query}`)
+	},
+	fetchFinasysDefer(pageIndex = 0, pageSize = 10, showRecords = 'true') {
+		const params = { pageIndex, pageSize, showRecords }
+		const query = httpBuildQuery(params)
+		return request(`/finasys/defer?${query}`)
+	},
+	fetchFinasysInvoice (pageIndex = 0, pageSize = 10, showRecords = 'true', year = '') {
+		const params = { pageIndex, pageSize, showRecords, year }
+		const query = httpBuildQuery(params)
+		return request(`/finasys/invoice?${query}`)
+	},
+	fetchFinasysInvoiceDetail (cfid) {
+		return request(`/finasys/invoice/detail?cfid=${cfid}`)
 	}
 }

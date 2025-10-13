@@ -35,7 +35,13 @@
 		{ "path" : "pages/points/balance" },
 		{ "path" : "pages/points/history" },
 		{ "path" : "pages/points/checkin" },
-		{ "path" : "pages/points/mall" }
+		{ "path" : "pages/points/mall" },
+		{ "path" : "pages/finasys/deferApply" },
+		{ "path" : "pages/finasys/feeRecord" },
+		{ "path" : "pages/finasys/orderRecord" },
+		{ "path" : "pages/finasys/feeBusiness" },
+		{ "path" : "pages/finasys/subsidyInfo" },
+		{ "path" : "pages/finasys/invoiceApply" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
