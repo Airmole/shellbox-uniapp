@@ -76,6 +76,7 @@
 				this.globalData.loginPromise = new Promise(async (resolve, reject) => {
 					try {
 						const res = await api.fetchProfile()
+						self.globalData.profile = res.data.data
 						console.log('登录成功11:》》', res)
 						resolve(res.data)
 					} catch(err) {

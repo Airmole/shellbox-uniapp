@@ -59,6 +59,23 @@
 			</view>
 		</view>
 		
+		<!-- 辣鸡教务系统异常，无法登录提示框 -->
+		<view class="cu-modal" :class="showTipsModal?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">注意</view>
+					<view class="action" @tap="showTipsModal = false">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl text-left"><rich-text :nodes="showTipsData.content"></rich-text></view>
+				<view class="cu-bar bg-white">
+					<view class="action margin-0 flex-sub solid-left" @tap="showTipsModal = false">尝试登录</view>
+					<view v-if="showTipsData.contact" class="action margin-0 flex-sub text-green solid-left" @tap="contactEduDepartment"><text class="cuIcon-phone"></text>联系教务</view>
+				</view>
+			</view>
+		</view>
+		
 	</view>
 </template>
 
@@ -79,9 +96,16 @@
 		account: '',
 		password: ''
 	})
+	const showTipsModal = ref(false)
+	const showTipsData = ref({
+		content: '',
+		contact: '',
+		status: false
+	})
 	
 	onMounted(() => {
 		fetchBackgroundImage()
+		fetchModalTips()
 	})
 	
 	function accountInput(e) {
@@ -140,6 +164,20 @@
 		})
 	}
 	
+	function fetchModalTips () {
+		api.fetchLoginTips().then(res => {
+			if (res.statusCode != 200) return
+			if (res.data && res.data.status) {
+				showTipsData.value = res.data
+				showTipsModal.value = res.data.status
+			}
+		})
+	}
+	
+	function contactEduDepartment () {
+		console.log(showTipsData.value.contact)
+		uni.makePhoneCall({ phoneNumber: showTipsData.value.contact })
+	}
 	
 	function helpModal () {
 		showHelpModal.value = !showHelpModal.value

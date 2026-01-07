@@ -15,6 +15,10 @@ export default {
 	fetchMenuList: () => {
 		return request(`/menu`, `GET`)
 	},
+	// 获取登录界面模态框提示信息内容
+	fetchLoginTips: () => {
+		return request(`/login/tips`, 'GET')
+	},
 	// 获取登录页背景图
 	getLoginBackground: () => {
 		return request('/login/image', 'GET')
@@ -557,6 +561,28 @@ export default {
 	},
 	fetchOpacsysOverdueSearch (usercode) {
 		return request(`/book/overdue/search?usercode=${usercode}`)
+	},
+	// opacsys
+	fetchOpacsysIndexProfile () {
+		return request('/opacsys/index')
+	},
+	fetchOpacsysStatistics (type = 'class') {
+		return request(`/opacsys/statistics?type=${type}`)
+	},
+	fetchOpacsysProfileRule () {
+		return request('/opacsys/profileRule')
+	},
+	fetchOpacsysRuleDetail (ruleNo) {
+		return request(`/opacsys/ruleDetail?ruleNo=${ruleNo}`)
+	},
+	fetchOpacsysReadingBooks () {
+		return request('/opacsys/readingBooks')
+	},
+	fetchOpacsysBorrowedHistory (page = 1) {
+		return request(`/opacsys/borrowedHistory?page=${page}`)
+	},
+	fetchOpacsysScoreRecord (page = 1) {
+		return request(`/opacsys/scoreRecord?page=${page}`)
 	},
 	fetchUserPointsBalance () {
 		return request(`/points/balance`)
