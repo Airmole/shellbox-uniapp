@@ -61,7 +61,7 @@
 		
 		<!-- 辣鸡教务系统异常，无法登录提示框 -->
 		<view class="cu-modal" :class="showTipsModal?'show':''">
-			<view class="cu-dialog">
+			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-white justify-end">
 					<view class="content">注意</view>
 					<view class="action" @tap="showTipsModal = false">
