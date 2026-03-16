@@ -77,7 +77,7 @@
 		},
 		onLoad() {
 			const edusysAccount = getEdusysAccount()
-			if (edusysAccount && edusysAccount.account.length < 8) this.isTeacher = true
+			if (edusysAccount && (edusysAccount.account.length < 8 || edusysAccount.account.indexOf('T')==0)) this.isTeacher = true
 			if (!this.isTeacher) return
 			this.fetchCourseList()
 		},

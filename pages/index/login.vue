@@ -12,7 +12,7 @@
 				<form>
 					<view class="cu-form-group round margin-top-xl">
 						<view class="title">账号</view>
-						<input v-model="loginForm.account" type="number" placeholder="统一身份认证账号(学号/教职工号)" name="account"
+						<input v-model="loginForm.account" type="text" placeholder="统一身份认证账号(学号/教职工号)" name="account"
 							maxlength="10" focus="true" confirm-type="next" @input="accountInput" />
 					</view>
 					<view class="cu-form-group round margin-tb-xl">
@@ -85,8 +85,8 @@
 	const app = getApp()
 	import { useAppStore } from '@/stores/app.js'
 	const { setAppAuth } = useAppStore()
-	const loadingUrl = 'https://store2018.muapp.cn/images/weapp/loading_cat.gif'
-	const helpImage = 'https://r2.airmole.cn/i/2025/08/17/t9fix-x1.jpg'
+	const loadingUrl = 'https://r2.airmole.cn/gif/loading_cat.gif'
+	const helpImage = 'https://r2.airmole.cn/i/2026/03/16/prmh0-w7.jpg'
 	const logoUrl = app.globalData.logoImageUrl
 	const isLoading = ref(false)
 	const showHelpModal = ref(false)

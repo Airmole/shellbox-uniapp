@@ -44,7 +44,7 @@
 	
 	const isTeacher = computed(() => {
 		let result = false
-		if (loginStatus && edusysAccount.account && edusysAccount.account.length <= 7) result = true
+		if (loginStatus && edusysAccount.account && (edusysAccount.account.length < 8 || edusysAccount.account.indexOf('T')==0)) result = true
 		return result
 	})
 	
