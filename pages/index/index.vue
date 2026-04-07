@@ -58,7 +58,7 @@
 		<!-- #endif -->
 
 		<!-- 今日课程列表 -->
-		<navigator url="/pages/course/calendar" class="cu-list menu sm-border card-menu" v-if="todayCourses.length">
+		<navigator url="/pages/course/calendar" class="cu-list menu sm-border card-menu margin-top" v-if="todayCourses.length">
 			<view class="cu-bar bg-white">
 				<view class="action border-title">
 					<text class="text-title">今日课程</text>
@@ -135,7 +135,7 @@
 	}
 	
 	function goBookSearch () {
-		uni.navigateTo({ url: '/pages/book/search' })
+		uni.navigateTo({ url: '/pages/book/index' })
 	}
 	
 	
