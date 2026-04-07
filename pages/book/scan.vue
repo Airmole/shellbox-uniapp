@@ -119,16 +119,23 @@
 					return
 				}
 				
-				uni.showLoading({ title: '检索中...' })
-				api.fetchBookSearch('05', this.isbn).then(res => {
-					console.log(res.data)
-					this.list = res.data
-				}).catch(error => {
-					console.log('fetchBookSearch error', error)
-				}).finally(() => {
-					uni.hideLoading()
-				})
+				uni.navigateTo({ url: `/pages/book/searchList?keyword=${this.isbn}` })
 			}
+		},
+		onShareAppMessage() {
+			let data = {
+			  title: `扫码查书 - 贝壳小盒子`,
+			  path: `/pages/book/scan`
+			}
+			return data
+		},
+		onShareTimeline() {
+			let query = ``
+			let data = {
+				title: `扫码查书 - 贝壳小盒子`,
+				query: query
+			}
+			return data
 		}
 	}
 </script>

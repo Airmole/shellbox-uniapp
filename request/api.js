@@ -517,73 +517,128 @@ export default {
 		return request(`/school/media`)
 	},
 	// 图书查询
-	fetchBookSearch (type = '02', keyword = '') {
-		return request(`/book/search?type=${type}&keyword=${keyword}`)
+	fetchBookHotKeyword () { // 图书检索热门关键字
+		return request(`/book/hot/keyword`)
 	},
-	fetchBookDetailByMarcNo (marcNo) {
-		return request(`/book/marc/${marcNo}`)
+	fetchLibspDictList () { // 图书系统数据字典
+		return request('/book/dict')
 	},
-	fetchBookLendTrend (marcNo) {
-		return request(`/book/lendTrend/${marcNo}`)
+	fetchBookHotBorrow ( // 热门借阅图书
+		page = 1,
+		rows = 10,
+		disCode = null,
+		statRange = 30,
+		indexFlag = 1,
+		libCode = '',
+		sortType = 1,
+		classNo = ''
+	) {
+		let queryParams = {}
+		queryParams.page = page
+		queryParams.rows = rows
+		queryParams.sortType = sortType
+		queryParams.statRange = statRange
+		if (disCode !== '') queryParams.disCode = disCode
+		if (libCode !== '') queryParams.libCode = libCode
+		if (classNo !== '') queryParams.classNo = classNo
+		if (indexFlag !== '') queryParams.indexFlag = indexFlag
+		return request(`/book/hot/borrow`, 'GET', queryParams)
 	},
-	fetchSameAuthorBooks (marcNo) {
-		return request(`/book/sameAuthor/${marcNo}`)
+	fetchBookNew ( // 获取新到图书
+		page = 1,
+		rows = 10,
+		time = '2',
+		docCode = '1',
+		disCode = '',
+		callNo = '',
+		locationId = ''
+	) {
+		let queryParams = {}
+		if (page !== 1) queryParams.page = page
+		if (rows !== 10) queryParams.rows = rows
+		if (time !== '2') queryParams.time = time
+		if (docCode !== '1') queryParams.docCode = docCode
+		if (disCode !== '') queryParams.disCode = disCode
+		if (callNo !== '') queryParams.callNo = callNo
+		if (locationId !== '') queryParams.locationId = locationId
+		return request('/book/new', 'GET', queryParams)
 	},
-	fetchOpacsysKeywordCloud () {
-		return request(`/book/keywordCloud`)
+	fetchBookSearchPara () { // 获取检索参数
+		return request('/book/search/para')
 	},
-	fetchOpacsysHotRankSimple () {
-		return request(`/book/hot/simple`)
+	fetchBookUnifySearch (
+		searchFieldContent,
+		searchField = 'keyWord',
+		page = 1,
+		rows = 10,
+		docCode = [],
+		litCode = [],
+		matchMode = '2',
+		resourceType = [],
+		subject = [],
+		discode1 = [],
+		publisher = [],
+		libCode = [],
+		locationId = [],
+		eCollectionIds = [],
+		neweCollectionIds = [],
+		curLocationId = [],
+		campusId = [],
+		kindNo = [],
+		collectionName = [],
+		author = [],
+		langCode = [],
+		countryCode = [],
+		publishBegin = null,
+		publishEnd = null,
+		coreInclude = [],
+		ddType = [],
+		verifyStatus = [],
+		group = [],
+		sortField = 'relevance',
+		sortClause = 'asc',
+		onlyOnShelf = '1',
+		searchItems = null,
+		newCoreInclude = [],
+		customSub = [],
+		customSub0 = [],
+		indexSearch = 1
+	) { // 统一检索
+		let body = { searchFieldContent, searchField, page, rows, docCode, litCode, matchMode, resourceType, subject, 
+			discode1, publisher, libCode, locationId, eCollectionIds, neweCollectionIds, curLocationId, campusId, kindNo,
+			collectionName, author, langCode, countryCode, publishBegin, publishEnd, coreInclude, ddType, verifyStatus,
+			group, sortField, sortClause, onlyOnShelf, searchItems, newCoreInclude, customSub, customSub0, indexSearch }
+		return request('/book/search', 'POST', body)
 	},
-	fetchOpacsysHotLendBooks(classType = 'ALL') {
-		return request(`/book/hot/lend?class=${classType}`)
+	fetchBookCountAndCover (recordId, title, isbn) { // 获取图书数量&封面
+		let query = { recordId, title, isbn }
+		return request('/book/countAndCover', 'GET', query)
 	},
-	fetchOpacsysHotScoreBooks (classType = 'ALL', sort = '') {
-		return request(`/book/hot/score?class=${classType}&sort=${sort}`)
+	fetchBookDetail (recordId) { // 获取图书详情信息
+		return request(`/book/${recordId}/detail`)
 	},
-	fetchOpacsysHotStarBooks (classType = 'ALL') {
-		return request(`/book/hot/star?class=${classType}`)
+	fetchBookTenYearBorrow (recordId) { // 获取图书近十年借阅数据
+		return request(`/book/${recordId}/tenYearBorrow`)
 	},
-	fetchOpacsysHotBooks (classType = 'ALL') {
-		return request(`/book/hot/book?class=${classType}`)
+	fetchBookBorrowAnalysis (recordId) { // 获取图书借阅分析
+		return request(`/book/${recordId}/borrowAnalysis`)
 	},
-	fetchOpacsysShelfBooks (shelfId) {
-		return request(`/book/shelf/${shelfId}`)
+	fetchBookCollection (recordId) { // 获取图书馆藏信息
+		return request(`/book/${recordId}/bookCollection`)
 	},
-	fetchDoubanIdByISBN (isbn) {
-		return request(`/book/isbn/douban/${isbn}`)
+	fetchBookDetailRelated (recordId, subject, page = 1, rows = 8) { // 获取图书详情相关图书
+		let query = { subject, page, rows }
+		return request(`/book/${recordId}/detailAbstract`, 'GET', query)
 	},
-	fetchOpacsysOverdueList (page = 1) {
-		return request(`/book/overdue?page=${page}`)
+	fetchBookAuthorInfo (
+		author,
+		fenlei = '',
+		size = 10
+	) {
+		let query = { author, fenlei, size }
+		return request('/book/search/author', 'GET', query)
 	},
-	fetchOpacsysExceedFine (page = 1) {
-		return request(`/book/exceedFine?page=${page}`)
-	},
-	fetchOpacsysOverdueSearch (usercode) {
-		return request(`/book/overdue/search?usercode=${usercode}`)
-	},
-	// opacsys
-	fetchOpacsysIndexProfile () {
-		return request('/opacsys/index')
-	},
-	fetchOpacsysStatistics (type = 'class') {
-		return request(`/opacsys/statistics?type=${type}`)
-	},
-	fetchOpacsysProfileRule () {
-		return request('/opacsys/profileRule')
-	},
-	fetchOpacsysRuleDetail (ruleNo) {
-		return request(`/opacsys/ruleDetail?ruleNo=${ruleNo}`)
-	},
-	fetchOpacsysReadingBooks () {
-		return request('/opacsys/readingBooks')
-	},
-	fetchOpacsysBorrowedHistory (page = 1) {
-		return request(`/opacsys/borrowedHistory?page=${page}`)
-	},
-	fetchOpacsysScoreRecord (page = 1) {
-		return request(`/opacsys/scoreRecord?page=${page}`)
-	},
+	// 用户积分
 	fetchUserPointsBalance () {
 		return request(`/points/balance`)
 	},
