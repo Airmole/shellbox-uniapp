@@ -185,9 +185,9 @@
 					this.optionsForm.startDate,
 					this.optionsForm.endDate
 				).then(res => {
-					this.scoreList = res.data.data
 					const lastPage = Math.ceil(res.data.data.totalCount / this.optionsForm.rows)
 					res.data.data.lastPage = lastPage
+					this.scoreList = res.data.data
 					console.log(this.scoreList)
 				}).finally(() => {
 					uni.hideLoading()
@@ -201,7 +201,7 @@
 			},
 			nextPage () {
 				let page = parseInt(this.optionsForm.page) + 1
-				if (page >= this.historyList.lastPage) page = this.historyList.lastPage
+				if (page >= this.scoreList.lastPage) page = this.scoreList.lastPage
 				this.optionsForm.page = page
 				this.fetchScore()
 			}

@@ -85,17 +85,35 @@
 		</template>
 		<template v-else>
 			<template v-if="loanList !== '' && loanList.numFound == 0">
-				<tips tips="当前没有正在借阅的图书" image="/static/image/nothing.png"></tips>
+				<tips :tips="`当前没有正在借阅的${typeTabs[typeIndex]}`" image="/static/image/nothing.png"></tips>
 			</template>
 			<template v-if="loanList !== '' && loanList.numFound > 0">
-				<view class="margin bg-white padding card-radius">
-					<view class="text-center text-bold">小盒子需要你的帮助</view>
-					<view><text>因暂无正在借阅图书的账号可供测试，小盒子还无法确定数据接口返回的代码结构，借阅列表暂无法渲染展示。\n如果你有在借图书，欢迎联系小盒子协助适配！\n联系微信号：Airmoe</text></view>
-				</view>
-				<view class="margin card-radius padding bg-white">
-					{{loanList.searchResult}}
+				<view class="cu-list menu sm-border card-menu shadow margin-top shadow bg-white" v-if="loanList && loanList.numFound">
+					<view class="cu-bar bg-white solid-bottom">
+						<view class="action">
+							<text class="cuIcon-title text-green"></text> 当前借阅
+						</view>
+						<view class="action"><text class="text-xl margin-lr-xs">{{loanList.numFound}}</text>条</view>
+					</view>
+					<template class="bg-white" v-for="(book, index) in loanList.searchResult" :key="index">
+						<bookItem
+						    :recordId="book.recordId"
+							:title="book.title"
+							:author="book.author"
+							:publisher="book.publisher"
+							:publishYear="book.publishYear"
+							:isbn="`ISBN：${book.isbn}`"
+							:bottomText="`${book.loanDate}借阅丨${book.normReturnDate}应还\n`"
+						></bookItem>
+					</template>
 				</view>
 			</template>
+			<!-- 分页器 -->
+			<view class="flex justify-between padding-lr-sm margin-top align-center">
+				<view class="flex-sub"><button @tap="lastPage" v-if="optionsForm.page>1" class="cu-btn round bg-gradual-blue">上一页</button></view>
+				<view class="flex-twice text-center"><text>第{{optionsForm.page}}页丨共{{loanList.lastPage}}页</text></view>
+				<view class="flex-sub text-right"><button @tap="nextPage" v-if="optionsForm.page<loanList.lastPage" class="cu-btn round bg-gradual-blue">下一页</button></view>
+			</view>
 		</template>
 		
 	</view>
@@ -105,7 +123,9 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import bookItem from './components/bookItem.vue'
 	export default {
+		components:{ bookItem },
 		data() {
 			return {
 				isVip: false,
