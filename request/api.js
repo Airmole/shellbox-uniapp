@@ -638,6 +638,66 @@ export default {
 		let query = { author, fenlei, size }
 		return request('/book/search/author', 'GET', query)
 	},
+	fetchLibspUserInfo () {
+		return request('/libsp/userInfo')
+	},
+	fetchLibspUserLimit () {
+		return request('/libsp/userLimit')
+	},
+	fetchLibspScoreList (
+	    page = 1,
+	    rows = 10,
+		scoreSign = null,
+		startDate = '',
+		endDate = '',
+		timeType = null
+	) {
+		let body = { page, rows, scoreSign, startDate, endDate, timeType }
+		return request('/libsp/scoreList', 'POST', body)
+	},
+	fetchLibspDailyBook () {
+		return request('/libsp/dailyBook')
+	},
+	fetchLibspLoanChart () {
+		return request('/libsp/loanChart')
+	},
+	fetchLibspLoanRules () {
+		return request('/libsp/loanRules')
+	},
+	fetchLibspLoanList (
+	    isIssue = false,
+	    searchType = 1,
+		searchContent = '',
+		page = 1,
+		rows = 10,
+		sortType = 0,
+		startDate = null,
+		endDate = null
+	) {
+		let body = { searchType, searchContent, page, rows, sortType, startDate, endDate }
+		if (isIssue) { // 是否现刊
+			return request('/libsp/issueLoanList', 'POST', body)
+		} else {
+			return request('/libsp/loanList', 'POST', body)
+		}
+	},
+	fetchLibspLoanHistory (
+	    isIssue = false,
+	    searchType = 1,
+		searchContent = '',
+		page = 1,
+		rows = 10,
+		sortType = 0,
+		startDate = '',
+		endDate = ''
+	) {
+		let body = { searchType, searchContent, page, rows, sortType, startDate, endDate }
+		if (isIssue) {
+			return request('/libsp/issueLoanHistory', 'POST', body)
+		} else {
+			return request('/libsp/loanHistory', 'POST', body)
+		}
+	},
 	// 用户积分
 	fetchUserPointsBalance () {
 		return request(`/points/balance`)

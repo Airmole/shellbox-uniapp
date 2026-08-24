@@ -12,7 +12,6 @@
 				<view class="text-cut">{{publisher}}{{publishYear}}</view>
 				<view class="text-cut">{{isbn}}</view>
 				<view v-if="callNo">索书号：{{callNo}}</view>
-				<view v-else><view class="margin-xs cu-tag radius line-red">暂无馆藏</view></view>
 				<view v-if="bottomText">{{bottomText}}</view>
 			</view>
 		</navigator>
