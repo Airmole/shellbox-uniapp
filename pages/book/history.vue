@@ -220,7 +220,7 @@
 					this.optionsForm.startDate,
 					this.optionsForm.endDate
 				).then(res => {
-					if (res.data.data && res.data.data.numFound) {
+					if (res.data.data) {
 						const lastPage = Math.ceil(res.data.data.numFound / this.optionsForm.rows)
 						res.data.data.lastPage = lastPage
 						this.historyList = res.data.data
