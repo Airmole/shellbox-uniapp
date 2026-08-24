@@ -33,7 +33,7 @@
 		{ "path": "pages/book/scan" },
 		{ "path": "pages/book/index" },
 		{ "path": "pages/book/rank"},
-		{ "path": "pages/book/newBook"},
+		{ "path": "pages/book/new"},
 		{ "path": "pages/book/searchList"},
 		{ "path": "pages/book/detail"},
 		{ "path": "pages/finasys/deferApply" },
@@ -41,7 +41,11 @@
 		{ "path": "pages/finasys/orderRecord" },
 		{ "path": "pages/finasys/feeBusiness" },
 		{ "path": "pages/finasys/subsidyInfo" },
-		{ "path": "pages/finasys/invoiceApply" }
+		{ "path": "pages/finasys/invoiceApply" },
+		{ "path": "pages/book/profile" },
+		{ "path": "pages/book/score" },
+		{ "path": "pages/book/history" },
+		{ "path": "pages/book/reading" }
 	],
 	"globalStyle": {
 		"navigationStyle": "custom",
