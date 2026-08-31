@@ -148,11 +148,9 @@
 				})
 			},
 			calendarChange(e) {
-				console.log('calendarChange', e)
 				this.getDateMovie(e.fulldate)
 			},
 			monthChange(e) {
-				console.log('monthChange', e)
 				this.getMonthMovie(e.fullDate)
 			},
 			getDateMovie(date = '') {
@@ -240,7 +238,6 @@
 			  path: `/pages/school/movie?date=${this.checkedDate}`
 			}
 			if (this.movieList.length && this.movieList[0].poster) data.imageUrl = this.movieList[0].poster
-			console.log(data)
 			return data
 		},
 		onShareTimeline() {

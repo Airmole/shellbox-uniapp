@@ -120,7 +120,6 @@
 			// #ifdef MP-QQ
 			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '8fe9b8e7191346a2ffb0c20c6bf3e0cf' })
 			// #endif
-			
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
@@ -164,7 +163,7 @@
 						})
 					})
 				})
-				// console.log(result)
+
 				return result.reverse()
 			},
 			fold: function(e) {

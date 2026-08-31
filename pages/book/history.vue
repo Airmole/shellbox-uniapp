@@ -207,7 +207,6 @@
 					return
 				}
 				
-				console.log(this.optionsForm)
 				uni.showLoading({ title: '正在加载...' })
 				const isIssue = this.typeIndex === 1 ? true: false
 				api.fetchLibspLoanHistory(

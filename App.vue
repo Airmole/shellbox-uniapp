@@ -15,12 +15,10 @@
 
 			// #ifdef MP-WEIXIN || MP-QQ
 			const openid = this.getOpenId()
-			console.log('openId ---> ', openid)
 			if (!openid) {
 				this.uniLogin()
 			} else {
 				uni.checkSession({
-					success() { console.log('getOpenid', openid) },
 					fail() { self.uniLogin() }
 				})
 			}
@@ -36,12 +34,8 @@
 			
 			this.clientLoginEdusys()
 		},
-		onShow: function() {
-			console.log('App Show')
-		},
-		onHide: function() {
-			console.log('App Hide')
-		},
+		onShow: function() {},
+		onHide: function() {},
 		methods: {
 			logout() {
 				uni.clearStorageSync()
@@ -57,13 +51,10 @@
 				const self = this
 				uni.login({
 					success(res) {
-						if (!res.code) {
-							console.log('登录失败！' + res.errMsg)
-						} else {
+						if (res.code) {
 							api.uniLogin({
 								code: res.code
 							}).then(loginRes => {
-								console.log('openid', loginRes.data)
 								self.setOpenId(loginRes.data.openid)
 								return loginRes.data.openid
 							})
@@ -77,7 +68,6 @@
 					try {
 						const res = await api.fetchProfile()
 						self.globalData.profile = res.data.data
-						console.log('登录成功11:》》', res)
 						resolve(res.data)
 					} catch(err) {
 						if (err && err.statusCode === 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
@@ -94,9 +84,7 @@
 								resolve(Object.assign({
 									...edusysAccount
 								}, loginRes.data))
-								console.log('登录成功')
 							}).catch(err => {
-								console.log('登录失败');
 								uni.showToast({ title: err.data.message, icon: 'none'})
 								reject(err)
 							})

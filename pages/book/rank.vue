@@ -3,7 +3,6 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>热门借阅排行</view>
 		</cu-custom>
-		
 		<view class="margin">
 			<view :class="'cu-list menu sm-border '+(foldOptionsArea?'round':'card-radius')">
 				<view class="cu-item press-class" @click="showOptionsArea">
@@ -65,13 +64,11 @@
 				</template>
 			</view>
 		</view>
-		
 		<!-- #ifdef MP-WEIXIN -->
 		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
-		
 		<view class="bg-white margin card-radius">
 			<template v-for="(book, index) in books">
 				<bookItem
@@ -87,7 +84,6 @@
 				></bookItem>
 			</template>
 		</view>
-		
 		
 	</view>
 </template>
@@ -132,7 +128,6 @@
 				adUnitId: 'adunit-c142eaf344ea8f4b'
 			})
 			// #endif
-			
 			this.fetchRankList()
 			this.fetchDictList()
 		},
@@ -151,7 +146,7 @@
 			fetchRankList (page = 1, rows = 10, disCode = '', statRange = 30, sortType = 1) {
 				uni.showLoading({ title: '加载中...' })
 				api.fetchBookHotBorrow(page, rows, disCode, statRange, 0, '', sortType).then(res => {
-					// console.log(res.data)
+
 					this.books = res.data.data.result
 					for (var index = 0; index < this.books.length; index++) {
 						let book = this.books[index]

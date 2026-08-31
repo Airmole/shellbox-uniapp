@@ -103,8 +103,7 @@
 				uni.scanCode({
 					scanType: 'barCode',
 					success (res) {
-						console.log(res)
-						if (res.scanType !== "EAN_13") {
+												if (res.scanType !== "EAN_13") {
 							uni.showToast({ title: '您扫描的不是标准ISBN码', icon: 'none' })
 							return
 						}

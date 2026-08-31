@@ -186,13 +186,11 @@
 				if (index == this.semesterIndex) return
 				this.semesterIndex = index
 				const url = this.semesters.data[index].url
-				console.log(url)
 				this.fetchCourses(url)
 			},
 			checkCourse (index) {
 				this.courseIndex = index
 				const item = this.courses.data[index]
-				console.log(item)
 				this.fetchDetail(item.url)
 			},
 			fetchSemester () {
@@ -200,7 +198,6 @@
 				api.fetchEvaluateTeacherSemester().then(res => {
 					this.semesters = res.data
 					if (res.data.pagination && res.data.pagination.total > 0) this.checkSemester(0)
-					console.log(this.semesters)
 					uni.hideLoading()
 				}).catch(error => {
 					console.log(error)
@@ -211,7 +208,6 @@
 				uni.showLoading({ title: '加载中...' })
 				api.fetchEvaluateTeacherCourse(url).then(res => {
 					this.courses = res.data
-					console.log(this.courses)
 					uni.hideLoading()
 				}).catch(error => {
 					console.log(error)
@@ -222,7 +218,6 @@
 				uni.showLoading({ title: '加载中...' })
 				api.fetchEvaluateTeacherDetail(url).then(res => {
 					this.detail = res.data
-					console.log(this.detail)
 					uni.hideLoading()
 					this.displayModal()
 				}).catch(error => {
@@ -235,7 +230,6 @@
 			},
 			suggestionInput (e) {
 				this.suggestion = e.detail.value
-				console.log(this.suggestion)
 			}
 		}
 	}

@@ -228,7 +228,6 @@
 			      success: (res) => {
 			        uni.showLoading({ title: '上传中...' })
 			        var tempFilesSize = res.tempFiles[0].size
-			        console.log('上传图片文件大小', tempFilesSize)
 			        if (tempFilesSize > 4000000) { // 4M图片大小限制
 			          uni.hideLoading()
 			          uni.showToast({ title: '上传图片不能大于4M!', icon: 'none' })
@@ -243,7 +242,6 @@
 					uni.hideLoading()
 					const data = JSON.parse(res.data)
 					if (res.statusCode == 200 || data.code == 200) {
-					  console.log(data)
 					  if (this.imgList.length != 0) {
 					    this.imgList = this.imgList.concat(data.url)
 					  } else {
@@ -316,7 +314,6 @@
 			      _this.sendPostRequest(data)
 			      return
 			    }
-				console.log('data', data)
 			    uni.requestSubscribeMessage({
 			      tmplIds: templateIds,
 			      success (res) {

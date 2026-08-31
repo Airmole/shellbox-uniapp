@@ -176,7 +176,6 @@
 		},
 		onLoad: function (options) {
 			this.env = app.globalData.env
-			console.log('options', options)
 			this.inital(options)
 		  },
 		  onShow: function () {
@@ -218,7 +217,6 @@
 			        if (res.confirm) {
 			          wx.navigateTo({ url: `./edit?reditid=${id}` })
 			        } else if (res.cancel) {
-			          console.log('用户点击取消')
 			        }
 			      }
 			    })
@@ -232,7 +230,6 @@
 			        if (res.confirm) {
 			          _this.deleteDataItem(id)
 			        } else if (res.cancel) {
-			          console.log('用户点击取消')
 			        }
 			      }
 			    })
@@ -260,11 +257,9 @@
 							  uni.showToast({ title: ress.data.message, icon: 'none' })
 							}
 						}).catch(ress => {
-							console.log('ress', ress)
 							wx.showToast({ title: ress.data.message, icon: 'none' })
 						})
 			        } else if (res.cancel) {
-			          console.log('取消操作')
 			        }
 			      }
 			    })
@@ -290,8 +285,6 @@
 					this.isAdminer = true
 					app.globalData.isBoardAdminer = true
 				  }
-				}).catch(res => {
-					console.log('不是权益管理员')
 				})
 			  },
 			  // 上一页

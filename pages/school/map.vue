@@ -102,8 +102,8 @@
 			this._mapContext = uni.createMapContext("map", this)
 			this._mapContext && this._mapContext.addCustomLayer({
 				layerId: '67eaa0550282',
-				success: (res) => { console.log('addCustomLayer success', res); },
-				fail: (e) => { console.log('addCustomLayer fail', e); },
+				success: (res) => { },
+				fail: (e) => { },
 			});
 		},
 		onShow () {
@@ -328,7 +328,6 @@
 			}
 			if (this.checkedPlaceId) data.path = `${data.path}?id=${this.checkedPlaceId}`
 			if (this.checkedPlaceId && place.image) data.imageUrl = place.image
-			console.log(data)
 			return data
 		},
 		onShareTimeline() {

@@ -482,7 +482,6 @@
 					this.optionForm.serialNoEnd
 				).then(res => {
 					const { params, classroom } = res.data
-					console.log('classroom', classroom)
 					this.classrooms = classroom
 					uni.hideLoading()
 				}).catch(res => {
@@ -493,7 +492,6 @@
 			roomDetail (roomIndex, dayIndex, serialIndex) {
 				uni.showLoading({ title: '加载中...'})
 				const item = this.classrooms[roomIndex].items[dayIndex].items[serialIndex]
-				console.log('roomDetail', item)
 				api.fetchClassroomDetail(
 					this.optionForm.semester,
 					this.optionForm.timeModel,
@@ -510,7 +508,6 @@
 					this.optionForm.serialNoEnd
 				).then(res => {
 					this.classroomDetail = res.data
-					console.log(res.data)
 					uni.hideLoading()
 					this.showDetailModal = true
 				}).catch(res => {

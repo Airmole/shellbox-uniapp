@@ -134,7 +134,6 @@
 			checkIn () {
 				uni.showLoading({ title: '正在签到中...'})
 				api.userPointsCheckin().then(res => {
-					console.log(res)
 					uni.showModal({ title: '签到成功', content: res.data.message, showCancel: false })
 					this.fetchPointsCheckinIndex()
 				}).catch(error => {
@@ -145,7 +144,6 @@
 				})
 			},
 			calendarChange(e) {
-				console.log(e);
 			},
 			monthChange(e) {
 				this.fetchPointsCheckinIndex(e.fullDate)

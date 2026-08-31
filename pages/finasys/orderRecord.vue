@@ -91,7 +91,6 @@
 				
 				api.fetchFinasysOrder(page, pagesize).then(res => {
 					this.datalist = res.data.data.data
-					console.log('this.datalist', this.datalist)
 					this.data = res.data.data
 				}).catch(error => {
 					let title = 'error'

@@ -231,7 +231,6 @@
 							endTime: new Date(`${_this.checkedDate}T${course.endAt}:00`).getTime().toString().slice(0, -3),
 							alarmOffset: 60 * 20, // 提前20分钟提醒
 							fail (error) {
-								console.log(error)
 							}
 						})
 					}

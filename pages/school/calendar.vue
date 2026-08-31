@@ -76,7 +76,6 @@
 					})
 					let semesterIndex = 0
 					if (semester) semesterIndex = res.data.findIndex(item => item.semester === semester)
-					console.log(res.data, semesterIndex)
 					this.schoolCalendarImage = res.data[semesterIndex].image
 					this.semesterIndex = semesterIndex
 					this.calendarList = res.data

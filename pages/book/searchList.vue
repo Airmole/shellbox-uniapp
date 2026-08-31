@@ -3,7 +3,6 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>检索结果</view>
 		</cu-custom>
-		
 		<!-- 搜索栏 -->
 		<view class="margin-lr-sm margin-top bg-white card-radius">
 			<view class="padding-top padding-left text-xl">
@@ -20,13 +19,11 @@
 			    </view>
 			</view>
 		</view>
-		
 		<!-- #ifdef MP-WEIXIN -->
 		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
-		
 		<!-- 搜索结果列表 -->
 		<template v-if="result">
 			<view class="bg-white margin-sm margin-top card-radius">			
@@ -57,7 +54,6 @@
 				<view class="flex-sub text-right"><button @tap="nextPage" v-if="page<totalPage" class="cu-btn round bg-gradual-blue">下一页</button></view>
 			</view>
 		</template>
-		
 	</view>
 </template>
 
@@ -85,7 +81,6 @@
 				adUnitId: 'adunit-c142eaf344ea8f4b'
 			})
 			// #endif
-			
 			if (options.page) this.page = parseInt(options.page)
 			if (options.rows) this.rows = parseInt(options.rows)
 			if (options.keyword) {
@@ -100,7 +95,7 @@
 			fetchSearchResult (keyword, page=1, rows=10) {
 				uni.showLoading({ title: '在找了...' })
 				api.fetchBookUnifySearch(keyword, 'keyWord',page, rows).then(res => {
-					// console.log(res.data)
+
 					this.result = res.data
 					this.totalPage = res.data.data.numFound == 0 ? 0 : Math.ceil((res.data.data.numFound / this.rows))
 					this.fetchBooksCovers(res.data)

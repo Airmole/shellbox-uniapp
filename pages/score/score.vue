@@ -365,7 +365,6 @@
 		methods: {
 			showDetail(semesterIndex, index) {
 				const record = this.score.data[semesterIndex].items[index]
-				console.log(record)
 				this.detail = record
 				this.displayDetailModal = true
 				this.showChart = false
@@ -377,7 +376,7 @@
 			foldSemesterScore(semesterIndex) {
 				let value = this.score.data[semesterIndex].fold
 				if (value == undefined) value = true
-				// console.log(value)
+
 				this.score.data[semesterIndex].fold = !value
 			},
 			semesterChange(e) {
@@ -405,7 +404,6 @@
 				}
 
 				api.fetchScoreOptions().then(res => {
-					console.log('获取成绩筛选项', res.data)
 					this.semesterOptionsList = res.data.time
 					this.natureOptionsList = res.data.nature
 					this.showOptionsList = res.data.show
@@ -429,7 +427,6 @@
 					this.optionForm.course,
 					this.optionForm.show
 				).then(res => {
-					console.log('成绩查询：', res.data)
 					this.score = this.convertScoreFormat(res.data)
 					// 成绩列表学期>=2则绘制渲染曲线图
 					if (res.data.data && Object.keys(res.data.data).length >= 2) {
@@ -642,7 +639,6 @@
 									this.addToTypewriterQueue(newContent)
 								}
 							} catch (e) {
-								console.log('解析JSON失败', data)
 							}
 						}
 					}

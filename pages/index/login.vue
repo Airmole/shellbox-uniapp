@@ -137,7 +137,6 @@
 		autoLogin(loginForm.value)
 	}
 	function autoLogin (formData) {
-		console.log('autoLogin (formData)', formData)
 		api.autoLogin(formData).then(res => {
 			setAppAuth(Object.assign({
 				account: formData.account,
@@ -145,11 +144,9 @@
 			}, res.data))
 			uni.switchTab({ url: '/pages/index/index' })
 		}).catch(err => {
-			console.log(err)
 			loginFailureCount.value = loginFailureCount.value + 1
 			if (loginFailureCount.value == 2) helpModal()
 			const errorMessage = formatErrorMessage(err.data)
-			console.log(errorMessage)
 			uni.showToast({ title: errorMessage, icon: 'none'})
 		}).finally(()=> {
 			isLoading.value = false
@@ -175,7 +172,6 @@
 	}
 	
 	function contactEduDepartment () {
-		console.log(showTipsData.value.contact)
 		uni.makePhoneCall({ phoneNumber: showTipsData.value.contact })
 	}
 	
