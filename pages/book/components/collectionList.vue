@@ -43,7 +43,7 @@
 				<!-- 馆藏地 -->
 				<view class="flex padding-tb-xs justify-between" v-if="item.locationName">
 					<view class="basis-xxs"><text>馆藏地： </text></view>
-					<view class="cu-capsule radius">
+					<view class="cu-capsule radius" @click="goLibrary(item.locationName)">
 						<view class="cu-tag line-grey"><text class="cuIcon-locationfill"></text></view>
 						<view class="cu-tag bg-grey">{{item.locationName}}</view>
 					</view>
@@ -78,6 +78,18 @@
 					default: {},
 					required: true
 				}
+			},
+			methods: {
+				goLibrary(locationName) {
+					const place = locationName
+					var placeArr = ["理工馆", "社科馆"]
+					var markerIdArr = [15, 14]
+					var result = placeArr.indexOf(place.substr(0, 3))
+					console.log(result)
+					uni.navigateTo({
+						url: `/pages/school/map?id=${markerIdArr[result]}`
+					})
+				},
 			}
 		}
 	</script>

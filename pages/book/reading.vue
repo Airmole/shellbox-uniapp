@@ -102,8 +102,13 @@
 							:author="book.author"
 							:publisher="book.publisher"
 							:publishYear="book.publishYear"
-							:isbn="`ISBN：${book.isbn}`"
-							:bottomText="`${book.loanDate}借阅丨${book.normReturnDate}应还\n`"
+							:loanDate="book.loanDate"
+							:normReturnDate="book.normReturnDate"
+							:book="book"
+							:showRenew="true"
+							:goBookDetail="false"
+							@click="clickBookItem"
+							@renewBook="renewBookItem"
 						></bookItem>
 					</template>
 				</view>
@@ -116,6 +121,98 @@
 			</view>
 		</template>
 		
+		<!-- 借阅详情模态框 -->
+		<view class="cu-modal" :class="loanDetailIndex!==null?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">当前借阅</view>
+					<view class="action" @tap="hideDetail">
+						<text class="cuIcon-close text-red"></text>
+					</view> 
+				</view>
+				<view class="text-left padding-sm bg-gray">
+					<swiper :indicator-dots="true" :autoplay="false" :current="loanDetailIndex" style="height: 1000rpx;" class="bg-white">
+							<swiper-item v-for="(detail, detailIndex) in loanList.searchResult" :key="detailIndex">
+								<view class="swiper-item">
+									<view class="cu-list menu sm-border">
+										<view class="cu-item arrow">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">题名</text></view>
+											<view @tap="goBookDetail" class="action text-blue text-right" style="max-width: 500rpx;"><view>{{detail.title}}</view></view>
+										</view>
+										<view class="cu-item">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">责任者</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.author}}</view></view>
+										</view>
+										<view class="cu-item">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">借阅日期</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.loanDate}}</view></view>
+										</view>
+										<view class="cu-item arrow">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">应还日期</text></view>
+											<view @click="checkAddCalendarPermisson" class="action text-right text-blue" style="max-width: 500rpx;"><view>{{detail.normReturnDate}}</view></view>
+										</view>
+										<view class="cu-item" v-if="detail.yearVol">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">年卷期</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.yearVol}}</view></view>
+										</view>
+										<view class="cu-item arrow" v-if="detail.yearVol">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">馆藏地</text></view>
+											<view @click="goLibrary" class="action text-blue" style="max-width: 500rpx;"><view>{{detail.locationName}}</view></view>
+										</view>
+										<view class="cu-item" v-if="detail.yearVol">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">索书号</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.callNo}}</view></view>
+										</view>
+										<view class="cu-item" v-if="detail.yearVol">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">条码号</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.barcode}}</view></view>
+										</view>
+										<view class="cu-item" v-if="detail.yearVol">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">续借次数</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.renewTimes}}</view></view>
+										</view>
+										<view class="cu-item" v-if="detail.yearVol">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">被预约</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.isRequested}}</view></view>
+										</view>
+									</view>
+								</view>
+							</swiper-item>
+						</swiper>
+						<view v-if="loanList.searchResult.length>1" class="padding-top-sm text-center"><text>左右滑动可切换</text></view>
+				</view>
+			</view>
+		</view>
+		
+		<!-- 续借结果模态框 -->
+		<view class="cu-modal" :class="renewResult!==''?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">续借结果</view>
+					<view class="action" @tap="renewResult=''">
+						<text class="cuIcon-close text-red"></text>
+					</view> 
+				</view>
+				<view class="bg-gray">
+					<view class="bg-white margin card-radius padding">
+						<view class="text-center text-xl flex justify-around">
+							<view>续借成功：<text class="text-green margin-lr-xs">{{renewResult.success}}</text>条</view>
+							<view>续借失败：<text class="text-red margin-lr-xs">{{renewResult.fail}}</text>条</view>
+						</view>
+						<view v-for="(item, index) in renewResult.result" class="flex flex-direction margin-tb-sm">
+							<view>《{{index}}》</view>
+							<view class="text-red">{{item}}</view>
+						</view>
+					</view>
+					<view class="margin">
+						<button @click="renewResult=''" class="cu-btn round bg-green">确认</button>
+					</view>
+				</view>
+			</view>
+		</view>
+
+
+		
 	</view>
 </template>
 
@@ -124,6 +221,7 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import bookItem from './components/bookItem.vue'
+import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 	export default {
 		components:{ bookItem },
 		data() {
@@ -147,7 +245,9 @@
 					startDate: null,
 					endDate: null
 				},
-				loanList: ''
+				loanList: '',
+				loanDetailIndex: null,
+				renewResult: ''
 			}
 		},
 		onLoad() {
@@ -249,6 +349,89 @@
 				if (page >= this.historyList.lastPage) page = this.historyList.lastPage
 				this.optionsForm.page = page
 				this.fetchLoanList()
+			},
+			hideDetail () {
+				this.loanDetailIndex = null
+			},
+			clickBookItem (e) {
+				const loanId = e.loanId
+				let index = null
+				for (var i = 0; i < this.loanList.searchResult.length; i++) {
+					const element = this.loanList.searchResult[i]
+					if (element.loanId === loanId) index = i
+				}
+				this.loanDetailIndex = index
+			},
+			renewBookItem (e) {
+				console.log('续借', e)
+				uni.showLoading({ title: '续借中...'})
+				api.fetchLibspRenewBooks([e.loanId]).then(res=> {
+					this.renewResult = res.data.data
+					uni.hideLoading()
+					this.fetchLoanList()
+				}).catch(error => {
+					console.log(error)
+				}).finally(() => {
+					uni.hideLoading()
+				})
+			},
+			goBookDetail () {
+				const recordId = this.loanList.searchResult[this.loanDetailIndex].recordId
+				uni.navigateTo({ url: `/pages/book/detail?recordId=${recordId}`})
+			},
+			goLibrary(e) {
+				const place = this.loanList.searchResult[this.loanDetailIndex].locationName
+				var placeArr = ["理工馆", "社科馆"]
+				var markerIdArr = [15, 14]
+				var result = placeArr.indexOf(place.substr(0, 3))
+				console.log(result)
+				uni.navigateTo({
+					url: `/pages/school/map?id=${markerIdArr[result]}`
+				})
+			},
+			checkAddCalendarPermisson () {
+				const book = this.loanList.searchResult[this.loanDetailIndex]
+				var _this = this
+				// #ifdef MP
+				uni.getSetting({
+				  success (settingRes) {
+					if (!settingRes.authSetting['scope.addPhoneCalendar']) {
+						uni.authorize({
+						    scope: 'scope.addPhoneCalendar',
+						    success() {
+								_this.addPhoneCalendar(book)
+						    },
+							fail() {
+								uni.openSetting()
+							}
+						})
+					} else {
+						_this.addPhoneCalendar(book)
+					}
+				  }
+				})
+				// #endif
+			},
+			addPhoneCalendar (book) {
+				var _this = this
+				// #ifdef MP
+				uni.showModal({
+					title: '提示',
+					content: '添加日程，图书应还日期前一天提醒您？',
+					success: function (res) {
+						if (!res.confirm) return
+						let startTime = new Date(`${book.normReturnDate}T00:00`).getTime().toString().slice(0, -3)
+						const place = book.locationName.substr(0, 3)
+						wx.addPhoneCalendar({
+							title: `归还图书${book.title}`,
+							startTime: startTime,
+							description: `您借阅的图书《${book.title}》将于${book.normReturnDate}到期，请及时前往${place}归还！`,
+							location: place,
+							alarmOffset: 60 * 60 * 24, // 提前1天提醒
+						})
+					}
+				})
+				// #endif
 			}
 		}
 	}
