@@ -123,7 +123,6 @@
 				uni.showLoading({ title: '加载中...'})
 				api.fetchSemesterCourse(semester, week).then(res => {
 					this.courseData = res.data
-					console.log(this.courseData)
 					uni.hideLoading()
 				}).catch(error => {
 					uni.hideLoading()
@@ -147,7 +146,6 @@
 					cancelText: '重新选择',
 					confirmText: '确认导出',
 					success: function (res) {
-						console.log('_this.courseData', _this.courseData)
 						if (res.confirm) {
 							callback(_this.courseData)
 						}

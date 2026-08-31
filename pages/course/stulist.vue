@@ -97,13 +97,11 @@
 				api.fetchTeacherCourseStudentList(code).then(res => {
 					this.stulist = res.data
 					this.showStulist = true
-					console.log('stulist', this.stulist)
 					uni.hideLoading()
 				})
 			},
 			showStulistDetail(index) {
 				const item = this.courseList[index]
-				console.log('item', item)
 				this.stulistTitle = item.title
 				this.fetchStuList(item.queryCode)
 			},

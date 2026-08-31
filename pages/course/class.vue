@@ -315,7 +315,6 @@
 					return
 				}
 				uni.showLoading({ title: '加载中...' })
-				console.log('optionForm', this.optionForm)
 				api.fetchClassCourse(
 					this.optionForm.semester,
 					this.optionForm.timeModel,

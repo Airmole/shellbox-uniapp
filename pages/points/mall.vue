@@ -5,7 +5,6 @@
 				<view>积分商城</view>
 			</cu-custom>
 		</view>
-		
 		<template v-if="!isLogined">
 			<view class="padding-tb-xl margin-tb-xl"></view>
 			<tips
@@ -24,7 +23,6 @@
 					<image :src="'https://r2.airmole.cn/i/2025/07/13/1c3m9b-mf.jpeg'" mode="aspectFill"></image>
 				</swiper-item>
 			</swiper>
-			
 			<view class="VerticalBox">
 				<!-- 左侧导航栏 -->
 				<scroll-view class="VerticalNav nav padding-top-xs" scroll-y scroll-with-animation :scroll-top="verticalNavTop" style="height:calc(100vh - 375upx)">
@@ -56,7 +54,6 @@
 					</view>
 				</scroll-view>
 			</view>
-			
 			<!-- 商品详情模态框 -->
 			<view class="cu-modal bottom-modal" :class="showGoodsModal?'show':''" style="z-index: 998;">
 				<view class="cu-dialog bg-gray" style="height:calc(100vh - 260upx);">
@@ -89,7 +86,6 @@
 					</view>
 				</view>
 			</view>
-				
 			<!-- 实物商品收件信息填写模态框	 -->
 			<view class="cu-modal" :class="showAddressModal?'show':''" style="z-index: 998;">
 				<view class="cu-dialog">
@@ -119,7 +115,6 @@
 				</view>
 			</view>
 		</template>
-		
 	</view>
 </template>
 
@@ -149,7 +144,6 @@
 		},
 		onLoad() {
 			uni.showLoading({ title: '加载中...', mask: true })
-			
 			// #ifdef MP-WEIXIN
 			this.isReleaseEnv = (app.globalData.env === 'release')
 			if (app.globalData.env !== 'release') {
@@ -159,14 +153,12 @@
 			// #ifdef H5
 			this.isReleaseEnv = true
 			// #endif
-			
 			const usercode = getEdusysAccount()
 			this.usercode = usercode
 			if (usercode === false) {
 				this.isLogined = false
 				return
 			}
-			
 			api.fetchPointsMallGoods().then(res => {
 				this.list = res.data
 			})
@@ -270,7 +262,7 @@
 					if (scrollTop > this.list[i].top && scrollTop < this.list[i].bottom) {
 						this.verticalNavTop = (this.list[i].id - 1) * 50
 						this.tabCur = this.list[i].id
-						// console.log(scrollTop)
+
 						return false
 					}
 				}
@@ -306,7 +298,6 @@
 	.VerticalMain {
 		flex: 1;
 	}
-	
 	.ua__markdown img {
 		max-width: none !important;
 	}

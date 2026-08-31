@@ -116,7 +116,6 @@
 			fetchBookDetail (recordId) {
 				uni.showLoading({ title: '加载中...' })
 				api.fetchBookDetail(recordId).then(res => {
-					console.log(res.data.data)
 					this.bookDetail = res.data.data
 					const baseInfo = res.data.data.baseMarcInfoDto
 					this.getBookAbstract(res.data.data)

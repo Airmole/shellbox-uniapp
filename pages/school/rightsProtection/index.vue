@@ -215,7 +215,6 @@
 			  },
 			  tagChanged: function (index) {
 			    const tag = this.tagList[index].value
-			    // console.log(type, orderby);
 			    this.tag = tag
 			    this.getDatalist(1, tag);
 			  },
@@ -226,8 +225,6 @@
 					  this.isAdminer = true
 					  app.globalData.isBoardAdminer = true
 					}
-				}).catch(res => {
-					console.log('不是权益管理员')
 				})
 			  },
 			  deleteConfirm: function(id) {
@@ -239,7 +236,6 @@
 			        if (res.confirm) {
 			          _this.deleteDataItem(id)
 			        } else if (res.cancel) {
-			          console.log('用户点击取消')
 			        }
 			      }
 			    })

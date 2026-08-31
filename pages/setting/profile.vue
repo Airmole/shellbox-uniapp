@@ -45,7 +45,6 @@
 	const app = getApp()
 	import { request } from '../../request'
 	import api from '@/request/api.js'
-	import { onLoad } from '@dcloudio/uni-app'
 	import { useAppStore } from '@/stores/app.js'
 	const { setUserInfo } = useAppStore()
 	export default {
@@ -89,16 +88,13 @@
 						this.fetchProfile()
 					} else {
 						uni.showToast({ title: res.data.message, icon:'none' })
-						console.log('updateProfile错误：', res.data)
-					}
+						}
 				})
 			},
 			onChooseAvatar (e) {
 				uni.showLoading({ title: '上传中...'})
-				console.log('onChooseAvatar', e)
 				const avatarUrl = e.detail.avatarUrl
 				request('','', avatarUrl, true).then(res => {
-					console.log('upload request', res.data.url)
 					this.avatarUrl = JSON.parse(res.data).url
 					uni.hideLoading()
 				})

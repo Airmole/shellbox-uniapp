@@ -131,7 +131,6 @@
 			        if (res.confirm) {
 			          _this.deleteDataItem(id)
 			        } else if (res.cancel) {
-			          console.log('用户点击取消')
 			        }
 			      }
 			    })

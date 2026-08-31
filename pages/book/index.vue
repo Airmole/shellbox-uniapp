@@ -3,7 +3,6 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>馆藏图书检索</view>
 		</cu-custom>
-		
 		<!-- 搜索栏 -->
 		<view class="margin-lr-sm margin-top bg-white card-radius">
 			<view class="padding-top padding-left text-xl">
@@ -20,13 +19,11 @@
 			    </view>
 			</view>
 		</view>
-		
 		<!-- #ifdef MP-WEIXIN -->
 		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
-		
 		<!-- 热读推荐 -->
 		<view v-if="hotBooks.length > 0" class="margin-top margin-lr-sm cu-list menu sm-border card-radius bg-white">
 			<navigator url="/pages/book/rank" class="cu-item press-class" :render-link="false">
@@ -46,7 +43,6 @@
 				></bookItem>
 			</template>
 		</view>
-		
 		<!-- 新书通报 -->
 		<view v-if="newBooks.length > 0" class="margin-top margin-lr-sm cu-list menu sm-border card-radius bg-white">
 			<navigator url="/pages/book/newBook" class="cu-item press-class" :render-link="false">
@@ -66,7 +62,6 @@
 				></bookItem>
 			</template>
 		</view>
-		
 	</view>
 </template>
 
@@ -87,7 +82,6 @@
 		},
 		onLoad() {
 			this.isVip = app.globalData.isVip
-			
 			this.fetchHotBook()
 			this.fetchNewBook()
 		},
@@ -102,7 +96,7 @@
 							const element = hotBooks[i]
 							hotBooks[i].countAndCover = await this.fetchBookCountAndCover(element.recordId, element.title, element.isbn)
 						}
-						// console.log(hotBooks)
+
 						this.hotBooks = hotBooks
 					}
 				}).catch(error => {
@@ -117,7 +111,6 @@
 							const element = newBooks[i]
 							newBooks[i].countAndCover = await this.fetchBookCountAndCover(element.recordId, element.title, element.isbn)
 						}
-						console.log(newBooks)
 						this.newBooks = newBooks
 					}
 				}).catch(error => {

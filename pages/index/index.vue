@@ -13,8 +13,8 @@
 		</view>
 
 		<!-- 教学周日期显示 -->
-		<template v-if="!!calendar">
-			<template v-if="calendar && calendar.title">
+		<template v-if="calendar">
+			<template v-if="calendar.title">
 				<navigator url="/pages/school/calendar"
 					class="padding-lr-sm bg-white margin round padding-bottom flex justify-between"
 					:render-link="false"
@@ -100,17 +100,15 @@
 	const appStore = useAppStore()
 	const { courses, calendar, loginStatus } = storeToRefs(appStore)
 	const praise = ref('')
-	const isLoading = ref(true)
-	const isShowTodayCourse = ref(false)
-	const now = ref(new Date())
 	let todayCourses = ref([])
 
-	watch(loginStatus, (newValue, oldValue) => {
+	watch(loginStatus, (newValue) => {
 		if (newValue === true) uni.hideLoading()
 	})
 
 	watch(courses, (newValue) => {
-		const dayIndex = (new Date()).getDay() > 0 ? ((new Date()).getDay() - 1) : (newValue.table.length - 1)
+		const today = new Date()
+		const dayIndex = today.getDay() > 0 ? today.getDay() - 1 : (newValue.table.length - 1)
 		if (newValue.table[dayIndex]) {
 			todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
 		}

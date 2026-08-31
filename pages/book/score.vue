@@ -151,7 +151,6 @@
 				const index = e.detail.value
 				this.scoreTypeIndex = index
 				this.optionsForm.scoreSign = this.scoreTypeOptions[index].value
-				console.log(this.optionsForm)
 			},
 			startDateChange (e) {
 				const value = e.detail.value
@@ -188,7 +187,6 @@
 					const lastPage = Math.ceil(res.data.data.totalCount / this.optionsForm.rows)
 					res.data.data.lastPage = lastPage
 					this.scoreList = res.data.data
-					console.log(this.scoreList)
 				}).finally(() => {
 					uni.hideLoading()
 				})

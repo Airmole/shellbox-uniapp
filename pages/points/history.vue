@@ -142,7 +142,6 @@
 				uni.showLoading({ title: '正在加载中...' })
 				api.fetchUserPointsBalanceHistory(page, this.form.type, this.form.bizType).then(res => {
 					this.data = res.data
-					console.log(res.data)
 				}).catch(error => {
 					console.log('fetchUserPointsBalanceHistory error', error)
 					uni.showModal({ content: error.data.message, showCancel: false})

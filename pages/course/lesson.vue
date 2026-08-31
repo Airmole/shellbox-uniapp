@@ -289,7 +289,6 @@
 				this.foldOptionsArea = !this.foldOptionsArea
 			},
 			clickLessonCourse (lessonIndex) {
-				console.log('clickLessonCourse', this.lessonCourses[lessonIndex])
 				if (lessonIndex >= 0) {
 					this.lessonIndex = lessonIndex
 					this.lessonCourse = this.lessonCourses[lessonIndex]
@@ -311,7 +310,6 @@
 					return
 				}
 				uni.showLoading({ title: '加载中...' })
-				console.log('optionForm', this.optionForm)
 				api.fetchLessonCourse(
 					this.optionForm.semester,
 					this.optionForm.timeModel,
@@ -324,7 +322,7 @@
 					this.optionForm.dayOfWeekStart.toString(),
 					this.optionForm.dayOfWeekEnd.toString()
 				).then(res => {
-					// console.log('fetchClassCourse', res.data)
+
 					this.lessonCourses = res.data
 					videoAd = initalVideoAd(api.exportLessonCourse, res.data, '导出课程课表')
 					uni.hideLoading()

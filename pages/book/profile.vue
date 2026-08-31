@@ -3,20 +3,17 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>借阅信息</view>
 		</cu-custom>
-		
 		<view class="grid margin-bottom text-center col-3 cu-list margin bg-white card-radius shadow">
 			<view class="padding"><view class="text-bold text-xxl margin-bottom-xs">{{userLimitData.userRequestNum}}</view><view>请求到书</view></view>
 			<view class="padding"><view class="text-bold text-xxl margin-bottom-xs">{{userLimitData.userLoanExpiredNum}}</view><view>借书超期</view></view>
 			<view class="padding"><view class="text-bold text-xxl margin-bottom-xs">{{userLimitData.userBehavierNotDealNum}}</view><view>未处理行为</view></view>
 		</view>
-		
 		<!-- 广告位 -->
 		<!-- #ifdef MP-WEIXIN -->
 		<view v-if="!isVip" class="margin margin-tb-xl radius">
 			<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
 		</view>
 		<!-- #endif -->
-		
 		<template v-if="isLogined">
 			<!-- 读者信息 -->
 			<view class="cu-list menu sm-border card-menu shadow" v-if="readerInfo">
@@ -59,7 +56,6 @@
 					</view>
 				</template>
 			</view>
-			
 			<!-- 借阅饼图 -->
 			 <view class="charts-box bg-white margin card-radius" v-show="showChart">
 				 <view class="cu-bar bg-white solid-bottom card-radius" @click="showChartArea">
@@ -77,10 +73,8 @@
 			      :chartData="chartData"
 			    />
 			</view>
-			
 			<!-- 借阅规则 -->
 			<view class="text-center margin-top text-xl">读者借阅规则</view>
-			
 			<view class="bg-white shadow margin card-radius" v-for="(item, index) in loanRules" :key="index">
 				<view class="cu-bar bg-white solid-bottom card-radius" @click="showRuleFold" :data-index="index">
 					<view class="action">
@@ -126,7 +120,6 @@
 			<tips tips="查询读者信息需登录账号" image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif" :showButton="true" buttonText="现在登录"
 				path="/pages/index/login"></tips>
 		</template>
-		
 		
 	</view>
 </template>
@@ -186,7 +179,6 @@
 				this.isLogined = false
 				return
 			}
-			
 			this.getLoanChartData()
 			this.getUserLimt()
 			this.getReaderInfo()
@@ -198,7 +190,7 @@
 			getUserLimt () {
 				api.fetchLibspUserLimit().then(res => {
 					this.userLimitData = res.data.data
-					// console.log(this.userLimitData)
+
 				})
 			},
 			getReaderInfo () {
@@ -234,7 +226,7 @@
 							labelText: `${chartDataItem.callNo}${callNoText}:${chartDataItem.num}`
 						})
 					}
-					// console.log(chartData)
+
 					this.chartData =  { series: [{ data: chartData }] }
 					this.showChart = chartData.length > 0 ? true : false
 				})

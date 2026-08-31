@@ -3,7 +3,6 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>新书通报</view>
 		</cu-custom>
-		
 		<view class="margin">
 			<view :class="'cu-list menu sm-border '+(foldOptionsArea?'round':'card-radius')">
 				<view class="cu-item press-class" @click="showOptionsArea">
@@ -87,13 +86,11 @@
 				</template>
 			</view>
 		</view>
-		
 		<!-- #ifdef MP-WEIXIN -->
 		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
-		
 		<template v-if="booksList">
 			<view class="bg-white margin card-radius">
 				<template v-for="(book, index) in booksList.searchResult">
@@ -116,7 +113,6 @@
 				<view class="flex-sub text-right"><button @tap="nextPage" v-if="optionsForm.page<totalPage" class="cu-btn round bg-gradual-blue">下一页</button></view>
 			</view>
 		</template>
-		
 	</view>
 </template>
 
@@ -169,7 +165,6 @@
 			})
 			// #endif
 			
-			
 			if (options.page) this.optionsForm.page = options.page
 			if (options.rows) this.optionsForm.rows = options.rows
 			if (options.callNo) this.optionsForm.callNo = options.callNo
@@ -202,7 +197,7 @@
 				api.fetchBookNew(page, rows, time, '1', disCode, callNo, locationId).then(res => {
 					this.booksList = res.data.data
 					this.totalPage = res.data.data.numFound == 0 ? 0 : Math.ceil((res.data.data.numFound / this.optionsForm.rows))
-					// console.log(this.booksList)
+
 					this.fetchBooksCovers(res.data)
 				}).catch(error => {
 					console.log(error)

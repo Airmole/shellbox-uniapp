@@ -258,13 +258,11 @@
 		const itemCourses = props.table[dayIdx].items[rowIdx]
 		if (!itemCourses || itemCourses.length == 0) return
 		details.value = itemCourses
-		console.log(itemCourses)
 		displayDetailModal.value = true
 	}
 	
 	function calcTableSize() {
 		const res = uni.getSystemInfoSync()
-		// console.log(res)
 		const scrWidth = res.screenWidth
 		const screenHeight = res.screenHeight
 		const itmWidth = (res.screenWidth - columnTitleWidth.value - (2 * 6)) / 5
