@@ -601,6 +601,10 @@ export default {
 			return request('/libsp/loanHistory', 'POST', body)
 		}
 	},
+	fetchLibspRenewBooks (loanIds = []) {
+		let body = { loanIds }
+		return request(`/libsp/renewBooks`, 'POST', body)
+	},
 	// 用户积分
 	fetchUserPointsBalance () {
 		return request(`/points/balance`)

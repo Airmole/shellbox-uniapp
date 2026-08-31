@@ -94,7 +94,8 @@
 							:publisher="book.publisher"
 							:publishYear="book.publishYear"
 							:isbn="book.isbn"
-							:bottomText="`${book.loanDate}借阅丨${book.normReturnDate}应还\n${book.returnDate}实际归还`"
+							:loanDate="book.loanDate"
+							:returnDate="book.returnDate"
 						></bookItem>
 					</template>
 				</view>
