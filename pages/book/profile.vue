@@ -121,6 +121,12 @@
 				path="/pages/index/login"></tips>
 		</template>
 		
+		
+		<template v-if="errorMessage">
+			<tips :tips="errorMessage" image="/static/image/nothing.png" :showButton="true" buttonText="返回"
+				path="/pages/index/feature"></tips>
+		</template>
+		
 	</view>
 </template>
 
@@ -170,7 +176,8 @@
 					userBehavierNotDealNum: 0
 				},
 				readerInfo: '',
-				loanRules: ''
+				loanRules: '',
+				errorMessage: ''
 			}
 		},
 		onLoad() {
@@ -196,6 +203,8 @@
 			getReaderInfo () {
 				api.fetchLibspUserInfo().then(res => {
 					this.readerInfo = res.data.data
+				}).catch(error => {
+					this.errorMessage = error.data.message
 				})
 			},
 			getReaderLoanRule () {
