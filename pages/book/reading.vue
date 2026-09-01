@@ -117,7 +117,7 @@
 				</view>
 			</template>
 			<!-- 分页器 -->
-			<view class="flex justify-between padding-lr-sm margin-top align-center">
+			<view class="flex justify-between padding-lr-sm margin-top align-center" v-if="loanList && loanList.searchResult">
 				<view class="flex-sub"><button @tap="lastPage" v-if="optionsForm.page>1" class="cu-btn round bg-gradual-blue">上一页</button></view>
 				<view class="flex-twice text-center"><text>第{{optionsForm.page}}页丨共{{loanList.lastPage}}页</text></view>
 				<view class="flex-sub text-right"><button @tap="nextPage" v-if="optionsForm.page<loanList.lastPage" class="cu-btn round bg-gradual-blue">下一页</button></view>
@@ -218,7 +218,7 @@
 			</view>
 		</view>
 
-
+		<!-- 批量续借模态框 -->
 		<view class="cu-modal" :class="showBatchRenewModal?'show':''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-white justify-end">
@@ -245,8 +245,11 @@
 				</view>
 			</view>
 		</view>
-
-
+		
+		<template v-if="errorMessage">
+			<tips :tips="errorMessage" image="/static/image/nothing.png" :showButton="true" buttonText="返回"
+				path="/pages/index/feature"></tips>
+		</template>
 		
 	</view>
 </template>
@@ -286,6 +289,7 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 				showBatchRenewModal: false,
 				batchRenewList: [],
 				batchRenewIds: [],
+				errorMessage: '',
 			}
 		},
 		onLoad() {
@@ -382,6 +386,8 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 						this.batchRenewList = batchRenewList
 						this.loanList = res.data.data
 					}
+				}).catch(error => {
+					this.errorMessage = error.data.message
 				}).finally(() => {
 					uni.hideLoading()
 				})

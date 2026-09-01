@@ -43,7 +43,14 @@
 	function navigate () {
 		const path = props.path || this.path
 		if (path === '' || !path) return
-		uni.navigateTo({ url: path })
+		
+		uni.navigateTo({
+			url: path,
+			fail() {
+				uni.switchTab({ url: path })
+			}
+		})
+		
 	}
 </script>
 

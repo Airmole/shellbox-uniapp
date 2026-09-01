@@ -108,6 +108,11 @@
 			</template>
 		</template>
 		
+		<template v-if="errorMessage">
+			<tips :tips="errorMessage" image="/static/image/nothing.png" :showButton="true" buttonText="返回"
+				path="/pages/index/feature"></tips>
+		</template>
+		
 	</view>
 </template>
 
@@ -139,7 +144,8 @@
 					startDate: null,
 					endDate: null
 				},
-				historyList: ''
+				historyList: '',
+				errorMessage: ''
 			}
 		},
 		onLoad() {
@@ -225,6 +231,8 @@
 						res.data.data.lastPage = lastPage
 						this.historyList = res.data.data
 					}
+				}).catch(error => {
+					this.errorMessage = error.data.message
 				}).finally(() => {
 					uni.hideLoading()
 				})

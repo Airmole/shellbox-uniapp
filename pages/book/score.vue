@@ -96,13 +96,17 @@
 				</view>
 			</view>
 			<!-- 分页器 -->
-			<view class="flex justify-between padding-lr-sm margin-top align-center">
+			<view class="flex justify-between padding-lr-sm margin-top align-center" v-if="scoreList && scoreList.ret">
 				<view class="flex-sub"><button @tap="lastPage" v-if="optionsForm.page>1" class="cu-btn round bg-gradual-blue">上一页</button></view>
 				<view class="flex-twice text-center"><text>第{{optionsForm.page}}页丨共{{scoreList.lastPage}}页</text></view>
 				<view class="flex-sub text-right"><button @tap="nextPage" v-if="optionsForm.page<scoreList.lastPage" class="cu-btn round bg-gradual-blue">下一页</button></view>
 			</view>
 		</template>
 		
+		<template v-if="errorMessage">
+			<tips :tips="errorMessage" image="/static/image/nothing.png" :showButton="true" buttonText="返回"
+				path="/pages/index/feature"></tips>
+		</template>
 		
 	</view>
 </template>
@@ -130,7 +134,8 @@
 					startDate: '',
 					endDate: ''
 				},
-				scoreList: ''
+				scoreList: '',
+				errorMessage: '',
 			}
 		},
 		onLoad() {
@@ -187,6 +192,8 @@
 					const lastPage = Math.ceil(res.data.data.totalCount / this.optionsForm.rows)
 					res.data.data.lastPage = lastPage
 					this.scoreList = res.data.data
+				}).catch(error => {
+					this.errorMessage = error.data.message
 				}).finally(() => {
 					uni.hideLoading()
 				})
