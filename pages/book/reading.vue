@@ -70,7 +70,7 @@
 		</view>
 		<!-- #endif -->
 				
-		<view class="cu-bar bg-white solid-bottom margin card-radius" v-if="loanList && loanList.loanNum">
+		<view class="cu-bar bg-white solid-bottom margin card-radius margin-top-xl" v-if="loanList && loanList.loanNum">
 			<view class="action">
 				<text class="cuIcon-title text-green"></text> 当前剩余可借阅书
 			</view>
@@ -88,6 +88,9 @@
 				<tips :tips="`当前没有正在借阅的${typeTabs[typeIndex]}`" image="/static/image/nothing.png"></tips>
 			</template>
 			<template v-if="loanList !== '' && loanList.numFound > 0">
+				<view class="flex justify-start margin">
+					<button @click="showBatchRenewModal=true" class="cu-btn round bg-green" :disabled="!loanList || !loanList.searchResult">批量续借</button>
+				</view>
 				<view class="cu-list menu sm-border card-menu shadow margin-top shadow bg-white" v-if="loanList && loanList.numFound">
 					<view class="cu-bar bg-white solid-bottom">
 						<view class="action">
@@ -164,6 +167,10 @@
 											<view class="action" style="max-width: 500rpx;"><view>{{detail.callNo}}</view></view>
 										</view>
 										<view class="cu-item" v-if="detail.yearVol">
+											<view class="content" style="min-width: 30%;"><text class="text-grey">ISBN</text></view>
+											<view class="action" style="max-width: 500rpx;"><view>{{detail.isbn}}</view></view>
+										</view>
+										<view class="cu-item" v-if="detail.yearVol">
 											<view class="content" style="min-width: 30%;"><text class="text-grey">条码号</text></view>
 											<view class="action" style="max-width: 500rpx;"><view>{{detail.barcode}}</view></view>
 										</view>
@@ -179,7 +186,7 @@
 								</view>
 							</swiper-item>
 						</swiper>
-						<view v-if="loanList.searchResult.length>1" class="padding-top-sm text-center"><text>左右滑动可切换</text></view>
+						<view v-if="loanList && loanList.searchResult.length>1" class="padding-top-sm text-center"><text>左右滑动可切换</text></view>
 				</view>
 			</view>
 		</view>
@@ -206,6 +213,34 @@
 					</view>
 					<view class="margin">
 						<button @click="renewResult=''" class="cu-btn round bg-green">确认</button>
+					</view>
+				</view>
+			</view>
+		</view>
+
+
+		<view class="cu-modal" :class="showBatchRenewModal?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">批量续借</view>
+					<view class="action" @tap="showBatchRenewModal=false">
+						<text class="cuIcon-close text-red"></text>
+					</view> 
+				</view>
+				<view class="bg-gray padding-bottom-sm">
+					<view class="padding-sm text-left">请选择您要续借的图书：</view>
+					<view class="bg-white margin-xs card-radius">
+						<checkbox-group class="block" @change="batchRenewChange">
+							<label v-for="(item, index) in batchRenewList" :key="index">
+								<view class="cu-form-group" >
+									<view class="title text-cut">{{item.title}}({{item.normReturnDate}}还)</view>
+									<checkbox class="round green" :class="item.checked?'checked':''" :value="item.loanId" :checked="item.checked"></checkbox>
+								</view>
+							</label>
+						</checkbox-group>
+					</view>
+					<view class="flex justify-center margin-top">
+						<button @click="batchRenew" class="cu-btn round bg-gradual-green">续借图书</button>
 					</view>
 				</view>
 			</view>
@@ -247,7 +282,10 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 				},
 				loanList: '',
 				loanDetailIndex: null,
-				renewResult: ''
+				renewResult: '',
+				showBatchRenewModal: false,
+				batchRenewList: [],
+				batchRenewIds: [],
 			}
 		},
 		onLoad() {
@@ -256,7 +294,6 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 				this.isLogined = false
 				return
 			}
-			
 			
 			this.fetchLoanList()
 		},
@@ -332,6 +369,17 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 					if (res.data.data) {
 						const lastPage = Math.ceil(res.data.data.numFound / this.optionsForm.rows)
 						res.data.data.lastPage = lastPage
+						let batchRenewList = []
+						for (var i = 0; i < res.data.data.searchResult.length; i++) {
+							const element = res.data.data.searchResult[i]
+							batchRenewList.push({
+								title: element.title,
+								normReturnDate: element.normReturnDate,
+								loanId: element.loanId,
+								checked: false
+							})
+						}
+						this.batchRenewList = batchRenewList
 						this.loanList = res.data.data
 					}
 				}).finally(() => {
@@ -363,7 +411,6 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 				this.loanDetailIndex = index
 			},
 			renewBookItem (e) {
-				console.log('续借', e)
 				uni.showLoading({ title: '续借中...'})
 				api.fetchLibspRenewBooks([e.loanId]).then(res=> {
 					this.renewResult = res.data.data
@@ -432,11 +479,36 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 					}
 				})
 				// #endif
+			},
+			batchRenewChange (e) {
+				const loanIds = e.detail.value
+				this.batchRenewIds = loanIds
+				
+				let batchRenewList = this.batchRenewList
+				for (var i = 0; i < batchRenewList.length; i++) {
+					batchRenewList[i].checked = loanIds.includes(batchRenewList[i].loanId)
+				}
+				this.batchRenewList = batchRenewList
+			},
+			batchRenew () {
+				this.showBatchRenewModal = false
+				uni.showLoading({ title: '续借中...'})
+				api.fetchLibspRenewBooks(this.batchRenewIds).then(res=> {
+					this.renewResult = res.data.data
+					uni.hideLoading()
+					this.fetchLoanList()
+				}).catch(error => {
+					console.log(error)
+				}).finally(() => {
+					uni.hideLoading()
+				})
 			}
 		}
 	}
 </script>
 
 <style>
-
+.swiper-item .cu-list .cu-item {
+	min-height: 2.8rem;
+}
 </style>
