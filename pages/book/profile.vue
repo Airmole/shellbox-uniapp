@@ -17,7 +17,7 @@
 		<template v-if="isLogined">
 			<!-- 读者信息 -->
 			<view class="cu-list menu sm-border card-menu shadow" v-if="readerInfo">
-				<view class="cu-bar bg-white solid-bottom" @click="showReaderInfo">
+				<view :class="`cu-bar bg-white solid-bottom ${foldReaderInfo?'round':''}`" @click="showReaderInfo">
 					<view class="action">
 						<text class="cuIcon-title text-green"></text> 读者信息
 					</view>
@@ -57,8 +57,8 @@
 				</template>
 			</view>
 			<!-- 借阅饼图 -->
-			 <view class="charts-box bg-white margin card-radius" v-show="showChart">
-				 <view class="cu-bar bg-white solid-bottom card-radius" @click="showChartArea">
+			 <view :class="`charts-box bg-white margin ${foldChart?'round':'card-radius'}`" v-show="showChart">
+				 <view :class="`cu-bar bg-white solid-bottom ${foldChart?'round':'card-radius'}`" @click="showChartArea">
 				 	<view class="action">
 				 		<text class="cuIcon-title text-green"></text> 借阅统计
 				 	</view>
@@ -75,8 +75,8 @@
 			</view>
 			<!-- 借阅规则 -->
 			<view class="text-center margin-top text-xl">读者借阅规则</view>
-			<view class="bg-white shadow margin card-radius" v-for="(item, index) in loanRules" :key="index">
-				<view class="cu-bar bg-white solid-bottom card-radius" @click="showRuleFold" :data-index="index">
+			<view :class="`bg-white shadow margin ${item.fold?'round':'card-radius'}`" v-for="(item, index) in loanRules" :key="index">
+				<view :class="`cu-bar bg-white solid-bottom ${item.fold?'round':'card-radius'}`" @click="showRuleFold" :data-index="index">
 					<view class="action">
 						<text class="cuIcon-title text-green"></text> {{item.ruleName}}
 					</view>

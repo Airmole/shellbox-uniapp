@@ -22,13 +22,17 @@
 						animation: `show ${((dayIdx+1)*0.2+1)}s 1`
 					}"
 					:key="dayIdx"
-					:data-dayidx="dayIdx"
-					:data-rowidx="rowIdx"
-					@click="showDetail"
 				>
 					<template v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 0"></template>
 					<!-- 一节一门课程 -->
-					<view v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1" :style="{width: `${itemWidth}px`}">
+					<view 
+						v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1" 
+						:style="{width: `${itemWidth}px`}"
+						:data-dayidx="dayIdx"
+						:data-rowidx="rowIdx"
+						:data-cellidx="0"
+						@click="showDetail"
+					>
 						<view class="margin-tb-xs place-name">{{table[dayIdx].items[rowIdx][0].place}}</view>
 						<view class="margin-tb-xs course-name" :style="{height: `${itemHeight-50}px`}">
 							{{table[dayIdx].items[rowIdx][0].courseName}}
@@ -46,6 +50,10 @@
 								overflow: 'clip',
 								borderBottom: idx === table[dayIdx].items[rowIdx].length - 1 ? '' : '1px solid white'
 							}"
+							:data-dayidx="dayIdx"
+							:data-rowidx="rowIdx"
+							:data-cellidx="idx"
+							@click="showDetail"
 						>
 							<view class="place-name text-cut" style="height: 1.1rem;">{{itm.place}}</view>
 							<view class="course-name">
@@ -65,6 +73,10 @@
 								overflow: 'clip',
 								borderBottom: idx === table[dayIdx].items[rowIdx].length - 1 ? '' : '1px solid white'
 							}"
+							:data-dayidx="dayIdx"
+							:data-rowidx="rowIdx"
+							:data-cellidx="idx"
+							@click="showDetail"
 						>
 							<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
 						</view>
@@ -81,11 +93,22 @@
 									overflow: 'clip',
 									borderBottom:idx === 4 ? '' : '1px solid white'
 								}"
+								:data-dayidx="dayIdx"
+								:data-rowidx="rowIdx"
+								:data-cellidx="idx"
+								@click="showDetail"
 							>
 								<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
 							</view>
 						</template>
-						<view class="text-sm" v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length">...共{{table[dayIdx] && table[dayIdx].items[rowIdx].length}}门</view>
+						<view
+							class="text-sm"
+							v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length"
+							:data-dayidx="dayIdx"
+							:data-rowidx="rowIdx"
+							:data-cellidx="5"
+							@click="showDetail"
+						>...共{{table[dayIdx] && table[dayIdx].items[rowIdx].length}}门</view>
 					</template>
 				</view>
 			</view>
@@ -100,6 +123,7 @@
 		</view>
 	</view>
 	
+	<!-- 课程详情模态框 -->
 	<view class="cu-modal" :class="displayDetailModal?'show':''">
 		<view class="cu-dialog bg-gray">
 			<view class="cu-bar justify-end">
@@ -109,7 +133,7 @@
 				</view>
 			</view>
 			<view class="text-left padding-lr-xs">
-				<swiper :indicator-dots="true" :autoplay="false" style="height: 720rpx;" class="bg-gray">
+				<swiper :indicator-dots="true" :autoplay="false" :current="courseCellIndex" style="height: 720rpx;" class="bg-gray">
 					<block v-for="(detail, index) in details" :key="index">
 						<swiper-item>
 							<view class="swiper-item">
@@ -205,6 +229,7 @@
 			</view>
 		</view>
 	</view>
+	
 </template>
 
 <script setup>
@@ -224,6 +249,7 @@
 	let newRowTitles = ref([])
 	const rowTitles = ref([["08:00","09:35"], ["09:55","11:30"], ["13:10","14:45"], ["15:00","16:35"], ["16:50","18:25"], ["19:10","21:35"]])
 	let isVip = ref(false)
+	let courseCellIndex = ref(0)
 	
 	const props = defineProps({
 		columnTitles: {
@@ -255,9 +281,11 @@
 	function showDetail(e) {
 		const dayIdx = e.currentTarget.dataset.dayidx
 		const rowIdx = e.currentTarget.dataset.rowidx
+		const cellIdx = e.currentTarget.dataset.cellidx
 		const itemCourses = props.table[dayIdx].items[rowIdx]
 		if (!itemCourses || itemCourses.length == 0) return
 		details.value = itemCourses
+		courseCellIndex.value = cellIdx
 		displayDetailModal.value = true
 	}
 	

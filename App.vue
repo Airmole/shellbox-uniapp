@@ -68,6 +68,7 @@
 					try {
 						const res = await api.fetchProfile()
 						self.globalData.profile = res.data.data
+						self.globalData.isVip = res.data.data.isVip
 						resolve(res.data)
 					} catch(err) {
 						if (err && err.statusCode === 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
@@ -102,7 +103,7 @@
 			
 				updateManager.onUpdateReady(function () {
 				  wx.showModal({
-					title: '小盒子求更新',
+					title: '小盒子更新',
 					content: "小盒子有版本功能更新啦，建议各位小可爱重启应用体验新版本(●'◡'●)",
 					success: function (res) {
 					  if (res.confirm) {
