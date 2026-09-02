@@ -45,7 +45,7 @@
 		</view>
 		<!-- 新书通报 -->
 		<view v-if="newBooks.length > 0" class="margin-top margin-lr-sm cu-list menu sm-border card-radius bg-white">
-			<navigator url="/pages/book/newBook" class="cu-item press-class" :render-link="false">
+			<navigator url="/pages/book/new" class="cu-item press-class" :render-link="false">
 				<view class="text-bold text-xl"><text class="cuIcon-title text-green"></text> 新书通报</view>
 				<view class="action text-right">更多<text class="cuIcon-right"></text></view>
 			</navigator>

@@ -10,8 +10,8 @@
 		</scroll-view>
 		
 		<!-- 筛选面板 -->
-		<view class="cu-list menu sm-border card-menu shadow margin-top shadow">
-			<view class="cu-bar bg-white solid-bottom" @click="showOptionsArea">
+		<view :class="`cu-list menu sm-border card-menu shadow margin-top shadow ${foldOptionsArea?'round':'card-radius'}`">
+			<view :class="`cu-bar bg-white solid-bottom ${foldOptionsArea?'round':''}`" @click="showOptionsArea">
 				<view class="action">
 					<text class="cuIcon-title text-green"></text> 筛选操作
 				</view>
@@ -70,7 +70,7 @@
 		</view>
 		<!-- #endif -->
 				
-		<view class="cu-bar bg-white solid-bottom margin card-radius margin-top-xl" v-if="loanList && loanList.loanNum">
+		<view class="cu-bar bg-white solid-bottom margin round margin-top-xl" v-if="loanList && loanList.loanNum">
 			<view class="action">
 				<text class="cuIcon-title text-green"></text> 当前剩余可借阅书
 			</view>
