@@ -258,8 +258,9 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import { navigateToPlace } from '@/common/utils/location.js'
+	import { addPhoneCalendarEvent } from '@/common/utils/phone-calendar.js'
 	import bookItem from './components/bookItem.vue'
-import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 	export default {
 		components:{ bookItem },
 		data() {
@@ -432,59 +433,27 @@ import { error } from '../../uni_modules/wu-ui-tools/libs/function'
 				const recordId = this.loanList.searchResult[this.loanDetailIndex].recordId
 				uni.navigateTo({ url: `/pages/book/detail?recordId=${recordId}`})
 			},
-			goLibrary(e) {
-				const place = this.loanList.searchResult[this.loanDetailIndex].locationName
-				var placeArr = ["理工馆", "社科馆"]
-				var markerIdArr = [15, 14]
-				var result = placeArr.indexOf(place.substr(0, 3))
-				console.log(result)
-				uni.navigateTo({
-					url: `/pages/school/map?id=${markerIdArr[result]}`
-				})
+			goLibrary() {
+				const book = this.loanList.searchResult[this.loanDetailIndex]
+				if (book) navigateToPlace(book.locationName)
 			},
 			checkAddCalendarPermisson () {
 				const book = this.loanList.searchResult[this.loanDetailIndex]
-				var _this = this
-				// #ifdef MP
-				uni.getSetting({
-				  success (settingRes) {
-					if (!settingRes.authSetting['scope.addPhoneCalendar']) {
-						uni.authorize({
-						    scope: 'scope.addPhoneCalendar',
-						    success() {
-								_this.addPhoneCalendar(book)
-						    },
-							fail() {
-								uni.openSetting()
-							}
-						})
-					} else {
-						_this.addPhoneCalendar(book)
-					}
-				  }
-				})
-				// #endif
-			},
-			addPhoneCalendar (book) {
-				var _this = this
-				// #ifdef MP
-				uni.showModal({
-					title: '提示',
-					content: '添加日程，图书应还日期前一天提醒您？',
-					success: function (res) {
-						if (!res.confirm) return
-						let startTime = new Date(`${book.normReturnDate}T00:00`).getTime().toString().slice(0, -3)
-						const place = book.locationName.substr(0, 3)
-						wx.addPhoneCalendar({
+				if (!book) return
+				addPhoneCalendarEvent({
+					modalContent: '添加日程，图书应还日期前一天提醒您？',
+					buildCalendarData() {
+						const startTime = new Date(`${book.normReturnDate}T00:00`).getTime().toString().slice(0, -3)
+						const place = book.locationName ? book.locationName.substr(0, 3) : ''
+						return {
 							title: `归还图书${book.title}`,
 							startTime: startTime,
 							description: `您借阅的图书《${book.title}》将于${book.normReturnDate}到期，请及时前往${place}归还！`,
 							location: place,
 							alarmOffset: 60 * 60 * 24, // 提前1天提醒
-						})
+						}
 					}
 				})
-				// #endif
 			},
 			batchRenewChange (e) {
 				const loanIds = e.detail.value
