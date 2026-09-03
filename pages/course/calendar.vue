@@ -28,20 +28,20 @@
 				</view>
 			</view>
 			<template v-if="checkedDateCourses" v-for="(item, index) in checkedDateCourses.items" :key="index">
-				<view @tap="checkAddCalendarPermisson(item)" class="padding-xs border-radius solids-bottom" v-if="item && item.courseName">
+				<view class="padding-xs border-radius solids-bottom" v-if="item && item.courseName">
 					<view class="flex radius">
 						<view class="basis-xl padding-xs margin-tb-xs text-cut flex flex-direction">
-							<view class="margin-tb-xs text-cut" style="height: 1.2rem;"><text
+							<view @tap="checkAddCalendarPermisson(item)" class="margin-tb-xs text-cut" style="height: 1.2rem;"><text
 									class="cuIcon-calendar text-blue margin-right-xs"></text><text>{{item.teachTime}}</text></view>
-							<view class="text-cut"  style="height: 1.2rem;"><text
+							<view @click="goCourseSearchPage(item.courseName)" class="text-cut"  style="height: 1.2rem;"><text
 									class="cuIcon-activity text-blue margin-right-xs"></text><text>{{item.courseName}}</text>
 							</view>
 						</view>
 						<view class="basis-xs text-lg margin-tb-xs padding-xs text-center">
-							<view class="margin-tb-xs">
+							<view @tap="checkAddCalendarPermisson(item)" class="margin-tb-xs">
 								{{item.startAt}}~{{item.endAt}}
 							</view>
-							<view>{{item.place}}</view>
+							<view @click="goCoursePlace">{{item.place}}</view>
 						</view>
 					</view>
 				</view>
@@ -87,6 +87,7 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import { addPhoneCalendarEvent } from '@/common/utils/phone-calendar.js'
+	import { navigateToPlace } from '@/common/utils/location.js'
 	let interstitialAd = null
 	export default {
 		data() {
@@ -209,6 +210,14 @@
 						}
 					}
 				})
+			},
+			goCourseSearchPage (courseName) {
+				uni.navigateTo({
+					url: `/pages/course/lesson?keyword=${courseName}`
+				})
+			},
+			goCoursePlace (place = '') {
+				navigateToPlace(place)
 			}
 		}
 	}
