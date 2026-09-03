@@ -235,6 +235,7 @@
 <script setup>
 	import { ref } from 'vue'
 	import { onLoad } from '@dcloudio/uni-app'
+	import { navigateToPlace } from '@/common/utils/location.js'
 
 	const app = getApp()
 	let screenWidth = ref(375)
@@ -316,44 +317,7 @@
 	}
 	
 	function goCoursePlace (place = '') {
-		if (place === '') return
-		if (/\d{1,2}教/.test(place)) {
-			const mapId = /\d{1,2}/.exec(place)
-			uni.navigateTo({ url: `/pages/school/map?id=${mapId}` })
-			return
-		}
-		
-		if (place.includes('社科')) {
-			uni.navigateTo({ url: `/pages/school/map?id=14` })
-			return
-		}
-		
-		if (place.includes('理工')) {
-			uni.navigateTo({ url: `/pages/school/map?id=15` })
-			return
-		}
-		
-		if (place.includes('游泳馆')) {
-			uni.navigateTo({ url: `/pages/school/map?id=16` })
-			return
-		}
-		
-		if (place.includes('体育馆')) {
-			uni.navigateTo({ url: `/pages/school/map?id=17` })
-			return
-		}
-		
-		if (place.includes('活动中心')) {
-			uni.navigateTo({ url: `/pages/school/map?id=23` })
-			return
-		}
-		
-		if (place.includes('众创')) {
-			uni.navigateTo({ url: `/pages/school/map?id=24` })
-			return
-		}
-		
-		uni.showToast({ title: '地点暂未收录，欢迎反馈', icon: 'none' })
+		navigateToPlace(place)
 	}
 	
 </script>

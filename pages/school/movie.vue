@@ -74,6 +74,8 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import { getTodayDateString } from '../../common/utils/tools'
+	import { navigateToPlace } from '@/common/utils/location.js'
+	import { addPhoneCalendarEvent } from '@/common/utils/phone-calendar.js'
 	let interstitialAd = null
 	export default {
 		data() {
@@ -181,53 +183,24 @@
 				})
 			},
 			goPlace (place = '') {
-				if (!place.includes('社科')) return
-				uni.navigateTo({ url: '/pages/school/map?id=14' })
+				navigateToPlace(place)
 			},
 			addCalendar (movie) {
-				const _this = this
-				// #ifdef MP
-				uni.getSetting({
-				  success (settingRes) {
-					if (!settingRes.authSetting['scope.addPhoneCalendar']) {
-						uni.authorize({
-							scope: 'scope.addPhoneCalendar',
-							success() {
-								_this.addPhoneCalendar(movie)
-							},
-							fail() {
-								uni.openSetting()
-							}
-						})
-					} else {
-						_this.addPhoneCalendar(movie)
-					}
-				  }
-				})
-				// #endif
-			},
-			addPhoneCalendar (movie) {
-				// #ifdef MP
-				const duration = /\d{1,3}/.exec(movie.duration) // 影片时长分钟数
-				uni.showModal({
-					title: '提示',
-					content: '你要将此影片放映添加到手机日程，放映前20分钟提醒吗？',
-					success: function (res) {
-						if (!res.confirm) return
-						wx.addPhoneCalendar({
+				addPhoneCalendarEvent({
+					modalContent: '你要将此影片放映添加到手机日程，放映前20分钟提醒吗？',
+					buildCalendarData() {
+						const duration = /\d{1,3}/.exec(movie.duration) // 影片时长分钟数
+						const startTime = new Date(`${movie.play_at}`).getTime().toString().slice(0, -3)
+						return {
 							title: `观看影片《${movie.name}》`,
-							startTime: new Date(`${movie.play_at}`).getTime().toString().slice(0, -3),
-							endTime: Number(new Date(`${movie.play_at}`).getTime().toString().slice(0, -3)) + (duration  * 60),
+							startTime: startTime,
+							endTime: Number(startTime) + (Number(duration) * 60),
 							description: `${movie.name} | 主演：${movie.actor} | 地点：${movie.place}`,
 							location: movie.place,
 							alarmOffset: 60 * 20, // 提前20分钟提醒
-							fail (error) {
-								console.log(error)
-							}
-						})
+						}
 					}
 				})
-				// #endif
 			}
 		},
 		onShareAppMessage() {

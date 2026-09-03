@@ -71,6 +71,7 @@
 		</view>
 	</template>
 	<script>
+		import { navigateToPlace } from '@/common/utils/location.js'
 		export default {
 			props: {
 				collection: {
@@ -81,14 +82,7 @@
 			},
 			methods: {
 				goLibrary(locationName) {
-					const place = locationName
-					var placeArr = ["理工馆", "社科馆"]
-					var markerIdArr = [15, 14]
-					var result = placeArr.indexOf(place.substr(0, 3))
-					console.log(result)
-					uni.navigateTo({
-						url: `/pages/school/map?id=${markerIdArr[result]}`
-					})
+					navigateToPlace(locationName)
 				},
 			}
 		}

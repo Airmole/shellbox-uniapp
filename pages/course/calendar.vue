@@ -86,6 +86,7 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import { addPhoneCalendarEvent } from '@/common/utils/phone-calendar.js'
 	let interstitialAd = null
 	export default {
 		data() {
@@ -194,48 +195,20 @@
 				this.fetchMonthCourses(`${e.fullDate}-1`, true)
 			},
 			checkAddCalendarPermisson (course) {
-				var _this = this
-				// #ifdef MP
-				uni.getSetting({
-				  success (settingRes) {
-					if (!settingRes.authSetting['scope.addPhoneCalendar']) {
-						uni.authorize({
-						    scope: 'scope.addPhoneCalendar',
-						    success() {
-								_this.addPhoneCalendar(course)
-						    },
-							fail() {
-								uni.openSetting()
-							}
-						})
-					} else {
-						_this.addPhoneCalendar(course)
-					}
-				  }
-				})
-				// #endif
-			},
-			addPhoneCalendar (course) {
-				var _this = this
-				// #ifdef MP
-				uni.showModal({
-					title: '提示',
-					content: '你要将这节课添加到手机日程，上课前20分钟提醒吗？',
-					success: function (res) {
-						if (!res.confirm) return
-						wx.addPhoneCalendar({
+				const checkedDate = this.checkedDate
+				addPhoneCalendarEvent({
+					modalContent: '你要将这节课添加到手机日程，上课前20分钟提醒吗？',
+					buildCalendarData() {
+						return {
 							title: course.courseName,
-							startTime: new Date(`${_this.checkedDate}T${course.startAt}:00`).getTime().toString().slice(0, -3),
+							startTime: new Date(`${checkedDate}T${course.startAt}:00`).getTime().toString().slice(0, -3),
 							description: `${course.teachTime} | ${course.courseName} | 地点：${course.place}`,
 							location: course.place,
-							endTime: new Date(`${_this.checkedDate}T${course.endAt}:00`).getTime().toString().slice(0, -3),
+							endTime: new Date(`${checkedDate}T${course.endAt}:00`).getTime().toString().slice(0, -3),
 							alarmOffset: 60 * 20, // 提前20分钟提醒
-							fail (error) {
-							}
-						})
+						}
 					}
 				})
-				// #endif
 			}
 		}
 	}
