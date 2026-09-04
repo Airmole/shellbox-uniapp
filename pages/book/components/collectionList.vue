@@ -5,26 +5,20 @@
 			</view>
 			<tips v-if="collection.totalCount==0" :tips="'暂时没有馆藏'"></tips>
 			<view v-for="(item, index) in collection.list" class="bg-gray radius margin-xs flex flex-direction padding-xs">
-				<view class="flex justify-between align-center">
-					<!-- 书刊状态 -->
-					<view class="flex padding-tb-xs justify-between">
-						<view class="basis-xxs"><text>书刊状态： </text></view>
-						<view class="fbasis-llg"><view class='cu-tag radius line-blue'>{{item.processType||'未知状态'}}</view></view>
-					</view>
-					<!-- 借阅属性 -->
-					<view class="flex padding-tb-xs justify-between">
-						<view class="basis-xxs"><text>借阅属性： </text></view>
-						<view class="fbasis-llg">
-							<view class='cu-tag radius line-blue'>
-								<text v-if="item.circAttr==0">可借</text>
-								<text v-else-if="item.circAttr==1">阅览</text>
-								<text v-else-if="item.circAttr==2">停借</text>
-								<text v-else-if="item.circAttr==3">保留本</text>
-								<text v-else-if="item.circAttr==4">业务用书</text>
-								<text v-else-if="item.circAttr==5">非可借</text>
-								<text v-else-if="item.circAttr==6">分馆藏书</text>
-								<text v-else>{{item.circAttr}}</text>
-							</view>
+				<view class="flex align-center justify-between">
+					<view class="basis-xxs"><text>书刊状态： </text></view>
+					<view class="flex justify-end">
+						<view class="fbasis-llg margin-lr-xs"><view class="cu-tag radius line-blue">{{item.processType||'未知状态'}}</view></view>
+						<!-- 借阅属性 -->
+						<view class="fbasis-llg margin-lr-xs" v-if="item.circAttr!=='--'">
+							<view v-if="item.circAttr==0" class="cu-tag radius line-green">可借</view>
+							<view v-else-if="item.circAttr==1" class="cu-tag radius line-green">阅览</view>
+							<view v-else-if="item.circAttr==2" class="cu-tag radius line-red">停借</view>
+							<view v-else-if="item.circAttr==3" class="cu-tag radius line-red">保留本</view>
+							<view v-else-if="item.circAttr==4" class="cu-tag radius line-orange">业务用书</view>
+							<view v-else-if="item.circAttr==5" class="cu-tag radius line-red">非可借</view>
+							<view v-else-if="item.circAttr==6" class="cu-tag radius line-green">分馆藏书</view>
+							<view v-else class="cu-tag radius line-blue">{{item.circAttr}}</view>
 						</view>
 					</view>
 				</view>
@@ -44,8 +38,8 @@
 				<view class="flex padding-tb-xs justify-between" v-if="item.locationName">
 					<view class="basis-xxs"><text>馆藏地： </text></view>
 					<view class="cu-capsule radius" @click="goLibrary(item.locationName)">
-						<view class="cu-tag line-grey"><text class="cuIcon-locationfill"></text></view>
-						<view class="cu-tag bg-grey">{{item.locationName}}</view>
+						<view class="cu-tag line-blue"><text class="cuIcon-locationfill"></text></view>
+						<view class="cu-tag bg-blue">{{item.locationName}}</view>
 					</view>
 				</view>
 				<!-- 索书号 -->

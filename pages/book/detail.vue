@@ -5,13 +5,13 @@
 		</cu-custom>
 		
 		<!-- 书籍信息 -->
-		<view v-if="bookDetail" class="bg-white margin card-radius padding-sm">
+		<view v-if="bookDetail" :class="`bg-white margin padding-sm ${foldInfoArea?'round':'card-radius'}`">
 			<view @tap="showInfoArea" class="padding-lr-sm text-xl flex justify-between">
 				<view>
-					<text class="cuIcon-title text-green margin-right-xs"></text>{{bookDetail.clearTitle}}
+					<text class="cuIcon-title text-green margin-right-xs"></text>《{{bookDetail.clearTitle}}》
 				</view>
 				<view class="action text-right">
-					<text :class="'cuIcon-'+(foldInfoArea?'right':'unfold')"></text>
+					<text :class="`cuIcon-${foldInfoArea?'right':'unfold'}`"></text>
 				</view>
 			</view>
 			<template v-if="!foldInfoArea">
@@ -51,7 +51,7 @@
 			</scroll-view>
 			<!-- 馆藏信息 -->
 			<collectionList v-if="currentTab==0" :collection="collectionData"></collectionList>
-			<view v-if="currentTab==1" class="padding-sm"><text v-if="bookAbstract">{{bookAbstract}}</text></view>
+			<view v-if="currentTab==1" class="padding-sm"><text v-if="bookAbstract">{{bookAbstract||'无'}}</text></view>
 		</view>
 		
 		<!-- 相关借阅 -->
@@ -64,7 +64,40 @@
 			</view>
 			<bookSwiper :books="relatedBooks"></bookSwiper>
 		</view>
-				
+		
+		<!-- 豆瓣、当当、微信读书 -->
+		<view class="cu-list menu sm-border card-menu margin-tb" v-if="bookDetail">
+			<view class="cu-item">
+			  <view class="action">
+				<text class="cuIcon-title text-cyan"></text> 其他相关资源
+			  </view>
+			</view>
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="cu-item arrow" @click="goWechatBook">
+			  <view class="content">
+				<image src="https://r2.airmole.cn/i/2025/04/27/17ndig-v8.jpg" class="png radius" mode="aspectFit"></image>
+				<text class="text-black">微信读书</text>
+			  </view>
+			  <view class="action">前往阅读</view>
+			</view>
+			<!-- #endif -->
+			<!-- #ifdef H5 -->
+			<view class="cu-item arrow" @click="goToDouban">
+			  <view class="content">
+				<image src="https://r2.airmole.cn/i/2025/04/27/s3qy1-93.ico" class="png radius" mode="aspectFit"></image>
+				<text class="text-black">豆瓣评分</text>
+			  </view>
+			  <view class="action">查看热评</view>
+			</view>
+			<!-- #endif -->
+			<view class="cu-item arrow" @click="goToDangdang">
+			  <view class="content">
+				<image src="https://r2.airmole.cn/i/2025/04/27/s3uey-7d.ico" class="png radius" mode="aspectFit"></image>
+				<text class="text-black">当当图书</text>
+			  </view>
+			  <view class="action">前往购买</view>
+			</view>
+		</view>
 				
 	</view>
 </template>
@@ -167,6 +200,34 @@
 						})
 					}
 				})
+			},
+			goToDouban () {
+				// #ifdef H5
+				window.open(`${this.bookDetail.link[0].linkUrl}`)
+				// #endif
+			},
+			goToDangdang () {
+				const keyword = this.bookDetail.clearTitle
+				// #ifdef MP-WEIXIN
+				wx.navigateToMiniProgram({
+				  appId: 'wx7bb576902363f4ff', // 当当购物
+				  path: `pages/search/index?keyword=${keyword}`
+				})
+				return
+				// #endif
+				
+				// #ifdef H5
+				window.open(`https://search.dangdang.com/?key=${keyword}`)
+				// #endif
+			},
+			goWechatBook () {
+				const keyword = this.bookDetail.clearTitle;
+				// #ifdef MP-WEIXIN
+				wx.navigateToMiniProgram({
+				  appId: 'wx8a5d6f9fad07544e', // 微信读书
+				  path: `pages/search/main?keyword=${keyword}`
+				})
+				// #endif
 			}
 		},
 		onShareAppMessage() {

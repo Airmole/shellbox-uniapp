@@ -5,7 +5,7 @@
 		</cu-custom>
 		
 		<view class="margin">
-			<view :class="'cu-list menu sm-border '+(foldOptionsArea?'card-radius':'card-radius')">
+			<view :class="'cu-list menu sm-border '+(foldOptionsArea?'round':'card-radius')">
 				<view class="cu-item press-class" @click="showOptionsArea">
 					<view class="content">
 						<text class="cuIcon-title text-green"></text> 教室筛选操作
