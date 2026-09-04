@@ -146,8 +146,11 @@
 			fetchRankList (page = 1, rows = 10, disCode = '', statRange = 30, sortType = 1) {
 				uni.showLoading({ title: '加载中...' })
 				api.fetchBookHotBorrow(page, rows, disCode, statRange, 0, '', sortType).then(res => {
-
+					if (res.data.data.result.length >= rows) {
+						res.data.data.result = res.data.data.result.slice(0, rows)
+					}
 					this.books = res.data.data.result
+					
 					for (var index = 0; index < this.books.length; index++) {
 						let book = this.books[index]
 						api.fetchBookCountAndCover(book.recordId, book.title, book.isbn).then(rres => {

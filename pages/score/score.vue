@@ -277,7 +277,7 @@
 				</view>
 				<view class="padding-sm text-left bg-white">
 					<view class="text-center text-sm">
-						<text class="iconfont icon-hunyuan"></text> 以下内容由腾讯混元AI大模型生成，不代表贝壳小盒子立场！
+						<text class="iconfont icon-hunyuan"></text> 以下内容由讯飞星火AI大模型生成，不代表贝壳小盒子立场！
 					</view>
 					<scroll-view scroll-y="true" style="height: 1000rpx;" class="padding" :scroll-top="scrollTop">
 						<ua-markdown :source="displayedSuggestion" />

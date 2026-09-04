@@ -34,7 +34,7 @@
 				<bookItem
 				    :recordId="book.recordId"
 					:title="book.title"
-					:cover="book.countAndCover.duxiuImageUrl"
+					:cover="book.cover"
 					:author="book.author"
 					:publisher="book.publish"
 					:publishYear="book.pubDate"
@@ -53,7 +53,7 @@
 				<bookItem
 				    :recordId="book.recordId"
 					:title="book.title"
-					:cover="book.countAndCover.duxiuImageUrl"
+					:cover="book.cover"
 					:author="book.author"
 					:publisher="book.publisher"
 					:publishYear="book.publishYear"
@@ -89,14 +89,9 @@
 		},
 		methods: {
 			fetchHotBook () {
-				api.fetchBookHotBorrow(1, 10, '', 30, 1).then(async(res) => {
+				api.fetchBookHotBorrow().then(async(res) => {
 					if (res.data.data.result.length > 0) {
 						let hotBooks = res.data.data.result.slice(0, 5)
-						for (var i = 0; i < hotBooks.length; i++) {
-							const element = hotBooks[i]
-							hotBooks[i].countAndCover = await this.fetchBookCountAndCover(element.recordId, element.title, element.isbn)
-						}
-
 						this.hotBooks = hotBooks
 					}
 				}).catch(error => {
@@ -104,22 +99,11 @@
 				})
 			},
 			fetchNewBook () {
-				api.fetchBookNew(1, 6).then(async(res) => {
-					if (res.data.data.searchResult.length > 0) {
-						let newBooks = res.data.data.searchResult
-						for (var i = 0; i < newBooks.length; i++) {
-							const element = newBooks[i]
-							newBooks[i].countAndCover = await this.fetchBookCountAndCover(element.recordId, element.title, element.isbn)
-						}
-						this.newBooks = newBooks
-					}
+				api.fetchBookNew().then(async(res) => {
+					this.newBooks = res.data.data.searchResult
 				}).catch(error => {
 					console.log(error)
 				})
-			},
-			async fetchBookCountAndCover(recordId, title, isbn) {
-				const result = await api.fetchBookCountAndCover(recordId, title, isbn)
-				return result.data.data
 			},
 			keywordChange (e) {
 				this.keyword = e.detail.value

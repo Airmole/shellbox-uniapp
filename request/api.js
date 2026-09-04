@@ -437,14 +437,14 @@ export default {
 		classNo = ''
 	) {
 		let queryParams = {}
-		queryParams.page = page
-		queryParams.rows = rows
-		queryParams.sortType = sortType
-		queryParams.statRange = statRange
-		if (disCode !== '') queryParams.disCode = disCode
+		if (page !== 1) queryParams.page = page
+		if (rows !== 10) queryParams.rows = rows
+		if (sortType !== 1) queryParams.sortType = sortType
+		if (statRange !== 30) queryParams.statRange = statRange
+		if (disCode !== null) queryParams.disCode = disCode
 		if (libCode !== '') queryParams.libCode = libCode
 		if (classNo !== '') queryParams.classNo = classNo
-		if (indexFlag !== '') queryParams.indexFlag = indexFlag
+		if (indexFlag !== 1) queryParams.indexFlag = indexFlag
 		return request(`/book/hot/borrow`, 'GET', queryParams)
 	},
 	fetchBookNew ( // 获取新到图书

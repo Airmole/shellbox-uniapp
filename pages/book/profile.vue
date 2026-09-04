@@ -201,10 +201,13 @@
 				})
 			},
 			getReaderInfo () {
+				uni.showLoading({title: '加载中...'})
 				api.fetchLibspUserInfo().then(res => {
 					this.readerInfo = res.data.data
 				}).catch(error => {
 					this.errorMessage = error.data.message
+				}).finally(() => {
+					uni.hideLoading()
 				})
 			},
 			getReaderLoanRule () {

@@ -6,7 +6,7 @@
 					<text class="text-sm text-black">{{title}}</text>
 				</view>
 			</view>
-			<view class="flex flex-direction margin-tb-xs margin-lr-sm" style="max-width: 500rpx;">
+			<view class="flex flex-direction margin-tb-xs margin-lr-sm" style="width: 500rpx;">
 				<view class="text-lg text-bold text-cut'">{{title}}</view>
 				<view class="text-cut">{{author}}</view>
 				<view class="text-cut">{{publisher}}丨{{publishYear}}出版</view>
