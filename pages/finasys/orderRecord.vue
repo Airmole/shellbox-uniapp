@@ -82,8 +82,10 @@
 			}
 		},
 		onShow() {
-			if (interstitialAd && !this.isVip) interstitialAd.show()
 			this.getDatalist()	
+		},
+		onReady() {
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			getDatalist: function(page = 0, pagesize = 30) {

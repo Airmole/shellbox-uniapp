@@ -87,8 +87,6 @@
 		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
-		onShow() {
-		},
 		methods: {
 			isbnInput (e) {
 				const value = e.detail.value

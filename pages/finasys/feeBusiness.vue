@@ -100,8 +100,10 @@
 			}
 		},
 		onShow() {
-			if (interstitialAd && !this.isVip) interstitialAd.show()
 			this.getDatalist()
+		},
+		onReady() {
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			tabChanged: function(e) {

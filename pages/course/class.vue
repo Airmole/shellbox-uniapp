@@ -263,11 +263,13 @@
 			this.fetchProfessionOptions()
 		},
 		onShow() {
-			if (interstitialAd && !this.isVip) interstitialAd.show()
 			if (this.weekOption.length === 0) this.generateWeekOption()
 			if (this.dayOfWeekOption.length === 0) this.generateDayOfWeekOption()
 			if (this.semesterOption.length === 0 || this.timeModelOption.length === 0) this.fetchOptions()
 			if (this.professionOption.length === 0) this.fetchProfessionOptions()
+		},
+		onReady() {
+			if (interstitialAd && !this.isVip) interstitialAd.show()	
 		},
 		methods: {
 			generateWeekOption () {

@@ -270,7 +270,7 @@
 
 			this.fetchTrainingPlan()
 		},
-		onShow() {
+		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {

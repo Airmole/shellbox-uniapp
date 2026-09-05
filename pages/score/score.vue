@@ -358,8 +358,6 @@
 		onReady() {
 			this.cWidth = uni.upx2px(750)
 			this.cHeight = uni.upx2px(500)
-		},
-		onShow() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {

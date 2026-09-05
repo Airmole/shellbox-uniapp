@@ -88,7 +88,7 @@
 				this.fetchSearchResult(this.keyword, this.page, this.rows)
 			}
 		},
-		onShow() {
+		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
