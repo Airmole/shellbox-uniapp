@@ -39,8 +39,12 @@
 		onHide: function() {},
 		methods: {
 			logout() {
-				uni.clearStorageSync()
-				uni.redirectTo({ url: '/pages/index/login' })
+				// 仅清除 eduSys 账号登录态，保留 openid 等微信身份标识
+				clearLoginStatus()
+				// 重置全局登录 Promise，防止后续使用旧 Promise 导致状态错乱
+				this.globalData.loginPromise = null
+				this.globalData.isVip = false
+				uni.reLaunch({ url: '/pages/index/index' })
 			},
 			setOpenId(openid = '') {
 				uni.setStorageSync('openid', openid)
