@@ -233,7 +233,7 @@
 </template>
 
 <script setup>
-	import { ref } from 'vue'
+	import { ref, onMounted } from 'vue'
 	import { onLoad } from '@dcloudio/uni-app'
 	import { navigateToPlace } from '@/common/utils/location.js'
 
@@ -272,14 +272,24 @@
 	
 	onLoad(() => {
 		calcTableSize()
-		isVip.value = app.globalData.isVip
+		syncIsVip()
 	})
+	// 组件挂载时同步一次会员状态（兼容子组件场景页面生命周期不可靠的情况）
+	onMounted(() => {
+		syncIsVip()
+	})
+
+	function syncIsVip() {
+		isVip.value = !!(app && app.globalData && app.globalData.isVip)
+	}
 	
 	function hideModal() {
 		displayDetailModal.value = false
 	}
 	
 	function showDetail(e) {
+		// 每次打开详情弹窗前同步最新会员状态（自动登录可能晚于组件挂载完成）
+		syncIsVip()
 		const dayIdx = e.currentTarget.dataset.dayidx
 		const rowIdx = e.currentTarget.dataset.rowidx
 		const cellIdx = e.currentTarget.dataset.cellidx
