@@ -264,8 +264,10 @@
 			}
 		},
 		onShow() {
-			if (interstitialAd && !this.isVip) interstitialAd.show()
 			this.inital()
+		},
+		onReady() {
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			inital: function(params) {

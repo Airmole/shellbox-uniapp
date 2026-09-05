@@ -142,7 +142,7 @@
 				uni.redirectTo({ url: '/pages/book/index' })
 			}
 		},
-		onShow() {
+		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {

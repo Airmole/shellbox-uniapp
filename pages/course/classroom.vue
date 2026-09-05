@@ -413,7 +413,7 @@
 			this.fetchClassroomList('building')
 			// this.fetchClassroomList('classroom')
 		},
-		onShow() {
+		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()	
 		},
 		methods: {

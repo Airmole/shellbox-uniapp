@@ -261,7 +261,7 @@
 			this.generateDayOfWeekOption()
 			this.fetchOptions(options.keyword)			
 		},
-		onShow() {
+		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {

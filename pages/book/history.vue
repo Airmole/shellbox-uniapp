@@ -121,6 +121,7 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import bookItem from './components/bookItem.vue'
+	let interstitialAd = null
 	export default {
 		components:{ bookItem },
 		data() {
@@ -150,12 +151,21 @@
 		},
 		onLoad() {
 			this.isVip = app.globalData.isVip
+			// #ifdef MP-WEIXIN
+			if (wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({
+				adUnitId: 'adunit-c142eaf344ea8f4b'
+			})
+			// #endif
+			
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
 			}
 			
 			this.fetchHistory()
+		},
+		onReady() {
+			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
 			typeTabChange (e) {

@@ -111,7 +111,7 @@
 			this.getDateMovie(this.checkedDate)
 			this.getMonthMovie(this.checkedDate)
 		},
-		onShow() {
+		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()	
 		},
 		methods: {

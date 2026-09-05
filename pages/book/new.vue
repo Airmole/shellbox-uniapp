@@ -181,7 +181,7 @@
 			)
 			this.fetchDictList()
 		},
-		onShow() {
+		onReady() {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {

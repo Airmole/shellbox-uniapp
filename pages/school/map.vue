@@ -105,8 +105,6 @@
 				success: (res) => { },
 				fail: (e) => { },
 			});
-		},
-		onShow () {
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
