@@ -20,9 +20,10 @@ export const useAppStore = defineStore('app', () => {
 	getUserInfo()
 	
 	function dataInit() {
+		if (!app.globalData.loginPromise) return
 		app.globalData.loginPromise.then((res) => {
 			setAppAuth(res)
-			app.globalData.isVip = (res && res.isVip) ? true : false
+			app.globalData.isVip = !!(res && res.isVip)
 		}).catch(err => {
 			clearLoginStatus()
 		})
@@ -34,6 +35,10 @@ export const useAppStore = defineStore('app', () => {
 		}
 		store.edusysAccount = getEdusysAccount()
 		store.loginStatus = true
+		// 同步更新全局 isVip（兼容手动登录场景）
+		if (res && typeof res.isVip !== 'undefined') {
+			app.globalData.isVip = !!res.isVip
+		}
 		getCourses() // 获取课表信息
 		getCalendar() // 获取校历
 	}
@@ -57,12 +62,17 @@ export const useAppStore = defineStore('app', () => {
 	// 获取用户昵称头像信息
 	function getUserInfo () {
 		api.fetchProfile().then(res => {
+			const profile = res.data.data || res.data
 			let userInfo = {}
-			if (res.data.avatar) userInfo.avatar = res.data.avatar
-			if (res.data.nickname) userInfo.nickname = res.data.nickname
-			if (res.data.isVip) userInfo.isVip = res.data.isVip
+			if (profile.avatar) userInfo.avatar = profile.avatar
+			if (profile.nickname) userInfo.nickname = profile.nickname
+			if (profile.isVip) userInfo.isVip = profile.isVip
 			if (Object.keys(userInfo).length === 0) userInfo = undefined
 			setUserInfo(userInfo)
+			// 同步全局 isVip
+			if (typeof profile.isVip !== 'undefined') {
+				app.globalData.isVip = !!profile.isVip
+			}
 		}).catch(() => {
 			setUserInfo(undefined)
 		})

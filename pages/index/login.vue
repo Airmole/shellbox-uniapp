@@ -138,10 +138,18 @@
 	}
 	function autoLogin (formData) {
 		api.autoLogin(formData).then(res => {
-			setAppAuth(Object.assign({
+			const loginData = Object.assign({
 				account: formData.account,
 				password: formData.password
-			}, res.data))
+			}, res.data)
+			setAppAuth(loginData)
+			// 登录成功后刷新用户资料，同步更新全局 isVip
+			api.fetchProfile().then(profileRes => {
+				const profile = profileRes.data.data || profileRes.data
+				if (profile && typeof profile.isVip !== 'undefined') {
+					app.globalData.isVip = !!profile.isVip
+				}
+			}).catch(() => {})
 			uni.switchTab({ url: '/pages/index/index' })
 		}).catch(err => {
 			loginFailureCount.value = loginFailureCount.value + 1
