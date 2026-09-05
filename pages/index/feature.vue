@@ -220,8 +220,10 @@
 			content: '确定要退出账号吗？',
 			success(res) {
 				if (res.confirm) {
-					app.logout()
-				} else if (res.cancel) {
+					// 重置 Pinia 响应式登录态 + 清除本地登录存储
+					appStore.logout()
+					// 关闭所有页面回到首页（tabBar 页），以未登录态展示
+					uni.reLaunch({ url: '/pages/index/index' })
 				}
 			}
 		})

@@ -25,7 +25,9 @@ export const useAppStore = defineStore('app', () => {
 			setAppAuth(res)
 			app.globalData.isVip = !!(res && res.isVip)
 		}).catch(err => {
+			// 登录失败：清除登录态并同步重置 store 响应式状态
 			clearLoginStatus()
+			resetAppState()
 		})
 	}
 	function setAppAuth(res) {
@@ -42,17 +44,25 @@ export const useAppStore = defineStore('app', () => {
 		getCourses() // 获取课表信息
 		getCalendar() // 获取校历
 	}
+	// 重置 store 中与登录态相关的响应式状态（退出账号/登录失败时调用）
+	function resetAppState() {
+		store.userInfo = undefined
+		store.edusysAccount = undefined
+		store.courses = { table: [] }
+		store.calendar = undefined
+		store.loginStatus = false
+	}
 	// 获取课表信息
 	function getCourses() {
 		api.fetchDateCourse().then(res => {
 			store.courses = res.data
-		})
+		}).catch(() => {})
 	}
 	// 获取校历
 	function getCalendar() {
 		api.fetchCalendar().then(res => {
 			store.calendar = res.data
-		})
+		}).catch(() => {})
 	}
 	// 设置用户昵称头像信息
 	function setUserInfo (userInfo) {
@@ -78,12 +88,24 @@ export const useAppStore = defineStore('app', () => {
 		})
 	}
 	
+	// 退出登录：清理登录态并重置响应式状态
+	function logout() {
+		clearLoginStatus()
+		resetAppState()
+		// 同步重置 app 全局变量
+		app.globalData.isVip = false
+		app.globalData.profile = undefined
+		app.globalData.loginPromise = null
+	}
+	
 	return {
 		getCourses,
 		dataInit,
 		setAppAuth,
 		setUserInfo,
 		getUserInfo,
+		resetAppState,
+		logout,
 		...toRefs(store)
 	}
 })
