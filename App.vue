@@ -6,6 +6,7 @@
 		globalData: {
 			env: 'develop',
 			screenHeight: 800,
+			isVip: false,
 			logoImageUrl: 'https://r2.airmole.cn/i/2024/11/30/17v4j5-c1.jpg',
 			loginPromise: null,
 			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
@@ -62,18 +63,27 @@
 					}
 				})
 			},
+			updateGlobalProfile (profile) {
+				this.globalData.profile = profile
+				this.globalData.isVip = !!(profile && profile.isVip)
+			},
 			clientLoginEdusys () {
 				const self = this
 				this.globalData.loginPromise = new Promise(async (resolve, reject) => {
 					try {
+						// 已有有效 auth，直接获取用户资料
 						const res = await api.fetchProfile()
-						self.globalData.profile = res.data.data
-						self.globalData.isVip = res.data.data.isVip
-						resolve(res.data)
+						const profile = res.data.data || res.data
+						self.updateGlobalProfile(profile)
+						resolve(Object.assign({}, res.data, profile))
 					} catch(err) {
+						// auth 失效或未登录，尝试使用 edusys 账号静默自动登录
 						if (err && err.statusCode === 401 && ['请先登录', '账号未登录'].includes(err.data.message)) {
 							let edusysAccount = getEdusysAccount()
-							if (edusysAccount == false) return
+							if (edusysAccount == false) {
+								reject(err)
+								return
+							}
 							// #ifdef MP-WEIXIN
 							edusysAccount.wx_open_id = self.getOpenId()
 							// #endif
@@ -81,14 +91,35 @@
 							// #ifdef MP-QQ
 							edusysAccount.qq_open_id = self.getOpenId()
 							// #endif
-							await api.autoLogin(edusysAccount).then(loginRes => {
-								resolve(Object.assign({
+							try {
+								const loginRes = await api.autoLogin(edusysAccount)
+								const loginData = Object.assign({
 									...edusysAccount
-								}, loginRes.data))
-							}).catch(err => {
-								uni.showToast({ title: err.data.message, icon: 'none'})
-								reject(err)
-							})
+								}, loginRes.data)
+								const { auth, account, password } = loginData
+								// 保存登录态，使后续请求能携带有效 auth
+								if (account && password && auth) {
+									setLoginStatus(auth, account, password)
+								}
+								// 自动登录成功后重新获取用户资料（含 isVip）
+								let profileData = loginData
+								try {
+									const profileRes = await api.fetchProfile()
+									const profile = profileRes.data.data || profileRes.data
+									profileData = Object.assign({}, loginData, profile)
+								} catch (e) {
+									console.log('fetchProfile after autoLogin error:', e)
+								}
+								self.updateGlobalProfile(profileData)
+								resolve(profileData)
+							} catch (err2) {
+								if (err2 && err2.data && err2.data.message) {
+									uni.showToast({ title: err2.data.message, icon: 'none'})
+								}
+								reject(err2)
+							}
+						} else {
+							reject(err)
 						}
 					}
 				})

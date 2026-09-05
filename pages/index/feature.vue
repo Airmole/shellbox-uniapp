@@ -194,8 +194,13 @@
 	
 	function fetchProfile () {
 		api.fetchProfile().then(res => {
-			profile.value = res.data
-			if (res.data.isVip) isVip.value = res.data.isVip
+			const data = res.data.data || res.data
+			profile.value = data
+			if (typeof data.isVip !== 'undefined') {
+				isVip.value = !!data.isVip
+				// 同步更新全局 isVip
+				app.globalData.isVip = !!data.isVip
+			}
 		}).catch(error => {
 			console.log('fetchProfile error', error)
 		})

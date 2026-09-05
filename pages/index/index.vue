@@ -47,7 +47,7 @@
 		</view>
 		
 		<!-- #ifdef MP-WEIXIN -->
-		<view v-if="isVip" class="margin-lr margin-tb-sm radius">
+		<view v-if="!isVip" class="margin-lr margin-tb-sm radius">
 			<ad unit-id="adunit-62f52651dd5f4ff6" ad-intervals="30"></ad>
 		</view>
 		<!-- #endif -->
@@ -103,7 +103,11 @@
 	let todayCourses = ref([])
 
 	watch(loginStatus, (newValue) => {
-		if (newValue === true) uni.hideLoading()
+		if (newValue === true) {
+			uni.hideLoading()
+			// 登录完成，同步最新 isVip
+			isVip.value = app.globalData.isVip
+		}
 	})
 
 	watch(courses, (newValue) => {
@@ -124,6 +128,8 @@
 	})
 
 	onShow(() => {
+		// 同步全局 isVip（自动登录可能在此前异步完成）
+		isVip.value = app.globalData.isVip
 		if (loginStatus) uni.hideLoading()
 	})
 
