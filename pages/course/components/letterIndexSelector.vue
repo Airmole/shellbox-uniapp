@@ -1,5 +1,5 @@
 <template>
-	<view class="margin bg-white card-radius flex flex-wrap" v-if="letters">
+	<view class="margin bg-white card-radius flex flex-wrap" v-if="letters.length">
 		<view class="cu-bar bg-white card-radius">
 			<view class="action">
 				<text class="cuIcon-titles text-blue"></text>
@@ -7,7 +7,7 @@
 			</view>
 		</view>
 		<view class="padding-lr padding-bottom">
-			<template v-for="(item, index) in letters">
+			<template v-for="(item, index) in letters" :key="item">
 				<view
 				  @click="letterChange(index)"
 				  :class="`cu-tag radius margin-xs ${index==currentIndex?'bg-blue':'line-blue'} ${list[item].length?'':'line-gray'}`"
@@ -29,27 +29,19 @@
 		},
 		data() {
 			return {
-				letters: [],
 				currentIndex: 0
 			}
 		},
-		created() {
-			this.initalLetters()
-		},
-		mounted() {
-			this.initalLetters()
-		},
-		updated() {
-			this.initalLetters()
-		},
-		methods: {
-			initalLetters () {
+		computed: {
+			letters () {
 				const letters = []
 				for (let letter in this.list) {
 					letters.push(letter)
 				}
-				this.letters = letters
-			},
+				return letters
+			}
+		},
+		methods: {
 			letterChange (index) {
 				const letter = this.letters[index]
 				if (!this.list[letter].length) {
