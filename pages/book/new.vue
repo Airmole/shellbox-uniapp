@@ -206,11 +206,9 @@
 				})
 			},
 			fetchBooksCovers (result) {
-				for (var index = 0; index < result.data.searchResult.length; index++) {
+				for (let index = 0; index < result.data.searchResult.length; index++) {
 					let book = result.data.searchResult[index]
 					api.fetchBookCountAndCover(book.recordId, book.title, book.isbn).then(res => {
-						book.countAndCover = res.data.data
-						this.booksList.searchResult[index] = book
 						this.$set(this.booksList.searchResult[index], 'countAndCover', res.data.data)
 					})
 				}

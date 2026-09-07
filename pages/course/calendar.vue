@@ -41,7 +41,7 @@
 							<view @tap="checkAddCalendarPermisson(item)" class="margin-tb-xs">
 								{{item.startAt}}~{{item.endAt}}
 							</view>
-							<view @click="goCoursePlace">{{item.place}}</view>
+							<view @click="goCoursePlace(item.place)">{{item.place}}</view>
 						</view>
 					</view>
 				</view>

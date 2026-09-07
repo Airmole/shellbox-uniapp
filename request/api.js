@@ -167,6 +167,9 @@ export default {
 		const queryString = httpBuildQuery(query)
 		return request(`/edusys/course/class/professionOptions?${queryString}`, `GET`)
 	},
+	fetchClassKeywordList () {
+		return request(`/edusys/course/class/keyword`, 'GET')
+	},
 	// 获取班级课表
 	fetchClassCourse(
 		semester = '',
@@ -206,6 +209,9 @@ export default {
 	fetchTeacherCourseOptions() {
 		return request(`/edusys/course/teacher/options`, `GET`)
 	},
+	fetchTeacherKeywordList () {
+		return request(`/edusys/course/teacher/keyword`, 'GET')
+	},
 	// 获取教师课表
 	fetchTeacherCourse(
 		semester = '',
@@ -240,6 +246,9 @@ export default {
 	// 课程课表筛选项
 	fetchLessonCourseOptions () {
 		return request(`/edusys/course/lesson/options`, `GET`)
+	},
+	fetchLessonKeywordList () {
+		return request(`/edusys/course/lesson/keyword`, 'GET')
 	},
 	// 获取课程课表
 	fetchLessonCourse (
@@ -512,6 +521,10 @@ export default {
 			collectionName, author, langCode, countryCode, publishBegin, publishEnd, coreInclude, ddType, verifyStatus,
 			group, sortField, sortClause, onlyOnShelf, searchItems, newCoreInclude, customSub, customSub0, indexSearch }
 		return request('/book/search', 'POST', body)
+	},
+	fetchBookCover (recordId, title, isbn) { // 获取图书封面
+		let query = { recordId, title, isbn }
+		return request('/book/bookCover', 'GET', query)
 	},
 	fetchBookCountAndCover (recordId, title, isbn) { // 获取图书数量&封面
 		let query = { recordId, title, isbn }

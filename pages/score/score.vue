@@ -276,9 +276,7 @@
 					<view @click="showSuggestionModal" class="action text-white"><text class="cuIcon-close"></text></view>
 				</view>
 				<view class="padding-sm text-left bg-white">
-					<view class="text-center text-sm">
-						<text class="iconfont icon-hunyuan"></text> 以下内容由讯飞星火AI大模型生成，不代表贝壳小盒子立场！
-					</view>
+					<view class="text-center text-sm"><text>以下内容由讯飞星火AI大模型生成，不代表贝壳小盒子立场！</text></view>
 					<scroll-view scroll-y="true" style="height: 1000rpx;" class="padding" :scroll-top="scrollTop">
 						<ua-markdown :source="displayedSuggestion" />
 						<text v-if="isTyping" class="typewriter-cursor">|</text>

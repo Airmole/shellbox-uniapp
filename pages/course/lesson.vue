@@ -1,14 +1,59 @@
 <template>
 	<view>
-		<template v-if="showSearchArea">
+		<template v-if="!showCourseDetail">
 			<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 				<view>课程课表</view>
 			</cu-custom>
+			<scroll-view scroll-x class="bg-white nav">
+				<view class="flex text-center">
+					<view class="cu-item flex-sub" :class="index==viewTabIndex?'text-blue cur':''" v-for="(item,index) in viewTabs" :key="index" @tap="viewChange" :data-id="index">
+						{{item}}
+					</view>
+				</view>
+			</scroll-view>
+			<view class="cu-bar search bg-white" v-if="showCardView">
+				<view class="search-form round">
+					<text class="cuIcon-search"></text>
+					<input v-model="lessonKeywordSearch" :adjust-position="false" type="text" placeholder="搜索课程名称"
+						confirm-type="search"></input>
+				</view>
+				<view class="action">
+					<button @click="keywordSearch" class="cu-btn bg-gradual-blue shadow-blur round">搜索</button>
+				</view>
+			</view>
+		</template>
+		
+		<template v-if="showCardView">
+			<letterIndexSelectorVue :list="lessonKeywordList" @change="letterChange"></letterIndexSelectorVue>
+			<template v-for="(item, index) in lessonKeywordList" :key="index">
+				<view class="flex justify-center flex-direction" v-if="item.length">
+					<view class="text-left margin padding-left" :id="index" @click="goTop">{{index}}</view>
+					<view class="flex flex-wrap justify-center">
+						<template v-for="(lessonName, cindex) in item" :key="cindex">
+							<view
+							  @click="checkLessonName(lessonName)"
+							  :id="`${index}${cindex}`"
+							  class="bg-gradual-blue padding-sm margin-sm basis-sm shadow radius lesson-card text-center"
+							  :style="[{animation: 'show ' + ((cindex+1)*0.2+1) + 's 1'}]"
+							>
+							    <view class="text-center"><text>{{lessonName}}</text></view>
+							</view>
+						</template>
+						<!-- 占位，以免落单卡片居中 -->
+						<view v-if="item.length%2===1" class="margin-sm basis-sm"></view>
+					</view>
+				</view>
+			</template>
+		</template>
+			
+		<!-- 筛选检索区域 -->
+		<template v-if="showSearchArea">
+			<!-- 课程筛选面板 -->
 			<view class="margin">
 				<view :class="'cu-list menu sm-border '+(foldOptionsArea?'round':'card-radius')">
 					<view class="cu-item press-class" @click="showOptionsArea">
 						<view class="content">
-							<text class="cuIcon-title text-green"></text> 课程课表查询筛选操作
+							<text class="cuIcon-title text-green"></text> 课程查询筛选
 						</view>
 						<view class="action text-right">
 							<text :class="'cuIcon-'+(foldOptionsArea?'right':'unfold')"></text>
@@ -159,7 +204,8 @@
 				<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
 			</view>
 			<!-- #endif -->
-			
+				
+			<!-- 课程检索结果列表 -->
 			<view class="cu-list menu-avatar margin card-radius">
 				<template v-for="(lessonCourse, lessonIndex) in lessonCourses" :key="lessonIndex">
 					<view class="cu-item" @click="clickLessonCourse(lessonIndex)">
@@ -182,7 +228,7 @@
 			</view>
 		</template>
 		
-		<view v-if="!showSearchArea && lessonCourse.courseName">
+		<view v-if="showCourseDetail">
 			<view class="padding-tb bg-gradual-blue"></view>
 			<view class="cu-bar bg-gradual-blue">
 			    <view class="action" @click="hideSearchArea"><text class="cuIcon-back text-white"></text></view>
@@ -198,15 +244,21 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import courseTable from './components/courseTable.vue'
+	import letterIndexSelectorVue from './components/letterIndexSelector.vue'
 	import { initalVideoAd, startPlayVideoAd } from '../../common/utils/mpAd.js'
 	let interstitialAd = null
 	let videoAd = null
 	export default {
-		components: { courseTable },
+		components: { courseTable, letterIndexSelectorVue },
 		data() {
 			return {
 				isVip: false,
-				showSearchArea: true,
+				viewTabs: ['卡片视图', '查询检索'],
+				viewTabIndex: 0,
+				showCardView: true,
+				lessonKeywordList: {},
+				lessonKeywordSearch: '',
+				showSearchArea: false,
 				showAllOption: false,
 				foldOptionsArea: false,
 				semesterIndex: -1,
@@ -240,7 +292,8 @@
 				lessonCourse: {},
 				columnTitle: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
 				weekOption: [],
-				dayOfWeekOption: []
+				dayOfWeekOption: [],
+				showCourseDetail: false
 			}
 		},
 		onLoad(options) {
@@ -255,8 +308,12 @@
 			if (options && options.keyword) {
 				uni.showLoading({ title: '加载中...' })
 				this.optionForm.courseName = options.keyword
+				this.showCardView = false
+				this.showSearchArea = true
+				this.viewTabIndex = 1
 			}
 			
+			this.fetchLessonList()
 			this.generateWeekOption()
 			this.generateDayOfWeekOption()
 			this.fetchOptions(options.keyword)			
@@ -265,6 +322,44 @@
 			if (interstitialAd && !this.isVip) interstitialAd.show()
 		},
 		methods: {
+			viewChange (e) {
+				const viewTabIndex = e.currentTarget.dataset.id
+				this.showCardView = !this.showCardView
+				this.showSearchArea = !this.showSearchArea
+				this.viewTabIndex = viewTabIndex
+				this.resetOptionsForm()
+			},
+			letterChange (e) {
+				uni.pageScrollTo({
+				  selector: `#${e.letter}`,
+				  offsetTop: -100
+				})
+			},
+			goTop () {
+				uni.pageScrollTo({ scrollTop: 0 })
+			},
+			keywordSearch () {
+				const keyword = this.lessonKeywordSearch
+				let targetId = false
+				for (var letter in this.lessonKeywordList) {
+					const letterLessons = this.lessonKeywordList[letter]
+					for (var i = 0; i < letterLessons.length; i++) {
+						const item = letterLessons[i]
+						if (item.indexOf(keyword) === 0) {
+							targetId = `#${letter}${i}`
+							break
+						}
+					}
+				}
+				if (!targetId) {
+					uni.showToast({ title: '未找到匹配数据', icon: 'none'})
+					return
+				}
+				uni.pageScrollTo({
+					selector: targetId,
+					offsetTop: -100
+				})
+			},
 			generateWeekOption () {
 				const weekOption = []
 				for (var i = 1; i <= 30; i++) {
@@ -280,7 +375,9 @@
 				this.dayOfWeekOption = dayOfWeekOption
 			},
 			hideSearchArea () {
-				this.showSearchArea = true
+				if (this.viewTabIndex == 0) this.showCardView = true
+				if (this.viewTabIndex == 1) this.showSearchArea = true
+				this.showCourseDetail = false
 			},
 			foldAllOption () {
 				this.showAllOption = !this.showAllOption
@@ -288,11 +385,45 @@
 			showOptionsArea() {
 				this.foldOptionsArea = !this.foldOptionsArea
 			},
+			fetchLessonList () {
+				uni.showLoading({ title: '加载中...'})
+				api.fetchLessonKeywordList().then(res => {
+					this.lessonKeywordList = res.data
+				}).finally(() =>{
+					uni.hideLoading()
+				})
+			},
+			checkLessonName(lessonName) {
+				uni.showLoading({ title: '加载中...' })
+				this.optionForm.courseName = lessonName
+				api.fetchLessonCourse(
+					this.optionForm.semester,
+					this.optionForm.timeModel,
+					this.optionForm.studyCollege,
+					this.optionForm.teachCollege,
+					this.optionForm.courseNature,
+					this.optionForm.courseName,
+					this.optionForm.weekStart.toString(),
+					this.optionForm.weekEnd.toString(),
+					this.optionForm.dayOfWeekStart.toString(),
+					this.optionForm.dayOfWeekEnd.toString()
+				).then(res => {
+					this.lessonCourse = res.data[0]
+					this.showCardView = false
+					this.showSearchArea = false
+					this.showCourseDetail = true
+				}).catch((res) => {
+					uni.showToast({ title: res.data.message, icon: 'none'})
+				}).finally(() => {
+					uni.hideLoading()
+				})
+			},
 			clickLessonCourse (lessonIndex) {
 				if (lessonIndex >= 0) {
 					this.lessonIndex = lessonIndex
 					this.lessonCourse = this.lessonCourses[lessonIndex]
 					this.showSearchArea = false
+					this.showCourseDetail = true
 				}
 			},
 			fetchLessonCourse () {
@@ -322,7 +453,6 @@
 					this.optionForm.dayOfWeekStart.toString(),
 					this.optionForm.dayOfWeekEnd.toString()
 				).then(res => {
-
 					this.lessonCourses = res.data
 					videoAd = initalVideoAd(api.exportLessonCourse, res.data, '导出课程课表')
 					uni.hideLoading()
@@ -461,5 +591,10 @@
 	.content {
 		width: calc(100% - 96rpx - 60rpx - 60rpx) !important;
 		line-height: 1.6em;
+	}
+	.lesson-card {
+		height: 110rpx;
+		overflow: hidden;
+		text-align: center;
 	}
 </style>

@@ -94,6 +94,7 @@
 							:publisher="book.publisher"
 							:publishYear="book.publishYear"
 							:isbn="book.isbn"
+							:cover="book.cover"
 							:loanDate="book.loanDate"
 							:returnDate="book.returnDate"
 						></bookItem>
@@ -240,12 +241,21 @@
 						const lastPage = Math.ceil(res.data.data.numFound / this.optionsForm.rows)
 						res.data.data.lastPage = lastPage
 						this.historyList = res.data.data
+						this.fetchBooksCovers(res.data)
 					}
 				}).catch(error => {
 					this.errorMessage = error.data.message
 				}).finally(() => {
 					uni.hideLoading()
 				})
+			},
+			fetchBooksCovers (result) {
+				for (let index = 0; index < result.data.searchResult.length; index++) {
+					let book = result.data.searchResult[index]
+					api.fetchBookCover(book.recordId, book.title, book.isbn).then(res => {
+						this.$set(this.historyList.searchResult[index], 'cover', res.data.data)
+					})
+				}
 			},
 			lastPage () {
 				let page = this.optionsForm.page - 1

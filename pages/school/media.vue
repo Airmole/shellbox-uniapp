@@ -41,7 +41,7 @@
 							@tap.stop="goPage(item)"
 							v-for="(item, index) in items"
 							class="radius padding-sm margin-tb-sm margin-lr-xs card-view bg-blue shadow flex flex-wrap justify-between"
-							:style="[{animation: 'show ' + ((index+1)*0.2+1) + 's 1'}]"						>
+							:style="[{animation: 'show ' + ((index+1)*0.2+1) + 's 1'}]">
 							<view class="text-sm flex flex-direction basis-lg text-cut" style="height: 100rpx">
 								<view class="text-title text-df margin-bottom-xs">{{item.title}}</view>
 								<view @tap.stop="copyAccount(item.account)" class="text-xs">账号:{{item.account}}</view>

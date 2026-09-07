@@ -107,6 +107,7 @@
 							:publishYear="book.publishYear"
 							:loanDate="book.loanDate"
 							:normReturnDate="book.normReturnDate"
+							:cover="book.cover"
 							:book="book"
 							:showRenew="true"
 							:goBookDetail="false"
@@ -386,12 +387,21 @@
 						}
 						this.batchRenewList = batchRenewList
 						this.loanList = res.data.data
+						this.fetchBooksCovers(res.data)
 					}
 				}).catch(error => {
 					this.errorMessage = error.data.message
 				}).finally(() => {
 					uni.hideLoading()
 				})
+			},
+			fetchBooksCovers (result) {
+				for (let index = 0; index < result.data.searchResult.length; index++) {
+					let book = result.data.searchResult[index]
+					api.fetchBookCover(book.recordId, book.title, book.isbn).then(res => {
+						this.$set(this.loanList.searchResult[index], 'cover', res.data.data)
+					})
+				}
 			},
 			lastPage () {
 				let page = this.optionsForm.page - 1
