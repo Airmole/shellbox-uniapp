@@ -151,11 +151,9 @@
 					}
 					this.books = res.data.data.result
 					
-					for (var index = 0; index < this.books.length; index++) {
-						let book = this.books[index]
+					for (let index = 0; index < res.data.data.result.length; index++) {
+						let book = res.data.data.result[index]
 						api.fetchBookCountAndCover(book.recordId, book.title, book.isbn).then(rres => {
-							book.countAndCover = rres.data.data
-							this.books[index] = book
 							this.$set(this.books[index], 'countAndCover', rres.data.data)
 						})
 					}

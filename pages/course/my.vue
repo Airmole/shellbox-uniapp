@@ -20,7 +20,7 @@
 				</picker>
 			</view>
 			<view class="flex-sub flex justify-end margin-right-xs margin-top-xs">
-				<view @tap="exportXlsx" class='cu-tag bg-gradual-green round'><text class="cuIcon cuIcon-down"></text>导出</view>
+				<view v-if="isLogined&&courseData.table" @tap="exportXlsx" class='cu-tag bg-gradual-green round'><text class="cuIcon cuIcon-down"></text>导出</view>
 			</view>
 		</view>
 		

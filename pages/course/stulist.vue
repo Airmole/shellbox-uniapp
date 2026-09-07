@@ -38,9 +38,21 @@
 						:key="index">
 						<view class="cu-avatar xl round bg-gradual-blue"><text class="text-df">{{item.name}}</text></view>
 						<view class="content margin-left" style="width: 100%;">
-							<view class="text-black  padding-lr-xs text-sm"><text class="text-gray margin-right-sm">{{item.no}}.</text><text class="text-black text-xl">{{item.name}}</text></view>
+							<view class="text-black  padding-lr-xs text-sm flex flex-wrap">
+								<view><text class="text-gray margin-right-sm">{{item.no}}.</text></view>
+								<view><text class="text-black text-xl">{{item.name}}</text></view>
+								<view class="margin-lr-sm text-gray self-end" v-if="item.namePinyin">(
+									<template v-for="(pyItem, pyIndex) in item.namePinyin" :key="pyIndex">
+										<text class="margin-right-xs">{{pyItem}}</text>
+									</template>)
+								</view>
+							</view>
 							<view class="padding-lr-xs">
-								<text style="opacity: 0.7;">{{item.gender}} | 学号：{{item.usercode}}</text>
+								<text style="opacity: 0.7;">
+									<text v-if="item.gender=='男'" class="line-blue cuIcon-male margin-right-xs"></text>
+									<text v-else-if="item.gender=='女'" class="line-pink cuIcon-female margin-right-xs"></text>
+									<text v-else>{{item.gender}}</text>| 学号：{{item.usercode}}
+								</text>
 							</view>
 							<view class="padding-lr-xs">
 								<text style="opacity: 0.7;">{{item.grade}}级{{item.major}} | {{item.className}}</text>
