@@ -25,6 +25,16 @@
 		
 		<template v-if="showCardView">
 			<letterIndexSelectorVue :list="classKeywordList" @change="letterChange"></letterIndexSelectorVue>
+			<!-- #ifdef MP-WEIXIN -->
+			<view v-if="!isVip" class="margin margin-tb-xl radius">
+				<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
+			</view>
+			<!-- #endif -->
+			<!-- #ifdef MP-QQ -->
+			<view v-if="!isVip" class="margin margin-tb-xl radius">
+				<ad unit-id="f0256a9d11d62920007be2d67178cdd3" type="card"></ad>
+			</view>
+			<!-- #endif -->
 			<template v-for="(item, index) in classKeywordList" :key="index">
 				<view class="flex justify-center flex-direction" v-if="item.length">
 					<view @click="goTop" class="text-left margin padding-left" :id="index">{{index}}</view>
