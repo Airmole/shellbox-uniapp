@@ -80,7 +80,7 @@
 		</view>
 		
 		<!-- 更多 抽屉模态框 -->
-		<view class="cu-modal drawer-modal justify-end" :class="moreModal?'show':''" @tap="moreModal = !moreModal">
+		<view class="cu-modal drawer-modal justify-end" :class="moreModal?'show':''" @tap="moreModal = !moreModal" @touchmove.stop.prevent>
 			<view class="cu-dialog basis-xl padding-top-xl bg-gray" @tap.stop="">
 				<!-- #ifdef MP -->
 				<view class="margin-tb-xl padding-tb"></view>

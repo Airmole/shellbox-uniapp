@@ -57,7 +57,7 @@
 		</view>
 		
 		<!-- 电影模态框 -->
-		<view class="cu-modal" :class="showMovieModal?'show':''">
+		<view class="cu-modal" :class="showMovieModal?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog" v-if="movieRef">
 				<view class="bg-img bg-mask" :style="movieModalStyle"></view>
 				<view style="position: absolute;top: 0;left: 0;height: 800rpx;width: 680rpx;">
@@ -95,7 +95,7 @@
 		</view>
 		
 		<!-- 每日一言模态框 -->
-		<view class="cu-modal" :class="showSayingModal?'show':''">
+		<view class="cu-modal" :class="showSayingModal?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog" v-if="famousSayingRef">
 				<view class="bg-img bg-mask" :style="sayingModalStyle"></view>
 				<view style="position: absolute;top: 0;left: 0;" class="padding-top-xl flex justify-center align-center flex-direction">

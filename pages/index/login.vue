@@ -38,7 +38,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="cu-modal" :class="showHelpModal?'show':''" style="z-index: 99;">
+		<view class="cu-modal" :class="showHelpModal?'show':''" style="z-index: 99;" @touchmove.stop.prevent>
 			<view class="cu-dialog">
 				<view class="bg-img padding-sm text-center">
 					<image @tap="previewHelp" :src="helpImage" mode="widthFix"></image>
@@ -50,7 +50,7 @@
 		</view>
 
 		
-		<view class="cu-modal" :class="isLoading?'show':''">
+		<view class="cu-modal" :class="isLoading?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog" style="width: 120px; height: 120px;">
 				<view class="bg-img" :style="{ backgroundImage: `url(${loadingUrl})`, height: '120px' }"></view>
 				<view class="text-center" style="position: absolute;top: 40%;left: 28%;">
@@ -60,7 +60,7 @@
 		</view>
 		
 		<!-- 辣鸡教务系统异常，无法登录提示框 -->
-		<view class="cu-modal" :class="showTipsModal?'show':''">
+		<view class="cu-modal" :class="showTipsModal?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-white justify-end">
 					<view class="content">注意</view>

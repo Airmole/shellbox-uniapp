@@ -55,7 +55,7 @@
 				</scroll-view>
 			</view>
 			<!-- 商品详情模态框 -->
-			<view class="cu-modal bottom-modal" :class="showGoodsModal?'show':''" style="z-index: 998;">
+			<view class="cu-modal bottom-modal" :class="showGoodsModal?'show':''" style="z-index: 998;" @touchmove.stop.prevent>
 				<view class="cu-dialog bg-gray" style="height:calc(100vh - 260upx);">
 					<view class="cu-bar bg-white">
 						<view class="action text-title">积分商品兑换</view>
@@ -87,7 +87,7 @@
 				</view>
 			</view>
 			<!-- 实物商品收件信息填写模态框	 -->
-			<view class="cu-modal" :class="showAddressModal?'show':''" style="z-index: 998;">
+			<view class="cu-modal" :class="showAddressModal?'show':''" style="z-index: 998;" @touchmove.stop.prevent>
 				<view class="cu-dialog">
 					<view class="cu-bar bg-white justify-end">
 						<view class="content">收件信息</view>

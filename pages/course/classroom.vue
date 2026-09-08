@@ -272,7 +272,7 @@
 		
 		<tips v-if="classrooms !== '' && classrooms.length === 0" :tips="'没找到符合条件的结果，调整筛选项试试？'"></tips>
 		
-		<view class="cu-modal" :class="showDetailModal?'show':''">
+		<view class="cu-modal" :class="showDetailModal?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-gray justify-end">
 					<view class="content">教室占用详情</view>

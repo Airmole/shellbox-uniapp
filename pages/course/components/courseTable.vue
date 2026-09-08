@@ -124,7 +124,7 @@
 	</view>
 	
 	<!-- 课程详情模态框 -->
-	<view class="cu-modal" :class="displayDetailModal?'show':''">
+	<view class="cu-modal" :class="displayDetailModal?'show':''" @touchmove.stop.prevent>
 		<view class="cu-dialog bg-gray">
 			<view class="cu-bar justify-end">
 				<view class="content">课程详情（{{details.length}}节）</view>
