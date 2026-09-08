@@ -96,31 +96,47 @@
 	import { getWeekNameByDayNumber } from '@/common/utils/tools.js'
 	import { useAppStore } from '@/stores/app'
 	import { storeToRefs } from 'pinia'
+
 	const app = getApp()
 	const appStore = useAppStore()
 	const { courses, calendar, loginStatus } = storeToRefs(appStore)
 	const praise = ref('')
+	const isVip = ref(false)
 	let todayCourses = ref([])
+
+	// 先定义 isVip 再使用
+	function syncIsVip () {
+		try {
+			isVip.value = !!(app && app.globalData && app.globalData.isVip)
+		} catch (e) {
+			isVip.value = false
+		}
+	}
 
 	watch(loginStatus, (newValue) => {
 		if (newValue === true) {
 			uni.hideLoading()
 			// 登录完成，同步最新 isVip
-			isVip.value = app.globalData.isVip
+			syncIsVip()
 		}
 	})
 
 	watch(courses, (newValue) => {
-		const today = new Date()
-		const dayIndex = today.getDay() > 0 ? today.getDay() - 1 : (newValue.table.length - 1)
-		if (newValue.table[dayIndex]) {
-			todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
+		try {
+			if (!newValue || !newValue.table || !Array.isArray(newValue.table)) return
+			const today = new Date()
+			const dayIndex = today.getDay() > 0 ? today.getDay() - 1 : (newValue.table.length - 1)
+			const dayCourses = newValue.table[dayIndex]
+			if (dayCourses && dayCourses.items && Array.isArray(dayCourses.items)) {
+				todayCourses.value = dayCourses.items.filter((item) => item && item.courseName)
+			}
+		} catch (e) {
+			console.error('watch courses error:', e)
 		}
 	})
 
-	const isVip = ref(false)
 	onLoad(() => {
-		isVip.value = app.globalData.isVip
+		syncIsVip()
 		uni.showLoading({ title: '加载中...'})
 		// #ifdef MP
 		uni.showShareMenu({ menus: ["shareAppMessage", "shareTimeline"] })
@@ -129,8 +145,11 @@
 
 	onShow(() => {
 		// 同步全局 isVip（自动登录可能在此前异步完成）
-		isVip.value = app.globalData.isVip
-		if (loginStatus) uni.hideLoading()
+		syncIsVip()
+		// 始终尝试隐藏 loading，避免在某些场景下loading无法关闭导致页面看起来白屏
+		uni.hideLoading()
+		// 延时后再次尝试隐藏（某些异步流程中loading可能被延迟显示）
+		setTimeout(() => { uni.hideLoading() }, 1000)
 	})
 
 	// 周几
@@ -141,7 +160,6 @@
 	function goBookSearch () {
 		uni.navigateTo({ url: '/pages/book/index' })
 	}
-	
 	
 	onShareAppMessage (() => {
 		return {

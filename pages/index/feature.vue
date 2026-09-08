@@ -175,8 +175,12 @@
 		isReleaseEnv.value = true
 		// #endif
 		uni.showLoading({ title: '加载中...' })
-		const sysInfo = uni.getSystemInfoSync()
-		if (sysInfo.theme === 'dark') waterWaveUrl.value = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'
+		try {
+			const sysInfo = uni.getSystemInfoSync()
+			if (sysInfo && sysInfo.theme === 'dark') waterWaveUrl.value = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'
+		} catch (e) {
+			console.error('getSystemInfoSync error in feature page:', e)
+		}
 		fetchMenuList()
 	})
 	
