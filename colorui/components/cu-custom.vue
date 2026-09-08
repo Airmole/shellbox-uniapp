@@ -28,8 +28,8 @@
 	const CustomBar = ref(customBarHeight)
 	
 	const style = computed(() => {
-		const barStyle = `height:${CustomBar.value}px;padding-top:${StatusBar.value}px;`;
-		return barStyle
+		const style = `height:${CustomBar.value}px;padding-top:${StatusBar.value}px;`;
+		return style
 	})
 	
 	const BackPage = () => {

@@ -128,22 +128,7 @@
 	const nowYMD = [now.getFullYear(), now.getMonth()+1, now.getDate()] // 当前年月日
 	const nowDays = Math.ceil((now - new Date(nowYMD[0].toString())) / 86400000) // 当前是今年的第几天
 	const nowWeek = Math.ceil(nowDays/7) // 当前是今年的第几周
-	let calendarDate = {}
-	try {
-		const result = calendar.solar2lunar(...nowYMD) // 农历
-		if (result && typeof result === 'object') {
-			calendarDate = result
-		}
-	} catch (e) {
-		console.error('solar2lunar error:', e)
-		calendarDate = {
-			IMonthCn: '',
-			IDayCn: '',
-			ncWeek: '',
-			nWeek: '',
-			solar2lunar: null
-		}
-	}
+	const calendarDate = calendar.solar2lunar(...nowYMD) // 农历
 	
 	const movieRef = ref(null) // 今日电影
 	const holidaysRef = ref(null) // 节假日
@@ -157,7 +142,7 @@
 			'flex': 1, 
 			'background': '#201f18',
 		}
-		if (movieRef && movieRef.value && movieRef.value.mov_pic) {
+		if (movieRef.value.mov_pic) {
 			style.background = `#201f18 url("${movieRef.value.mov_pic}") no-repeat center/cover`
 		}
 		return style
@@ -199,25 +184,12 @@
 	}
 	
 	api.fetchHomeWidget([`todayMovie`, `famousSayings`, `nextHoliday`]).then(({ data: resData }) => {
-		try {
-			if (!resData || typeof resData !== 'object') return
-			const { todayMovie, nextHoliday, famousSayings } = resData
-			if (todayMovie && todayMovie.data && todayMovie.data.date) {
-				todayMovie.data.date = getYMDByDateString(todayMovie.data.date)
-				todayMovie.data._date = new Date(todayMovie.data.date.join('-'))
-				movieRef.value = todayMovie.data
-			}
-			if (nextHoliday && Array.isArray(nextHoliday.data)) {
-				holidaysRef.value = nextHoliday.data.filter(item => new Date(item.holiday) > now)
-			}
-			if (famousSayings && famousSayings.data) {
-				famousSayingRef.value = famousSayings.data
-			}
-		} catch (e) {
-			console.error('fetch homeWidget data parse error:', e)
-		}
-	}).catch(err => {
-		console.error('fetch homeWidget request error:', err)
+		const { todayMovie, nextHoliday, famousSayings } = resData
+		todayMovie.data.date = getYMDByDateString(todayMovie.data.date)
+		todayMovie.data._date = new Date(todayMovie.data.date.join('-'))
+		movieRef.value = todayMovie.data
+		holidaysRef.value = nextHoliday.data.filter(item => new Date(item.holiday) > now)
+		famousSayingRef.value = famousSayings.data
 	})
 	
 	function goDoubanMovie () {
