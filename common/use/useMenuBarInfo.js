@@ -7,21 +7,14 @@ const getMenuInfo = function() {
 		statusBarHeight = 0
 	}
 
-	// 运行时检测当前平台是否为小程序
-	let isMP = false
-	try {
-		// #ifdef MP
-		isMP = true
-		// #endif
-	} catch (e) {
-		isMP = false
-	}
-
+	// 默认值：标准导航栏高度 44px
 	let navigationBarHeight = 44
 	let custom = { height: 44, top: statusBarHeight }
 
-	if (isMP) {
-		// 小程序端存在胶囊按钮，可据此精确计算导航栏高度
+	// 运行时检测：直接检查 getMenuButtonBoundingClientRect 是否存在
+	// 存在则说明是支持胶囊按钮的小程序平台，用胶囊按钮精算导航栏高度
+	// 不存在则使用默认 44px（App/H5 端）
+	if (typeof uni.getMenuButtonBoundingClientRect === 'function') {
 		try {
 			custom = uni.getMenuButtonBoundingClientRect()
 			if (custom && typeof custom.height === 'number' && typeof custom.top === 'number') {
