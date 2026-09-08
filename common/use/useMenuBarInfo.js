@@ -1,10 +1,25 @@
 const getMenuInfo = function() {
-	const statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+	let statusBarHeight = 0
+	try {
+		statusBarHeight = uni.getSystemInfoSync().statusBarHeight || 0
+	} catch (e) {
+		statusBarHeight = 0
+	}
 
 	// #ifdef MP
 	// 小程序端存在胶囊按钮，可据此精确计算导航栏高度
-	const custom = uni.getMenuButtonBoundingClientRect()
-	const navigationBarHeight = custom.height + (custom.top - statusBarHeight) * 2
+	let custom = null
+	let navigationBarHeight = 44
+	try {
+		custom = uni.getMenuButtonBoundingClientRect()
+		if (custom && typeof custom.height === 'number' && typeof custom.top === 'number') {
+			navigationBarHeight = custom.height + (custom.top - statusBarHeight) * 2
+		} else {
+			custom = { height: 44, top: statusBarHeight }
+		}
+	} catch (e) {
+		custom = { height: 44, top: statusBarHeight }
+	}
 	// #endif
 
 	// #ifndef MP
@@ -17,7 +32,7 @@ const getMenuInfo = function() {
 	}
 	// #endif
 
-	const customBarHeight = navigationBarHeight + statusBarHeight
+	const customBarHeight = (navigationBarHeight || 44) + (statusBarHeight || 0)
 
 	return {
 		statusBarHeight, // 状态栏高度
