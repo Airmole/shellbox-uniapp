@@ -14,32 +14,31 @@
 				path="/pages/index/login"
 			></tips>
 		</template>
-		<template v-else-if="isReleaseEnv">
 			<view class="padding margin-top-sm bg-white card-radius margin-lr">
-				<view class="text-xl text-bold text-center padding-bottom">开通会员，去广告、解锁更多功能</view>
+				<view class="text-xl text-bold text-center padding-bottom">开通会员，解锁更多功能</view>
 				<view class="text-center text-gray text-sm">
-					微信小程序虚拟支付，支付成功后自动发货开通会员，如遇支付成功未到账会自动为你补发。
+					支付成功后自动发货开通会员<br/>如遇支付成功未到账会自动为你补发。
 				</view>
 			</view>
 
 			<!-- 会员套餐 -->
 			<view class="margin-tb bg-white card-radius margin-lr">
-				<view class="cu-bar bg-white">
+				<view class="cu-bar bg-white card-radius">
 					<view class="action text-bold"><text class="cuIcon-titles text-green"></text>选择会员套餐</view>
 				</view>
 				<view class="padding" v-if="products.length">
-					<view class="flex flex-wrap justify-between"
-						v-for="(item, index) in products" :key="index"
-						@click="selectProduct(item)">
-						<view class="goods-card padding-sm radius" :class="selected && selected.productId === item.productId ? 'bg-gradual-blue' : 'bg-gray'">
-							<view class="text-bold">{{item.title}}</view>
-							<view class="text-lg text-bold margin-top-xs">
-								<text v-if="item.price" class="text-sm">¥</text>{{formatPrice(item.price)}}
+					<view class="flex flex-wrap justify-center">
+						<template v-for="(item, index) in products" :key="index">
+							<view @click="selectProduct(item)" class="padding-sm radius margin-sm basis-sm" :class="selected && selected.productId === item.productId ? 'bg-gradual-blue' : 'bg-gray'">
+								<view class="text-bold">{{item.title}}</view>
+								<view class="text-lg text-bold margin-top-xs">
+									<text v-if="item.price" class="text-sm">¥</text>{{formatPrice(item.price)}}
+								</view>
 							</view>
-						</view>
+						</template>
 					</view>
 					<view class="margin-top-sm">
-						<view v-if="isVip" class="cu-tag round bg-green margin-bottom-xs">当前已是会员，到期时间：{{vipExpireAt || '--'}}</view>
+						<view v-if="isVip" class="cu-tag round bg-gradual-blue margin-bottom-xs">当前已是会员，到期时间：{{vipExpireAt || '--'}}</view>
 						<view v-if="hasPendingOrder(selected && selected.productId)" class="cu-tag round line-orange margin-bottom-xs">检测到未支付订单，点击将续付</view>
 						<button class="cu-btn round bg-default lg block" :disabled="buying" @click="buyVip">
 							{{buying ? '支付处理中...' : (hasPendingOrder(selected && selected.productId) ? '继续支付' : '立即开通')}}
@@ -55,14 +54,6 @@
 			<navigator v-if="isLoginStatus" url="/pages/index/vipOrder" class="cu-btn round bg-white margin-lr margin-tb-sm text-blue border-blue block">
 				查看会员购买记录
 			</navigator>
-		</template>
-		<template v-else-if="!isReleaseEnv">
-			<tips
-				tips="虚拟支付需在小程序正式版（release）环境中使用，当前为开发/体验版，仅供测试。"
-				image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"
-				:showButton="false"
-			></tips>
-		</template>
 		<!-- #endif -->
 
 		<!-- #ifndef MP-WEIXIN -->
@@ -398,11 +389,6 @@
 </script>
 
 <style scoped>
-	.goods-card {
-		width: 48%;
-		margin-bottom: 20upx;
-		box-sizing: border-box;
-	}
 	.card-radius {
 		border-radius: 24upx;
 	}
