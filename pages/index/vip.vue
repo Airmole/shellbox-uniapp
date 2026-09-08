@@ -208,7 +208,7 @@
 		try {
 			loading.value = true
 			const res = await api.fetchVpProducts()
-			const data = res.data || {}
+			const data = res.data.data || res.data || {}
 			products.value = data.list || []
 			if (products.value.length && !selected.value) {
 				selected.value = products.value[0]
@@ -297,11 +297,11 @@
 				quantity: 1,
 				openid: openid
 			})
-			const payData = res.data || {}
+			const payData = res.data.data || res.data || {}
 			const outTradeNo = parseOutTradeNo(payData.signData)
 			uni.hideLoading()
 			if (!payData.signData || !payData.mode || !payData.paySig || !payData.signature) {
-				uni.showToast({ title: (res.data && res.data.message) || '创建订单失败', icon: 'none' })
+				uni.showToast({ title: (payData && payData.message) || '创建订单失败', icon: 'none' })
 				return
 			}
 			await startVirtualPayment(payData, outTradeNo)
@@ -369,7 +369,7 @@
 			await sleep(2000)
 			try {
 				const res = await api.queryVpOrder(outTradeNo)
-				const order = res.data || {}
+				const order = res.data.data || res.data || {}
 				if (order.status === '2' || order.status_text === 'delivered') {
 					return true
 				}
@@ -386,7 +386,7 @@
 		try {
 			const openid = app.getOpenId && app.getOpenId()
 			const res = await api.queryVpOrderByWechat({ outTradeNo, openid })
-			const data = res.data || {}
+			const data = res.data.data || res.data || {}
 			const order = data.local_order || {}
 			return order.status === '2' || order.status_text === 'delivered'
 		} catch (e) {
