@@ -1,38 +1,48 @@
 const getMenuInfo = function() {
 	let statusBarHeight = 0
 	try {
-		statusBarHeight = uni.getSystemInfoSync().statusBarHeight || 0
+		const sysInfo = uni.getSystemInfoSync()
+		statusBarHeight = (sysInfo && sysInfo.statusBarHeight) || 0
 	} catch (e) {
 		statusBarHeight = 0
 	}
 
-	// #ifdef MP
-	// 小程序端存在胶囊按钮，可据此精确计算导航栏高度
-	let custom = null
-	let navigationBarHeight = 44
+	// 运行时检测当前平台是否为小程序
+	let isMP = false
 	try {
-		custom = uni.getMenuButtonBoundingClientRect()
-		if (custom && typeof custom.height === 'number' && typeof custom.top === 'number') {
-			navigationBarHeight = custom.height + (custom.top - statusBarHeight) * 2
-		} else {
+		// #ifdef MP
+		isMP = true
+		// #endif
+	} catch (e) {
+		isMP = false
+	}
+
+	let navigationBarHeight = 44
+	let custom = { height: 44, top: statusBarHeight }
+
+	if (isMP) {
+		// 小程序端存在胶囊按钮，可据此精确计算导航栏高度
+		try {
+			custom = uni.getMenuButtonBoundingClientRect()
+			if (custom && typeof custom.height === 'number' && typeof custom.top === 'number') {
+				navigationBarHeight = custom.height + (custom.top - statusBarHeight) * 2
+			} else {
+				custom = { height: 44, top: statusBarHeight }
+			}
+		} catch (e) {
 			custom = { height: 44, top: statusBarHeight }
 		}
-	} catch (e) {
-		custom = { height: 44, top: statusBarHeight }
 	}
-	// #endif
 
-	// #ifndef MP
-	// H5 与 App 端没有胶囊按钮，getMenuButtonBoundingClientRect 不存在，
-	// 否则会导致页面渲染崩溃、白屏，此处使用标准导航栏高度 44px
-	const navigationBarHeight = 44
-	const custom = {
-		height: 44,
-		top: statusBarHeight
+	// 验证数值有效，防止 NaN/undefined 导致渲染崩溃
+	if (typeof navigationBarHeight !== 'number' || isNaN(navigationBarHeight) || navigationBarHeight <= 0) {
+		navigationBarHeight = 44
 	}
-	// #endif
+	if (typeof statusBarHeight !== 'number' || isNaN(statusBarHeight) || statusBarHeight < 0) {
+		statusBarHeight = 0
+	}
 
-	const customBarHeight = (navigationBarHeight || 44) + (statusBarHeight || 0)
+	const customBarHeight = navigationBarHeight + statusBarHeight
 
 	return {
 		statusBarHeight, // 状态栏高度
