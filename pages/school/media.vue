@@ -60,7 +60,7 @@
 			</view>
 		</view>
 		
-		<view class="cu-modal" :class="isShowModal&&detail ? 'show' : ''">
+		<view class="cu-modal" :class="isShowModal&&detail ? 'show' : ''" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-gray justify-end">
 					<view class="content">{{detail.title}}</view>

@@ -126,7 +126,7 @@
 		</template>
 		
 		<!-- 借阅详情模态框 -->
-		<view class="cu-modal" :class="loanDetailIndex!==null?'show':''">
+		<view class="cu-modal" :class="loanDetailIndex!==null?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-gray justify-end">
 					<view class="content">当前借阅</view>
@@ -193,7 +193,7 @@
 		</view>
 		
 		<!-- 续借结果模态框 -->
-		<view class="cu-modal" :class="renewResult!==''?'show':''">
+		<view class="cu-modal" :class="renewResult!==''?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-gray justify-end">
 					<view class="content">续借结果</view>
@@ -220,7 +220,7 @@
 		</view>
 
 		<!-- 批量续借模态框 -->
-		<view class="cu-modal" :class="showBatchRenewModal?'show':''">
+		<view class="cu-modal" :class="showBatchRenewModal?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar bg-gray justify-end">
 					<view class="content">批量续借</view>

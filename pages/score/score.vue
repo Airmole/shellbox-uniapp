@@ -181,7 +181,7 @@
 		<view class="padding-xl"></view>
 
 		<!-- 成绩详情模态框 -->
-		<view class="cu-modal" :class="displayDetailModal?'show':''">
+		<view class="cu-modal" :class="displayDetailModal?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray">
 				<view class="cu-bar justify-end">
 					<view class="content">{{detail.courseName}}</view>
@@ -268,7 +268,7 @@
 		</view>
 
 		<!-- AI建议底部模态框 -->
-		<view :class="`cu-modal bottom-modal ` + (displaySuggestionModal?'show':'')">
+		<view :class="`cu-modal bottom-modal ` + (displaySuggestionModal?'show':'')" @touchmove.stop.prevent>
 			<view class="cu-dialog">
 				<view class="cu-bar bg-gradual-blue">
 					<view class="action text-white"></view>

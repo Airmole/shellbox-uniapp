@@ -73,7 +73,7 @@
 		<!-- #endif -->
 		
 		<!-- 签到规则 -->
-		<view class="cu-modal bottom-modal" :class="showDocument?'show':''">
+		<view class="cu-modal bottom-modal" :class="showDocument?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog padding-sm bg-gray">
 				<view class="text-right">
 					<view class="action text-blue text-xxl" @tap="showCheckinDocument"><text class="cuIcon-close text-red"></text></view>

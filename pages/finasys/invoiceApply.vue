@@ -117,7 +117,7 @@
 			</template>
 		</template>
 		<!-- 票据明细模态框 -->
-		<view :class="`cu-modal ${showTarget ? 'show' : ''}`">
+		<view :class="`cu-modal ${showTarget ? 'show' : ''}`" @touchmove.stop.prevent>
 			<view class="cu-dialog bg-gray" v-if="datalist[target]">
 				<view class="cu-bar bg-white justify-end">
 					<view class="content">票据明细</view>

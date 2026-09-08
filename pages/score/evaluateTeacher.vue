@@ -98,7 +98,7 @@
 			</view>
 		</template>
 		
-		<view class="cu-modal bottom-modal" :class="showModal?'show':''" v-if="detail">
+		<view class="cu-modal bottom-modal" :class="showModal?'show':''" v-if="detail" @touchmove.stop.prevent>
 			<view class="cu-dialog">
 				<view class="cu-bar bg-gradual-blue">
 					<view class="action text-white"></view>

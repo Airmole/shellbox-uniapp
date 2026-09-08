@@ -111,7 +111,7 @@
 		<!-- #endif -->
 		
 		<!-- 金贝壳积分规则说明 -->
-		<view class="cu-modal bottom-modal" :class="showDocument?'show':''">
+		<view class="cu-modal bottom-modal" :class="showDocument?'show':''" @touchmove.stop.prevent>
 			<view class="cu-dialog padding-sm bg-gray">
 				<view class="text-right">
 					<view class="action text-blue text-xxl" @tap="showPointsDocument"><text class="cuIcon-close text-red"></text></view>
