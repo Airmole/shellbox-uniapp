@@ -694,5 +694,22 @@ export default {
 	},
 	fetchFinasysInvoiceDetail (cfid) {
 		return request(`/finasys/invoice/detail?cfid=${cfid}`)
+	},
+	// 小程序虚拟支付（会员）相关接口
+	// 获取虚拟支付商品列表（3天/7天/30天/永久会员）
+	fetchVpProducts: () => {
+		return request('/vp/products', 'GET')
+	},
+	// 创建虚拟支付订单
+	createVpOrder: (data) => {
+		return request('/vp/create', 'POST', data)
+	},
+	// 查询虚拟支付订单本地状态
+	queryVpOrder: (outTradeNo) => {
+		return request('/vp/query?outTradeNo=' + outTradeNo, 'GET')
+	},
+	// 兜底查询虚拟支付订单（转发微信 query_order）
+	queryVpOrderByWechat: (data) => {
+		return request('/vp/query/wechat', 'POST', data)
 	}
 }

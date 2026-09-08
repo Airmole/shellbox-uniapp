@@ -102,6 +102,15 @@
 					    </view>
 						<view class="action text-yellow"><text v-if="loginStatus">{{balance}}</text><text v-else>*</text></view>
 					</navigator>
+					<!-- #ifdef MP-WEIXIN -->
+					<navigator v-if="loginStatus" url="/pages/index/vip" class="cu-item arrow">
+					    <view class="content">
+					        <text class="cuIcon-vip text-yellow"></text>
+					        <text class="text-grey">开通会员</text>
+					    </view>
+						<view class="action text-yellow" v-if="isVip">已开通</view>
+					</navigator>
+					<!-- #endif -->
 					<!-- #ifndef MP-QQ -->
 					<view v-if="isReleaseEnv" @click="goRecharge" class="cu-item arrow">
 					    <view class="content">

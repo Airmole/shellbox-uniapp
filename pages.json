@@ -4,6 +4,7 @@
 		{ "path": "pages/index/login" },
 		{ "path": "pages/index/feature" },
 		{ "path": "pages/setting/profile" },
+		{ "path": "pages/index/vip" },
 		{ "path": "pages/course/my" },
 		{ "path": "pages/score/score" },
 		{ "path": "pages/course/class" },
