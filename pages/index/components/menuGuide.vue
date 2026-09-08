@@ -44,7 +44,8 @@
 	
 	const isTeacher = computed(() => {
 		let result = false
-		if (loginStatus && edusysAccount.account && (edusysAccount.account.length < 8 || edusysAccount.account.indexOf('T')==0)) result = true
+		const account = (edusysAccount && edusysAccount.value && edusysAccount.value.account) || ''
+		if (loginStatus.value && account && (account.length < 8 || account.indexOf('T')===0)) result = true
 		return result
 	})
 	
@@ -64,24 +65,28 @@
 		platform = 'qqapp'
 		// #endif
 		// #ifdef APP
-		const sysInfo = uni.getSystemInfoSync()
-		platform =sysInfo.osName
+		try {
+			const sysInfo = uni.getSystemInfoSync()
+			platform = (sysInfo && sysInfo.osName) || 'app'
+		} catch (e) {
+			platform = 'app'
+		}
 		// #endif
 		
 		return function (icon) {
-		    // 如果icon.logined为true，则需要检查loginStatus是否也为true
-		    if (icon.logined && !loginStatus) return false;
-		    // 如果icon.teacher为true，则需要检查isTeacher是否也为true
-		    if (icon.teacher && !isTeacher) return false;
-		    // 如果icon.student为true，则需要检查isStudent是否也为true
-		    if (icon.student && !isStudent) return false;
-		    // 如果icon.platform包含platform，则返回true，否则返回false
-		    return icon.platform.includes(platform);
+			// 如果icon.logined为true，则需要检查loginStatus是否也为true
+			if (icon.logined && !loginStatus.value) return false;
+			// 如果icon.teacher为true，则需要检查isTeacher是否也为true
+			if (icon.teacher && !isTeacher.value) return false;
+			// 如果icon.student为true，则需要检查isStudent是否也为true
+			if (icon.student && !isStudent.value) return false;
+			// 如果icon.platform包含platform，则返回true，否则返回false
+			return icon.platform.includes(platform);
 		}
 	})
 	
 	function goPage(menu) {
-		if (menu.need_login && (getEdusysAccount() === false || !loginStatus)) {
+		if (menu.need_login && (getEdusysAccount() === false || !loginStatus.value)) {
 			uni.showToast({ title: '此功能需要登录', icon: 'none' })
 			return
 		}
@@ -90,7 +95,7 @@
 		if (menu.menu_id === 'myCourse') {
 			// 正则匹配出本周是第几周
 			let nowWeek = ''
-			const courseWeekText =  '' || (courses && courses.value.nowWeek)
+			const courseWeekText =  '' || (courses && courses.value && courses.value.nowWeek)
 			const nowWeekRegexp = /\d{1,2}/
 			const nowWeekRegexpResult = Number(nowWeekRegexp.exec(courseWeekText))
 			if (nowWeekRegexp.test(courseWeekText) && nowWeekRegexpResult > 0 && nowWeekRegexpResult < 30) {

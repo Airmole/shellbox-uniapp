@@ -37,6 +37,10 @@
 		},
 		onShow: function() {},
 		onHide: function() {},
+		// App 端全局错误监听，用于定位白屏问题
+		onError: function(err) {
+			console.error('[App onError]', err)
+		},
 		methods: {
 			logout() {
 				// 仅清除 eduSys 账号登录态，保留 openid 等微信身份标识
