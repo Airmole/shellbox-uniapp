@@ -40,8 +40,9 @@
 					</view>
 					<view class="margin-top-sm">
 						<view v-if="isVip" class="cu-tag round bg-green margin-bottom-xs">当前已是会员，到期时间：{{vipExpireAt || '--'}}</view>
+						<view v-if="hasPendingOrder(selected && selected.productId)" class="cu-tag round line-orange margin-bottom-xs">检测到未支付订单，点击将续付</view>
 						<button class="cu-btn round bg-default lg block" :disabled="buying" @click="buyVip">
-							{{buying ? '支付处理中...' : '立即开通'}}
+							{{buying ? '支付处理中...' : (hasPendingOrder(selected && selected.productId) ? '继续支付' : '立即开通')}}
 						</button>
 					</view>
 				</view>
@@ -50,6 +51,10 @@
 					<text v-else>暂无可用会员套餐，请稍后再试</text>
 				</view>
 			</view>
+			<!-- 会员购买记录入口 -->
+			<navigator v-if="isLoginStatus" url="/pages/index/vipOrder" class="cu-btn round bg-white margin-lr margin-tb-sm text-blue border-blue block">
+				查看会员购买记录
+			</navigator>
 		</template>
 		<template v-else-if="!isReleaseEnv">
 			<tips
@@ -100,6 +105,8 @@
 	const selected = ref(null)
 	const loading = ref(true)
 	const buying = ref(false)
+	// 记录待支付订单，用于取消支付后复用 outTradeNo 续付
+	const pendingOrders = ref([])
 
 	onLoad(() => {
 		isVip.value = app.globalData.isVip
@@ -117,6 +124,7 @@
 		if (isLoginStatus.value) {
 			loadVipProfile()
 			loadProducts()
+			loadPendingOrders()
 		}
 	})
 
@@ -152,6 +160,29 @@
 
 	function selectProduct (item) {
 		selected.value = item
+	}
+
+	// 加载待支付订单，用于判断是否需要续付（repay）
+	async function loadPendingOrders () {
+		try {
+			const res = await api.fetchVpOrders('0', 1, 50)
+			const data = res.data.data || res.data || {}
+			pendingOrders.value = (data.data || []).filter(o => o.status === '0' || o.status_text === 'pending')
+		} catch (e) {
+			console.log('loadPendingOrders error', e)
+		}
+	}
+
+	// 根据商品查找待支付订单（若有则续付复用同一 outTradeNo）
+	function findPendingOrder (productId) {
+		if (!productId) return null
+		return pendingOrders.value.find(o => o.product_id === productId)
+	}
+
+	// 判断当前商品是否存在待支付订单（用于界面提示续付）
+	function hasPendingOrder (productId) {
+		if (!productId) return false
+		return !!findPendingOrder(productId)
 	}
 
 	// 金额格式化：优先使用 yuan，否则从 cents 换算
@@ -220,6 +251,37 @@
 		}
 
 		buying.value = true
+
+		// 若存在该商品的待支付订单，则复用同一 outTradeNo 续付，避免重复创建僵尸订单
+		const pending = findPendingOrder(selected.value.productId)
+		if (pending && pending.out_trade_no) {
+			uni.showLoading({ title: '续付处理中...', mask: true })
+			try {
+				const res = await api.repayVpOrder({
+					outTradeNo: pending.out_trade_no,
+					openid: openid
+				})
+				const payData = res.data.data || res.data || {}
+				const outTradeNo = payData.outTradeNo || pending.out_trade_no
+				uni.hideLoading()
+				if (!payData.signData || !payData.mode || !payData.paySig || !payData.signature) {
+					uni.showToast({ title: (payData && payData.message) || '订单当前状态不可支付', icon: 'none' })
+					// 非待支付状态，刷新待支付列表
+					loadPendingOrders()
+					return
+				}
+				await startVirtualPayment(payData, outTradeNo)
+			} catch (e) {
+				uni.hideLoading()
+				const msg = (e && e.data && e.data.message) || '续付失败'
+				uni.showToast({ title: msg, icon: 'none' })
+				loadPendingOrders()
+			} finally {
+				buying.value = false
+			}
+			return
+		}
+
 		uni.showLoading({ title: '创建订单中...', mask: true })
 		try {
 			const res = await api.createVpOrder({
@@ -276,11 +338,14 @@
 						if (ok) uni.showToast({ title: '会员已开通', icon: 'none' })
 					}
 					refreshVip()
+					loadPendingOrders()
 					resolve(true)
 				},
 				fail: (err) => {
 					console.log('requestVirtualPayment fail', err)
 					uni.showToast({ title: '支付失败或已取消', icon: 'none' })
+					// 取消后订单仍为待支付，刷新待支付列表以便后续续付
+					loadPendingOrders()
 					resolve(false)
 				}
 			})

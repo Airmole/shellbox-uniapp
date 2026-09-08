@@ -711,5 +711,18 @@ export default {
 	// 兜底查询虚拟支付订单（转发微信 query_order）
 	queryVpOrderByWechat: (data) => {
 		return request('/vp/query/wechat', 'POST', data)
+	},
+	// 查询虚拟支付订单记录列表（分页，可按状态筛选）
+	fetchVpOrders: (status = '', page = 1, pageSize = 10) => {
+		const params = {}
+		if (status !== '' && status !== null && typeof status !== 'undefined') params.status = status
+		params.page = page
+		params.pageSize = pageSize
+		const queryString = httpBuildQuery(params)
+		return request(`/vp/orders?${queryString}`, 'GET')
+	},
+	// 取消支付后重新支付（复用同一 outTradeNo 拉取新的 payData）
+	repayVpOrder: (data) => {
+		return request('/vp/repay', 'POST', data)
 	}
 }

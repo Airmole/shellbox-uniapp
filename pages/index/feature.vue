@@ -110,6 +110,12 @@
 					    </view>
 						<view class="action text-yellow" v-if="isVip">已开通</view>
 					</navigator>
+					<navigator v-if="loginStatus" url="/pages/index/vipOrder" class="cu-item arrow">
+					    <view class="content">
+					        <text class="cuIcon-form text-blue"></text>
+					        <text class="text-grey">会员购买记录</text>
+					    </view>
+					</navigator>
 					<!-- #endif -->
 					<!-- #ifndef MP-QQ -->
 					<view v-if="isReleaseEnv" @click="goRecharge" class="cu-item arrow">
