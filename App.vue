@@ -10,7 +10,7 @@
 			isVip: false,
 			logoImageUrl: 'https://r2.airmole.cn/i/2024/11/30/17v4j5-c1.jpg',
 			loginPromise: null,
-			defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
+			defaultAvatar: 'https://r2.airmole.cn/i/2026/09/10/4zmggf-skb0.png'
 		},
 		onLaunch: function() {
 			var self = this

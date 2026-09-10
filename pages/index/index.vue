@@ -102,12 +102,6 @@
 	const praise = ref('')
 	let todayCourses = ref([])
 
-	watch(loginStatus, (newValue) => {
-		if (newValue === true) {
-			uni.hideLoading()
-		}
-	})
-
 	watch(courses, (newValue) => {
 		const table = (newValue && newValue.table) || []
 		const today = new Date()
@@ -120,9 +114,6 @@
 	const isVip = ref(false)
 	onLoad(() => {
 		isVip.value = appStore.getIsVip()
-		uni.showLoading({ title: '加载中...'})
-		// 无网络 / 未登录场景下 loading 不会自然关闭，兜底关闭避免「假白屏」
-		setTimeout(() => { uni.hideLoading() }, 5000)
 		// #ifdef MP
 		uni.showShareMenu({ menus: ["shareAppMessage", "shareTimeline"] })
 		// #endif
@@ -132,13 +123,6 @@
 		// 兜底加载：仅对「本机登录过但当前无登录 Promise」的情况生效，不会重复请求
 		appStore.ensureAppData()
 	})
-
-	// 关键数据就绪后立即关闭 loading，避免接口慢时出现「假白屏」遮罩
-	watch([loginStatus, courses], () => {
-		if (loginStatus.value || (courses.value && courses.value.table.length)) {
-			uni.hideLoading()
-		}
-	}, { immediate: true })
 
 	// 周几
 	function getDayByDateStr(str = '') {

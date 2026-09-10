@@ -155,8 +155,8 @@
 	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页空白
 	const appStore = useAppStore()
 	const { loginStatus, userInfo, edusysAccount } = storeToRefs(appStore)
-	const defaultAvatar = 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
-	const backgroundImageUrl = 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp'
+	const defaultAvatar = 'https://r2.airmole.cn/i/2026/09/10/4zmggf-skb0.png'
+	const backgroundImageUrl = 'https://r2.airmole.cn/i/2026/09/10/4znexf-91nh.webp'
 	let waterWaveUrl = ref('https://r2.airmole.cn/images/weapp/water-wave-light.webp')
 	
 	const isVip = ref(false)

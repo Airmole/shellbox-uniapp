@@ -24,7 +24,7 @@ export const GLOBAL_DATA_DEFAULTS = {
 	isVip: false,
 	logoImageUrl: 'https://r2.airmole.cn/i/2024/11/30/17v4j5-c1.jpg',
 	loginPromise: null,
-	defaultAvatar: 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png',
+	defaultAvatar: 'https://r2.airmole.cn/i/2026/09/10/4zmggf-skb0.png',
 }
 
 // 内存兜底：始终可读写，作为 storage / App 实例都不可用时的最后防线
