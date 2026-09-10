@@ -119,7 +119,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '../../request/api'
 	export default {
@@ -145,8 +145,8 @@
 		onLoad() {
 			uni.showLoading({ title: '加载中...', mask: true })
 			// #ifdef MP-WEIXIN
-			this.isReleaseEnv = (app.globalData.env === 'release')
-			if (app.globalData.env !== 'release') {
+			this.isReleaseEnv = (getGlobalData('env', 'develop') === 'release')
+			if (getGlobalData('env', 'develop') !== 'release') {
 				uni.switchTab({ url: '/pages/index/index' })
 			}
 			// #endif

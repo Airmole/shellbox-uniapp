@@ -152,11 +152,11 @@
 	import { storeToRefs } from 'pinia'
 	import menuGuide from './components/menuGuide.vue'
 	
-	const app = getApp()
+	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页空白
 	const appStore = useAppStore()
 	const { loginStatus, userInfo, edusysAccount } = storeToRefs(appStore)
-	const defaultAvatar = 'https://store2018.muapp.cn/images/weapp/defaultAvatar.png'
-	const backgroundImageUrl = 'https://store2018.muapp.cn/images/weapp/background/4697920-48dab9eddafb6ce3.webp'
+	const defaultAvatar = 'https://r2.airmole.cn/i/2026/09/10/4zmggf-skb0.png'
+	const backgroundImageUrl = 'https://r2.airmole.cn/i/2026/09/10/4znexf-91nh.webp'
 	let waterWaveUrl = ref('https://r2.airmole.cn/images/weapp/water-wave-light.webp')
 	
 	const isVip = ref(false)
@@ -167,17 +167,23 @@
 	const isReleaseEnv = ref(false)
 	
 	onLoad(() => {
-		isVip.value = app.globalData.isVip
+		isVip.value = appStore.getIsVip()
 		// #ifdef MP-WEIXIN
-		isReleaseEnv.value = (app.globalData.env === 'release')
+		isReleaseEnv.value = (appStore.getGlobalData('env') === 'release')
 		// #endif
 		// #ifdef H5
 		isReleaseEnv.value = true
 		// #endif
 		uni.showLoading({ title: '加载中...' })
-		const sysInfo = uni.getSystemInfoSync()
-		if (sysInfo.theme === 'dark') waterWaveUrl.value = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'
+		setTimeout(() => { uni.hideLoading() }, 5000)
+		try {
+			const sysInfo = uni.getSystemInfoSync()
+			if (sysInfo && sysInfo.theme === 'dark') waterWaveUrl.value = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'
+		} catch (e) {
+			console.error('getSystemInfoSync error:', e)
+		}
 		fetchMenuList()
+		appStore.ensureAppData()
 	})
 	
 	onShow(() => {
@@ -198,8 +204,8 @@
 			profile.value = data
 			if (typeof data.isVip !== 'undefined') {
 				isVip.value = !!data.isVip
-				// 同步更新全局 isVip
-				app.globalData.isVip = !!data.isVip
+				// 同步更新全局 isVip（安全写入，App 实例未就绪也不抛错）
+				appStore.setGlobalData('isVip', !!data.isVip)
 			}
 		}).catch(error => {
 			console.log('fetchProfile error', error)
@@ -251,23 +257,41 @@
 		uni.showToast({ title: '暂仅支持在微信小程序端修改头像昵称', icon: 'none' })
 	}
 	
+	// 使用内嵌 web-view 打开外部 H5（App / 小程序通用兜底）
+	function openWebview (url) {
+		// #ifdef H5
+		window.location.href = url
+		return
+		// #endif
+		uni.navigateTo({
+			url: '/pages/webview/webview?url=' + encodeURIComponent(url)
+		})
+	}
+	
 	function goUserGuide () {
+		const url = 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'
 		// #ifdef MP-WEIXIN
 		try {
-			wx.openOfficialAccountArticle({url: 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'})
+			wx.openOfficialAccountArticle({url})
 		} catch (error) {
-			uni.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w') })
+			openWebview(url)
 		}
+		return
 		// #endif
 		
 		// #ifdef MP-QQ
-		this.copyText('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w')
+		uni.setClipboardData({
+			data: url,
+			success () {
+				uni.showToast({ title: '链接已复制，请在浏览器中打开', icon: 'none' })
+			}
+		})
+		return
 		// #endif
 		
-		// #ifdef H5
-		uni.showLoading({ title: '加载中...' })
-		window.location.href = 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'
-		// #endif
+		// ⚠️ 'MP-WEIXIN' / 'MP-QQ' / 'H5' 都不包含 App 端，
+		// App 必须显式补分支，否则函数体被整个剔除，点击毫无反应。
+		openWebview(url)
 	}
 	
 	function openWechatAuthSetting () {
@@ -285,10 +309,8 @@
 		return
 		// #endif
 		
-		// #ifdef H5
-		window.open('https://ifdian.net/a/Airmole?tab=shop')
-		return
-		// #endif
+		// App / H5 / 其他小程序端统一打开爱发电页面
+		openWebview('https://ifdian.net/a/Airmole?tab=shop')
 	}
 	
 	onShareAppMessage (() => {

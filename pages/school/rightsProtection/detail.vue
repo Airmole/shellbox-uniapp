@@ -152,7 +152,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData, setGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	import { request } from '@/request/index.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
@@ -175,7 +175,7 @@
 			}
 		},
 		onLoad: function (options) {
-			this.env = app.globalData.env
+			this.env = getGlobalData('env', 'develop')
 			this.inital(options)
 		  },
 		  onShow: function () {
@@ -183,7 +183,7 @@
 		  },
 		methods: {
 			inital: function (options) {
-			    const envVersion = app.globalData.env
+			    const envVersion = getGlobalData('env', 'develop')
 			    if (envVersion != 'release') {
 					uni.switchTab({ url: '../../index/index' })
 			    }
@@ -193,11 +193,11 @@
 			    const backpage = options.backpage ? options.backpage : 1
 			    this.id = id
 			    this.getDetailData(id, 1)
-			    if (app.globalData.isBoardAdminer == undefined) {
+			    if (getGlobalData('isBoardAdminer', undefined) === undefined) {
 			      this.isAdminerMethod(uid)
 			    } else {
 			      this.uid = uid
-				  this.isAdminer = app.globalData.isBoardAdminer ? true : false
+				  this.isAdminer = getGlobalData('isBoardAdminer', false) ? true : false
 			    }
 			  },
 			  getDetailData: function (id, page = 1) {
@@ -279,11 +279,11 @@
 			  },
 			  isAdminerMethod: function (uid = 0) {
 				api.fetchIsRightsProtectionAdminer(uid).then(res => {
-				  app.globalData.isBoardAdminer = false
+				  setGlobalData('isBoardAdminer', false)
 				  if (res.data.code == 200 && res.data.message == 'success') {
 					this.uid = uid
 					this.isAdminer = true
-					app.globalData.isBoardAdminer = true
+					setGlobalData('isBoardAdminer', true)
 				  }
 				})
 			  },

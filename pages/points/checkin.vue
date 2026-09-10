@@ -87,7 +87,7 @@
 	</view>
 </template> 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '../../request/api'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import { getTodayDateString } from '../../common/utils/tools'
@@ -120,7 +120,7 @@
 			}
 		},
 		onLoad () {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			this.date = getTodayDateString()
 			const sysInfo = uni.getSystemInfoSync()
 			if (sysInfo.theme === 'dark') this.waterWaveUrl = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'

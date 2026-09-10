@@ -197,22 +197,33 @@
 		// window.location.href = doubanUrl
 	}
 	
+	// 打开外部 H5：H5 端直接新窗口，App / 其他端走内嵌 webview 页
+	function openWebview (url) {
+		// #ifdef H5
+		window.open(url)
+		return
+		// #endif
+		uni.navigateTo({
+			url: '/pages/webview/webview?url=' + encodeURIComponent(url)
+		})
+	}
+	
 	function goCalendar () {
 		// #ifdef MP-WEIXIN
 		uni.navigateToMiniProgram({ appId: 'wx08787e63eba0d16b' }) // 幸运日历 微信小程序
+		return
 		// #endif
-		// #ifdef H5
-		window.open('https://mobile.51wnl-cq.com/huangli_tab_h5') //万年历
-		// #endif
+		// ⚠️ 'MP-WEIXIN' 与 'H5' 都不包含 App 端，App 端必须补一条通用分支，
+		// 否则 App 端整个函数体被条件编译剔除，点击后毫无反应。
+		openWebview('https://mobile.51wnl-cq.com/huangli_tab_h5') // 万年历
 	}
 	
 	function goHoliday () {
 		// #ifdef MP-WEIXIN
 		uni.navigateToMiniProgram({ appId: 'wxf08afe7fdbaee79b' }) // 下一个假期 微信小程序
+		return
 		// #endif
-		// #ifdef H5
-		window.open('https://xiayigejiaqi.com') // 下一个假期 H5
-		// #endif
+		openWebview('https://xiayigejiaqi.com') // 下一个假期
 	}
 	
 	function hideMovieModal () {
