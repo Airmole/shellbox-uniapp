@@ -96,7 +96,7 @@
 	import { getWeekNameByDayNumber } from '@/common/utils/tools.js'
 	import { useAppStore } from '@/stores/app'
 	import { storeToRefs } from 'pinia'
-	const app = getApp()
+	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页拿不到数据
 	const appStore = useAppStore()
 	const { courses, calendar, loginStatus } = storeToRefs(appStore)
 	const praise = ref('')
@@ -105,33 +105,40 @@
 	watch(loginStatus, (newValue) => {
 		if (newValue === true) {
 			uni.hideLoading()
-			// 登录完成，同步最新 isVip
-			isVip.value = app.globalData.isVip
 		}
 	})
 
 	watch(courses, (newValue) => {
+		const table = (newValue && newValue.table) || []
 		const today = new Date()
-		const dayIndex = today.getDay() > 0 ? today.getDay() - 1 : (newValue.table.length - 1)
-		if (newValue.table[dayIndex]) {
-			todayCourses.value = newValue.table[dayIndex].items.filter((item) => item && item.courseName)
-		}
+		const dayIndex = today.getDay() > 0 ? today.getDay() - 1 : (table.length - 1)
+		const dayCourses = table[dayIndex] || {}
+		const items = dayCourses.items || []
+		todayCourses.value = items.filter((item) => item && item.courseName)
 	})
 
 	const isVip = ref(false)
 	onLoad(() => {
-		isVip.value = app.globalData.isVip
+		isVip.value = appStore.getIsVip()
 		uni.showLoading({ title: '加载中...'})
+		// 无网络 / 未登录场景下 loading 不会自然关闭，兜底关闭避免「假白屏」
+		setTimeout(() => { uni.hideLoading() }, 5000)
 		// #ifdef MP
 		uni.showShareMenu({ menus: ["shareAppMessage", "shareTimeline"] })
 		// #endif
 	})
 
 	onShow(() => {
-		// 同步全局 isVip（自动登录可能在此前异步完成）
-		isVip.value = app.globalData.isVip
-		if (loginStatus) uni.hideLoading()
+		// 兜底加载：仅对「本机登录过但当前无登录 Promise」的情况生效，不会重复请求
+		appStore.ensureAppData()
 	})
+
+	// 关键数据就绪后立即关闭 loading，避免接口慢时出现「假白屏」遮罩
+	watch([loginStatus, courses], () => {
+		if (loginStatus.value || (courses.value && courses.value.table.length)) {
+			uni.hideLoading()
+		}
+	}, { immediate: true })
 
 	// 周几
 	function getDayByDateStr(str = '') {

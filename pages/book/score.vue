@@ -112,7 +112,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	export default {
@@ -139,7 +139,7 @@
 			}
 		},
 		onLoad() {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return

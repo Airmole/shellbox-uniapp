@@ -107,7 +107,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData, getAppInstance } from '@/common/store/globalData.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '@/request/api.js'
 	import { request } from '@/request/index.js'
@@ -139,8 +139,8 @@
 		},
 		onLoad(options) {
 			// #ifdef MP
-			this.env = app.globalData.env
-			if (app.globalData.env !== 'release') {
+			this.env = getGlobalData('env', 'develop')
+			if (getGlobalData('env', 'develop') !== 'release') {
 				uni.switchTab({ url: '../../index/index' })
 			}
 			// #endif
@@ -148,7 +148,7 @@
 		},
 		methods: {
 			inital: function (options) {
-			    let openid = app.getOpenId()
+			    let openid = getAppInstance().getOpenId()
 				if (typeof openid === 'object') openid = openid.openid
 			    const nickname = openid
 			    const avatar = 'https://r2.airmole.cn/images/upload/4697920-5a559d389ef75773.webp'

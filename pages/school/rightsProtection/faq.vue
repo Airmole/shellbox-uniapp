@@ -72,7 +72,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData, setGlobalData } from '@/common/store/globalData.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '@/request/api.js'
 	export default {
@@ -88,8 +88,8 @@
 			}
 		},
 		  onLoad: function (options) {
-		    this.env = app.globalData.env
-		    if (app.globalData.env != 'release') {
+		    this.env = getGlobalData('env', 'develop')
+		    if (getGlobalData('env', 'develop') != 'release') {
 		      uni.switchTab({ url: '../../index/index' })
 		    }
 		    
@@ -114,10 +114,10 @@
 			  },
 			  isAdminerMethod: function(uid = 0) {
 				  api.fetchIsRightsProtectionAdminer(uid).then(res => {
-					app.globalData.isBoardAdminer = false
+					setGlobalData('isBoardAdminer', false)
 					if (res.data.code == 200 && res.data.message == 'success') {
 					  this.isAdminer = true
-					  app.globalData.isBoardAdminer = true
+					  setGlobalData('isBoardAdminer', true)
 					}
 				  })
 			  },

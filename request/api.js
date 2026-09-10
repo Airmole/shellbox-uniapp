@@ -56,7 +56,7 @@ function exportRequest(url, data, { fileType = 'xlsx', errorMsg = '导出失败'
 	})
 }
 
-export default {
+const api = {
 	// 登录换取openID
 	uniLogin: (data) => {
 		// #ifdef MP-WEIXIN
@@ -696,3 +696,5 @@ export default {
 		return request(`/finasys/invoice/detail?cfid=${cfid}`)
 	}
 }
+
+export default api

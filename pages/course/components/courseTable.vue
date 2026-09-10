@@ -233,11 +233,11 @@
 </template>
 
 <script setup>
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import { ref, onMounted } from 'vue'
 	import { onLoad } from '@dcloudio/uni-app'
 	import { navigateToPlace } from '@/common/utils/location.js'
 
-	const app = getApp()
 	let screenWidth = ref(375)
 	let columnTitleWidth = ref(42)
 	let tableWidth = ref(500)
@@ -280,7 +280,7 @@
 	})
 
 	function syncIsVip() {
-		isVip.value = !!(app && app.globalData && app.globalData.isVip)
+		isVip.value = !!getGlobalData('isVip', false)
 	}
 	
 	function hideModal() {
