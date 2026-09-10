@@ -3,46 +3,62 @@
 		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
 			<view>开通会员</view>
 		</cu-custom>
+		
+		<view class="padding margin-top-sm bg-white card-radius margin-lr">
+			<view class="text-xl text-bold text-center padding-bottom">开通会员，解锁更多功能...</view>
+			<view class="text-center text-gray text-sm">
+				支付成功后自动发货开通会员<br/>如遇支付成功未到账会自动为你补发。
+			</view>
+		</view>
 
-		<!-- #ifdef MP-WEIXIN -->
 		<template v-if="!isLoginStatus">
 			<tips
-				tips="哎呀~还没登录嘛？"
+				tips="开通会员，请先登录！"
 				image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"
 				:showButton="true"
 				buttonText="立即登录"
 				path="/pages/index/login"
 			></tips>
 		</template>
-			<view class="padding margin-top-sm bg-white card-radius margin-lr">
-				<view class="text-xl text-bold text-center padding-bottom">开通会员，解锁更多功能</view>
-				<view class="text-center text-gray text-sm">
-					支付成功后自动发货开通会员<br/>如遇支付成功未到账会自动为你补发。
+		<template v-else>
+			<!-- 充值号码 -->
+			<view class="bg-white round margin margin-top-xl">
+				<view class="cu-form-group round">
+					<view class="title">充值账号</view>
+					<input placeholder="输入充值账号(学号)" v-model="usercode"></input>
+					<text @click="clearUsercode" class="cuIcon-close text-gray"></text>
 				</view>
 			</view>
-
 			<!-- 会员套餐 -->
 			<view class="margin-tb bg-white card-radius margin-lr">
 				<view class="cu-bar bg-white card-radius">
 					<view class="action text-bold"><text class="cuIcon-titles text-green"></text>选择会员套餐</view>
 				</view>
-				<view class="padding" v-if="products.length">
+				<view class="padding-tb" v-if="products.length">
 					<view class="flex flex-wrap justify-center">
 						<template v-for="(item, index) in products" :key="index">
-							<view @click="selectProduct(item)" class="padding-sm radius margin-sm basis-sm" :class="selected && selected.productId === item.productId ? 'bg-gradual-blue' : 'bg-gray'">
-								<view class="text-bold">{{item.title}}</view>
-								<view class="text-lg text-bold margin-top-xs">
-									<text v-if="item.price" class="text-sm">¥</text>{{formatPrice(item.price)}}
+							<view @click="selectProduct(item)" class="padding-tb-xs radius margin-sm basis-sm flex" :class="selected && selected.productId === item.productId ? 'bg-gradual-blue' : 'bg-gray'">
+								<view class="margin-xs"> <image :src="item.image" mode="widthFix" style="width: 100rpx;" class="radius"></image> </view>
+								<view class="margin-xs">
+									<view class="text-bold">{{item.title}}</view>
+									<view class="text-lg text-bold margin-top-xs">
+										<text v-if="item.price" class="text-sm">¥</text>{{formatPrice(item.price)}}
+									</view>
 								</view>
 							</view>
 						</template>
 					</view>
-					<view class="margin-top-sm">
+					<view class="margin-top margin-lr">
 						<view v-if="isVip" class="cu-tag round bg-gradual-blue margin-bottom-xs">当前已是会员，到期时间：{{vipExpireAt || '--'}}</view>
-						<view v-if="hasPendingOrder(selected && selected.productId)" class="cu-tag round line-orange margin-bottom-xs">检测到未支付订单，点击将续付</view>
-						<button class="cu-btn round bg-default lg block" :disabled="buying" @click="buyVip">
-							{{buying ? '支付处理中...' : (hasPendingOrder(selected && selected.productId) ? '继续支付' : '立即开通')}}
+						<!-- 微信小程序虚拟支付 -->
+						<!-- #ifdef MP-WEIXIN -->
+						<button class="cu-btn round bg-gradual-blue lg block" :disabled="buying" @click="buyVip">
+							{{buying ? '支付处理中...' : '立即开通'}}
 						</button>
+						<!-- #endif -->
+						<!-- #ifdef H5 -->
+						<button class="cu-btn round bg-gradual-blue lg block" @click="goIfdianBuyVip">立即开通</button>
+						<!-- #endif -->
 					</view>
 				</view>
 				<view v-else class="padding text-center text-gray">
@@ -51,27 +67,10 @@
 				</view>
 			</view>
 			<!-- 会员购买记录入口 -->
-			<navigator v-if="isLoginStatus" url="/pages/index/vipOrder" class="cu-btn round bg-white margin-lr margin-tb-sm text-blue border-blue block">
+			<navigator v-if="isLoginStatus" url="/pages/index/vipOrder" class="text-center round margin-lr margin-tb-sm text-blue border-blue block" :render-link="true">
 				查看会员购买记录
 			</navigator>
-		<!-- #endif -->
-
-		<!-- #ifndef MP-WEIXIN -->
-		<template v-if="!isLoginStatus">
-			<tips
-				tips="哎呀~还没登录嘛？"
-				image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"
-				:showButton="true"
-				buttonText="立即登录"
-				path="/pages/index/login"
-			></tips>
 		</template>
-		<view v-else class="padding margin-top bg-white card-radius margin-lr">
-			<view class="padding text-center text-gray">
-				微信小程序虚拟支付仅在微信小程序端支持，请在微信小程序中使用会员购买功能。
-			</view>
-		</view>
-		<!-- #endif -->
 
 		<view class="text-center padding"></view>
 	</view>
@@ -87,26 +86,18 @@
 	const app = getApp()
 	const appStore = useAppStore()
 	const { loginStatus } = storeToRefs(appStore)
-
+	
+	const usercode = ref('')
 	const isLoginStatus = ref(false)
-	const isReleaseEnv = ref(false)
 	const isVip = ref(false)
 	const vipExpireAt = ref('')
 	const products = ref([])
 	const selected = ref(null)
 	const loading = ref(true)
 	const buying = ref(false)
-	// 记录待支付订单，用于取消支付后复用 outTradeNo 续付
-	const pendingOrders = ref([])
 
 	onLoad(() => {
 		isVip.value = app.globalData.isVip
-		// #ifdef MP-WEIXIN
-		isReleaseEnv.value = (app.globalData.env === 'release')
-		// #endif
-		// #ifndef MP-WEIXIN
-		isReleaseEnv.value = false
-		// #endif
 	})
 
 	onShow(() => {
@@ -115,7 +106,6 @@
 		if (isLoginStatus.value) {
 			loadVipProfile()
 			loadProducts()
-			loadPendingOrders()
 		}
 	})
 
@@ -123,6 +113,7 @@
 		try {
 			const res = await api.fetchProfile()
 			const profile = res.data.data || res.data
+			usercode.value = profile.usercode
 			if (typeof profile.isVip !== 'undefined') {
 				isVip.value = !!profile.isVip
 				app.globalData.isVip = !!profile.isVip
@@ -151,29 +142,6 @@
 
 	function selectProduct (item) {
 		selected.value = item
-	}
-
-	// 加载待支付订单，用于判断是否需要续付（repay）
-	async function loadPendingOrders () {
-		try {
-			const res = await api.fetchVpOrders('0', 1, 50)
-			const data = res.data.data || res.data || {}
-			pendingOrders.value = (data.data || []).filter(o => o.status === '0' || o.status_text === 'pending')
-		} catch (e) {
-			console.log('loadPendingOrders error', e)
-		}
-	}
-
-	// 根据商品查找待支付订单（若有则续付复用同一 outTradeNo）
-	function findPendingOrder (productId) {
-		if (!productId) return null
-		return pendingOrders.value.find(o => o.product_id === productId)
-	}
-
-	// 判断当前商品是否存在待支付订单（用于界面提示续付）
-	function hasPendingOrder (productId) {
-		if (!productId) return false
-		return !!findPendingOrder(productId)
 	}
 
 	// 金额格式化：优先使用 yuan，否则从 cents 换算
@@ -224,8 +192,32 @@
 	function sleep (ms) {
 		return new Promise(resolve => setTimeout(resolve, ms))
 	}
+	
+	function goIfdianBuyVip () {
+		const productId = selected.value.productId
+		if (productId === 'shellbox_vip_3') {
+			window.open('https://ifdian.net/item/28177a16295b11f088b752540025c377')
+			return
+		}
+		if (productId === 'shellbox_vip_7') {
+			window.open('https://ifdian.net/item/9938be70295c11f0a0235254001e7c00')
+			return
+		}
+		if (productId === 'shellbox_vip_30') {
+			window.open('https://ifdian.net/item/016764e2295d11f0948152540025c377')
+			return
+		}
+		if (productId === 'shellbox_vip_999') {
+			window.open('https://ifdian.net/item/c1be94fc295f11f0b65d52540025c377')
+			return
+		}
+	}
 
 	async function buyVip () {
+		if (!usercode.value) {
+			uni.showToast({ title: '请输入充值账号', icon: 'none' })
+			return
+		}
 		if (!selected.value) {
 			uni.showToast({ title: '请先选择会员套餐', icon: 'none' })
 			return
@@ -243,42 +235,13 @@
 
 		buying.value = true
 
-		// 若存在该商品的待支付订单，则复用同一 outTradeNo 续付，避免重复创建僵尸订单
-		const pending = findPendingOrder(selected.value.productId)
-		if (pending && pending.out_trade_no) {
-			uni.showLoading({ title: '续付处理中...', mask: true })
-			try {
-				const res = await api.repayVpOrder({
-					outTradeNo: pending.out_trade_no,
-					openid: openid
-				})
-				const payData = res.data.data || res.data || {}
-				const outTradeNo = payData.outTradeNo || pending.out_trade_no
-				uni.hideLoading()
-				if (!payData.signData || !payData.mode || !payData.paySig || !payData.signature) {
-					uni.showToast({ title: (payData && payData.message) || '订单当前状态不可支付', icon: 'none' })
-					// 非待支付状态，刷新待支付列表
-					loadPendingOrders()
-					return
-				}
-				await startVirtualPayment(payData, outTradeNo)
-			} catch (e) {
-				uni.hideLoading()
-				const msg = (e && e.data && e.data.message) || '续付失败'
-				uni.showToast({ title: msg, icon: 'none' })
-				loadPendingOrders()
-			} finally {
-				buying.value = false
-			}
-			return
-		}
-
 		uni.showLoading({ title: '创建订单中...', mask: true })
 		try {
 			const res = await api.createVpOrder({
 				productId: selected.value.productId,
 				quantity: 1,
-				openid: openid
+				openid: openid,
+				attach: usercode.value
 			})
 			const payData = res.data.data || res.data || {}
 			const outTradeNo = parseOutTradeNo(payData.signData)
@@ -329,14 +292,14 @@
 						if (ok) uni.showToast({ title: '会员已开通', icon: 'none' })
 					}
 					refreshVip()
-					loadPendingOrders()
 					resolve(true)
 				},
-				fail: (err) => {
+				fail: async (err) => {
 					console.log('requestVirtualPayment fail', err)
-					uni.showToast({ title: '支付失败或已取消', icon: 'none' })
-					// 取消后订单仍为待支付，刷新待支付列表以便后续续付
-					loadPendingOrders()
+					uni.showLoading({ title: '取消支付处理中...', icon :'none'})
+					const cancelOrder = await cancelOrder(outTradeNo)
+					uni.hideLoading()
+					uni.showToast({ title: '已取消支付', icon: 'none' })
 					resolve(false)
 				}
 			})
@@ -379,12 +342,28 @@
 			return false
 		}
 	}
+	
+	async function cancelOrder (outTradeNo) {
+		if (!outTradeNo) return false
+		try {
+			const openid = app.getOpenId && app.getOpenId()
+			const res = await api.cancelVpOrder({ outTradeNo, openid })
+			const data = res.data.message || res.data || {}
+			return data
+		} catch (e) {
+			return false
+		}
+	}
 
 	// 支付完成后刷新会员状态
 	function refreshVip () {
 		setTimeout(() => {
 			loadVipProfile()
 		}, 1000)
+	}
+	
+	function clearUsercode () {
+		usercode.value = ''
 	}
 </script>
 

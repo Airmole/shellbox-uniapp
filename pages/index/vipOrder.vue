@@ -16,7 +16,7 @@
 		</template>
 		<template v-else>
 			<!-- 状态筛选 -->
-			<view class="margin bg-white card-radius order-status-bar">
+			<view class="bg-white">
 				<view class="flex text-center text-sm">
 					<view class="flex-sub" v-for="(tab, index) in statusTabs" :key="index"
 						@click="changeStatus(tab)">
@@ -29,12 +29,12 @@
 			</view>
 
 			<!-- 订单列表 -->
-			<view class="cu-card dynamic radius margin" v-for="(item, index) in datalist" :key="index">
+			<view class="cu-card dynamic card-radius" v-for="(item, index) in datalist" :key="index">
 				<view class="cu-item shadow" :class="bgClass(item.status)">
 					<view class="cu-bar">
 						<view class="action">
 							<text class="cuIcon-vip text-yellow"></text>
-							<text class="text-bold">{{item.product_id || item.title || '会员'}}</text>
+							<text class="text-bold">贝壳小盒子 - {{item.title || item.product_id || '会员'}}</text>
 						</view>
 						<view class="action">
 							<text class="cu-tag round" :class="statusTagClass(item.status)">{{item.status_text || statusText[item.status] || '未知'}}</text>
@@ -42,11 +42,11 @@
 					</view>
 					<view class="text-content" style="max-height: unset;">
 						<view class="flex">
-							<view class="flex-sub"><text class="text-gray">订单编号：</text><text class="text-price">{{item.out_trade_no}}</text></view>
+							<view class="flex-sub"><text class="text-gray">订单编号：</text><text>{{item.out_trade_no}}</text></view>
 						</view>
 						<view class="flex">
 							<view class="flex-sub"><text class="text-gray">购买数量：</text><text class="">{{item.quantity || 1}} 份</text></view>
-							<view class="flex-sub"><text class="text-gray">支付金额：</text><text class="text-price text-red">¥{{formatAmount(item.amount)}}</text></view>
+							<view class="flex-sub"><text class="text-gray">支付金额：</text><text class="text-red">¥{{formatAmount(item.amount)}}</text></view>
 						</view>
 						<view class="flex">
 							<view class="flex-sub"><text class="text-gray">下单时间：</text><text class="">{{item.created_at}}</text></view>
@@ -54,12 +54,6 @@
 						<view class="flex" v-if="item.updated_at && item.updated_at !== item.created_at">
 							<view class="flex-sub"><text class="text-gray">更新时间：</text><text class="">{{item.updated_at}}</text></view>
 						</view>
-					</view>
-					<!-- 待支付订单可继续支付 -->
-					<view class="padding" v-if="item.status === '0' || item.status === 0 || item.status_text === 'pending'">
-						<button class="cu-btn round bg-gradual-blue sm" :disabled="repaying === item.out_trade_no" @click="repay(item)">
-							{{repaying === item.out_trade_no ? '处理中...' : '继续支付'}}
-						</button>
 					</view>
 				</view>
 			</view>
@@ -96,9 +90,9 @@
 	const isLogined = ref(true)
 	const loading = ref(false)
 	const repaying = ref('')
-	const datalist = ref([])
-	const pager = ref(null)
-	const currentStatus = ref('')
+	let datalist = ref([])
+	let pager = ref(null)
+	let currentStatus = ref('')
 
 	// 状态筛选 Tabs
 	const statusTabs = [
@@ -141,7 +135,9 @@
 		try {
 			const res = await api.fetchVpOrders(currentStatus.value, page, 10)
 			const data = res.data.data || res.data || {}
-			datalist.value = data.data || []
+			console.log(data)
+			datalist.value = data || []
+			console.log(datalist)
 			pager.value = data.pager || null
 		} catch (e) {
 			console.log('fetchVpOrders error', e)
@@ -183,50 +179,6 @@
 		if (status === '2' || status === 2 || status === 'delivered') return 'bg-green'
 		if (status === '3' || status === 3 || status === 'failed') return 'bg-red'
 		return 'bg-gray'
-	}
-
-	// 取消支付后重新拉起支付：复用同一 outTradeNo 续付
-	async function repay (item) {
-		if (!item || !item.out_trade_no) return
-		if (repaying.value === item.out_trade_no) return
-
-		// iOS 版本校验：iOS 端需要微信 >= 8.0.68
-		if (!checkIosVersion()) return
-
-		let openid = ''
-		try {
-			openid = await getOpenid()
-		} catch (e) {
-			uni.showToast({ title: '获取微信身份失败', icon: 'none' })
-			return
-		}
-
-		repaying.value = item.out_trade_no
-		uni.showLoading({ title: '处理中...', mask: true })
-		try {
-			const res = await api.repayVpOrder({
-				outTradeNo: item.out_trade_no,
-				openid: openid
-			})
-			const payData = res.data.data || res.data || {}
-			const outTradeNo = payData.outTradeNo || item.out_trade_no
-			uni.hideLoading()
-			if (!payData.signData || !payData.mode || !payData.paySig || !payData.signature) {
-				const msg = (payData && payData.message) || '订单当前状态不可支付'
-				uni.showToast({ title: msg, icon: 'none' })
-				// 若非待支付状态，提示改用重新下单
-				fetchData()
-				return
-			}
-			await startVirtualPayment(payData, outTradeNo)
-		} catch (e) {
-			uni.hideLoading()
-			const msg = (e && e.data && e.data.message) || '续付失败'
-			uni.showToast({ title: msg, icon: 'none' })
-			fetchData()
-		} finally {
-			repaying.value = ''
-		}
 	}
 
 	function getOpenid () {
@@ -335,9 +287,6 @@
 <style scoped>
 	.card-radius {
 		border-radius: 24upx;
-	}
-	.order-status-bar {
-		margin-top: 20upx;
 	}
 	.status-line {
 		height: 6upx;

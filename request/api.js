@@ -721,8 +721,8 @@ export default {
 		const queryString = httpBuildQuery(params)
 		return request(`/vp/orders?${queryString}`, 'GET')
 	},
-	// 取消支付后重新支付（复用同一 outTradeNo 拉取新的 payData）
-	repayVpOrder: (data) => {
-		return request('/vp/repay', 'POST', data)
+	// 取消支付
+	cancelVpOrder: (data) => {
+		return request('/vp/cancel', 'POST', data)
 	}
 }
