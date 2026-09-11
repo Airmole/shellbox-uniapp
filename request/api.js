@@ -724,5 +724,9 @@ export default {
 	// 取消支付
 	cancelVpOrder: (data) => {
 		return request('/vp/cancel', 'POST', data)
+	},
+	// 发放会员
+	paidSendVip: (outTradeNo) => {
+		return request('/vp/sendVip', 'POST', {outTradeNo})
 	}
 }

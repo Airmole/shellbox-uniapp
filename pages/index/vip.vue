@@ -49,7 +49,7 @@
 						</template>
 					</view>
 					<view class="margin-top margin-lr">
-						<view v-if="isVip" class="cu-tag round bg-gradual-blue margin-bottom-xs">当前已是会员，到期时间：{{vipExpireAt || '--'}}</view>
+						<view v-if="isVip" class="text-blue text-center margin-bottom">您已是会员，到期：{{vipExpireAt || '--'}}</view>
 						<!-- 微信小程序虚拟支付 -->
 						<!-- #ifdef MP-WEIXIN -->
 						<button class="cu-btn round bg-gradual-blue lg block" :disabled="buying" @click="buyVip">
@@ -283,13 +283,11 @@
 				signature: payData.signature,
 				success: async () => {
 					uni.showToast({ title: '支付成功', icon: 'none' })
-					const delivered = await pollOrderStatus(outTradeNo)
-					if (delivered) {
-						uni.showToast({ title: '会员已开通', icon: 'none' })
+					const sendVipSuccess = await paidSendVip(outTradeNo)
+					if (sendVipSuccess) {
+						uni.showModal({ title: '成功', content: '已成功开通会员~感谢支持！',showCancel: false})
 					} else {
-						// 轮询超时，尝试主动查询微信兜底补发货
-						const ok = await wechatFallbackQuery(outTradeNo)
-						if (ok) uni.showToast({ title: '会员已开通', icon: 'none' })
+						uni.showModal({ title: '失败', content: '开通失败，请联系客服！',showCancel: false})
 					}
 					refreshVip()
 					resolve(true)
@@ -297,7 +295,7 @@
 				fail: async (err) => {
 					console.log('requestVirtualPayment fail', err)
 					uni.showLoading({ title: '取消支付处理中...', icon :'none'})
-					const cancelOrder = await cancelOrder(outTradeNo)
+					await cancelOrder(outTradeNo)
 					uni.hideLoading()
 					uni.showToast({ title: '已取消支付', icon: 'none' })
 					resolve(false)
@@ -309,6 +307,15 @@
 		uni.showToast({ title: '当前环境不支持虚拟支付', icon: 'none' })
 		return Promise.resolve(false)
 		// #endif
+	}
+	
+	async function paidSendVip (outTradeNo) {
+		if (!outTradeNo) return false
+		const sendVip = await api.paidSendVip(outTradeNo)
+		if (sendVip.data && sendVip.data.code === 0 && sendVip.data.msg === 'success') {
+			return true
+		}
+		return false
 	}
 
 	// 轮询本地订单状态
