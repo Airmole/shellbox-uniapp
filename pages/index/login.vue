@@ -82,12 +82,13 @@
 <script setup>
 	import api from '@/request/api.js'
 	import { onMounted, reactive, ref, toRefs } from 'vue'
-	const app = getApp()
 	import { useAppStore } from '@/stores/app.js'
-	const { setAppAuth } = useAppStore()
+	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页白屏
+	const appStore = useAppStore()
+	const { setAppAuth, setGlobalData } = appStore
 	const loadingUrl = 'https://r2.airmole.cn/gif/loading_cat.gif'
 	const helpImage = 'https://r2.airmole.cn/i/2026/03/16/prmh0-w7.jpg'
-	const logoUrl = app.globalData.logoImageUrl
+	const logoUrl = appStore.getGlobalData('logoImageUrl')
 	const isLoading = ref(false)
 	const showHelpModal = ref(false)
 	const bgImgUrl = ref('')
@@ -116,7 +117,10 @@
 	function submitLogin() {
 		let openid = null
 		// #ifdef MP-WEIXIN
-		openid = app.getOpenId()
+		const appInstance = appStore.getAppInstance()
+		if (appInstance && typeof appInstance.getOpenId === 'function') {
+			openid = appInstance.getOpenId()
+		}
 		if (typeof openid === 'object') openid = openid.openid
 		if (typeof openid === 'string') openid = openid
 		// #endif
@@ -147,7 +151,7 @@
 			api.fetchProfile().then(profileRes => {
 				const profile = profileRes.data.data || profileRes.data
 				if (profile && typeof profile.isVip !== 'undefined') {
-					app.globalData.isVip = !!profile.isVip
+					setGlobalData('isVip', !!profile.isVip)
 				}
 			}).catch(() => {})
 			uni.switchTab({ url: '/pages/index/index' })

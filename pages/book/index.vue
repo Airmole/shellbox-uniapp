@@ -66,7 +66,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '../../request/api'
 	import bookItem from './components/bookItem.vue'
 	export default {
@@ -81,7 +81,7 @@
 			}
 		},
 		onLoad() {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			this.fetchHotBook()
 			this.fetchNewBook()
 		},

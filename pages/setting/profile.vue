@@ -42,30 +42,51 @@
 </template>
 
 <script>
-	const app = getApp()
 	import { request } from '../../request'
 	import api from '@/request/api.js'
 	import { useAppStore } from '@/stores/app.js'
-	const { setUserInfo } = useAppStore()
+
+	/**
+	 * ⚠️ 本组件是 Options API（<script> + export default），
+	 * 其模块作用域代码会在 app-service.js 加载期同步执行（早于 app.mount）。
+	 *
+	 * 因此这里绝不能出现：
+	 *     const appStore = useAppStore()
+	 *     const { getGlobalData } = useAppStore()
+	 * pinia 的 setup store 需要 activePinia，而加载期 pinia 还没被 app.use 安装，
+	 * defineStore 内部会执行 pinia._s.get(...) →
+	 *     TypeError: Cannot read properties of undefined (reading '_s')
+	 * 该异常发生在 useStore 帧、createInstanceContext 阶段，
+	 * 会让整个 app-service.js 初始化中断 → 所有页面白屏（TabBar 原生渲染所以还在）。
+	 *
+	 * 正确做法：把 useAppStore() 延迟到组件生命周期/方法内调用（此时 pinia 已就绪），并缓存复用。
+	 */
+	let cachedAppStore = null
+	function getAppStore() {
+		if (!cachedAppStore) cachedAppStore = useAppStore()
+		return cachedAppStore
+	}
+
 	export default {
 		data() {
 			return {
-				avatarUrl: app.globalData.defaultAvatar,
+				avatarUrl: getAppStore().getGlobalData('defaultAvatar'),
 				nickname: ''
 			}
 		},
 		onLoad() {
-			this.isVip = app.globalData.isVip
+			this.isVip = !!getAppStore().getIsVip()
 			uni.showLoading({ title: '加载中...'})
 			this.fetchProfile()
 		},
 		methods: {
 			fetchProfile () {
+				const appStore = getAppStore()
 				api.fetchProfile().then(res => {
 					if (res.data.avatar !== '') this.avatarUrl = res.data.avatar
 					if (res.data.nickname !== '') this.nickname = res.data.nickname
-					setUserInfo({
-						avatar: res.data.avatar === '' ? app.globalData.defaultAvatar : res.data.avatar,
+					appStore.setUserInfo({
+						avatar: res.data.avatar === '' ? appStore.getGlobalData('defaultAvatar') : res.data.avatar,
 						nickname: res.data.nickname === '' ? '' : res.data.nickname
 					})
 					uni.hideLoading()
@@ -76,11 +97,13 @@
 					avatar: this.avatarUrl,
 					nickname: this.nickname
 				}
+				const appInstance = getAppStore().getAppInstance()
+				const openid = (appInstance && typeof appInstance.getOpenId === 'function') ? appInstance.getOpenId() : ''
 				// #ifdef MP-WEIXIN
-				data.wx_open_id = app.getOpenId()
+				data.wx_open_id = openid
 				// #endif
 				// #ifdef MP-QQ
-				data.qq_open_id = app.getOpenId()
+				data.qq_open_id = openid
 				// #endif
 				api.updateProfile(data).then(res => {
 					if (res.statusCode) {

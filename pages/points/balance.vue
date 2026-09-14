@@ -127,10 +127,12 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '../../request/api'
 	let videoAd = null
+	// 条件编译下同一标识符只能声明一次，否则会被拼进同一作用域导致重复声明
+	let adUnitId = ''
 	export default {
 		data() {
 			return {
@@ -146,12 +148,12 @@
 		},
 		onLoad() {
 			// #ifdef MP-WEIXIN
-			this.isReleaseEnv = (app.globalData.env === 'release')
+			this.isReleaseEnv = (getGlobalData('env', 'develop') === 'release')
 			// #endif
 			// #ifdef H5
 			this.isReleaseEnv = true
 			// #endif
-			this.isVip = app.globalData.isVip = app.globalData.isVip
+			this.isVip = !!getGlobalData('isVip', false)
 			const usercode = getEdusysAccount()
 			this.usercode = usercode
 			if (usercode === false) {
@@ -159,10 +161,10 @@
 				return
 			}
 			// #ifdef MP-WEIXIN
-			const adUnitId = 'adunit-6eaa05f3467dce0c'
+			adUnitId = 'adunit-6eaa05f3467dce0c'
 			// #endif
 			// #ifdef MP-QQ
-			const adUnitId = 'dd90320609f722f9c6f37135eb404a71'
+			adUnitId = 'dd90320609f722f9c6f37135eb404a71'
 			// #endif
 			
 			// #ifdef MP

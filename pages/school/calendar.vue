@@ -49,7 +49,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	
 	export default {
@@ -63,7 +63,7 @@
 			}
 		},
 		onLoad(options) {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			const semester = (options && options.semester) ? options.semester : ''
 			this.fetchAllCalendar(semester)
 		},

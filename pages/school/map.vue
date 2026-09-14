@@ -67,8 +67,8 @@
 </template>
 
 <script>
-	const app = getApp()
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	let interstitialAd = null
 	export default {
@@ -90,14 +90,14 @@
 			}
 		},
 		onLoad(option) {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
 			// #ifdef MP-QQ
 			if (qq.createInterstitialAd) interstitialAd = qq.createInterstitialAd({ adUnitId: '8fe9b8e7191346a2ffb0c20c6bf3e0cf' })
 			// #endif
-			this.pageHeight = app.globalData.screenHeight
+			this.pageHeight = getGlobalData('screenHeight', 800)
 			this.fetchPoi(option)
 		},
 		onReady () {

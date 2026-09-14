@@ -150,7 +150,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	let interstitialAd = null
@@ -170,13 +170,13 @@
 			}
 		},
 		onLoad() {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return
 			}
 			
-			this.pageHeight = app.globalData.screenHeight
+			this.pageHeight = getGlobalData('screenHeight', 800)
 			this.fetchSemester()
 		},
 		onShow() {

@@ -289,7 +289,7 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import {initalVideoAd, startPlayVideoAd} from '../../common/utils/mpAd.js'
@@ -333,7 +333,7 @@
 			}
 		},
 		onLoad() {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			// #ifdef MP-WEIXIN
 			if (wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({
 				adUnitId: 'adunit-5a3621a7eb4da121'

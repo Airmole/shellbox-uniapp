@@ -185,13 +185,14 @@
 </template>
 
 <script>
-	const app = getApp()
+	import { getGlobalData, getAppInstance } from '@/common/store/globalData.js'
+	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页白屏
 	export default {
 		data() {
 			return {
 				isVip: false,
 				timestamp: '',
-				logoImage: app.globalData.logoImageUrl,
+				logoImage: getGlobalData('logoImageUrl'),
 				appId: '',
 				version: '',
 				isWechatH5: false,
@@ -225,7 +226,11 @@
 				})
 			},
 			checkUpdate () {
-				app.mpappUpdate('userClick')
+				// 惰性获取 App 实例，避免冷启动早期实例未就绪时抛错
+				const appInstance = getAppInstance()
+				if (appInstance && typeof appInstance.mpappUpdate === 'function') {
+					appInstance.mpappUpdate('userClick')
+				}
 			},
 			clickUrl (url) {
 				// #ifdef MP

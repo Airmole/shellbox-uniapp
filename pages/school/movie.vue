@@ -71,7 +71,7 @@
 	</view>
 </template>
 <script>
-	const app = getApp()
+	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	import { getTodayDateString } from '../../common/utils/tools'
 	import { navigateToPlace } from '@/common/utils/location.js'
@@ -96,7 +96,7 @@
 			}
 		},
 		onLoad(option) {
-			this.isVip = app.globalData.isVip
+			this.isVip = getGlobalData('isVip', false)
 			// #ifdef MP-WEIXIN
 			if(wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-c142eaf344ea8f4b' })
 			// #endif
