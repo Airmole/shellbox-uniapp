@@ -102,7 +102,7 @@
 					    </view>
 						<view class="action text-yellow"><text v-if="loginStatus">{{balance}}</text><text v-else>*</text></view>
 					</navigator>
-					<navigator url="/pages/index/vip" class="cu-item arrow">
+					<navigator url="/pages/index/vip" class="cu-item arrow" :render-link="false">
 					    <view class="content">
 					        <text class="cuIcon-vip text-yellow"></text>
 					        <text class="text-grey">开通会员</text>

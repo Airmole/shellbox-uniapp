@@ -5,9 +5,12 @@
 		</cu-custom>
 		
 		<view class="padding margin-top-sm bg-white card-radius margin-lr">
-			<view class="text-xl text-bold text-center padding-bottom">开通会员，解锁更多功能...</view>
+			<view class="text-xl text-bold text-center padding-bottom-xs">开通会员，解锁更多功能...</view>
 			<view class="text-center text-gray text-sm">
-				支付成功后自动发货开通会员<br/>如遇支付成功未到账会自动为你补发。
+				<view>支付成功后自动发货开通会员</view>
+				<!-- #ifdef MP-WEIXIN -->
+				<view>如遇支付成功未开通会员可<button open-type="contact" class="cu-btn round sm text-blue">联系客服</button></view>
+				<!-- #endif -->
 			</view>
 		</view>
 
@@ -30,7 +33,7 @@
 				</view>
 			</view>
 			<!-- 会员套餐 -->
-			<view class="margin-tb bg-white card-radius margin-lr">
+			<view class="margin-tb bg-white card-radius margin-lr padding-bottom-sm">
 				<view class="cu-bar bg-white card-radius">
 					<view class="action text-bold"><text class="cuIcon-titles text-green"></text>选择会员套餐</view>
 				</view>
@@ -65,12 +68,15 @@
 					<text v-if="loading">会员套餐加载中...</text>
 					<text v-else>暂无可用会员套餐，请稍后再试</text>
 				</view>
+				<!-- 会员购买记录入口 -->
+				<navigator v-if="isLoginStatus" url="/pages/index/vipOrder" class="text-center round margin-lr text-blue border-blue block" :render-link="true">
+					查看会员购买记录
+				</navigator>
 			</view>
-			<!-- 会员购买记录入口 -->
-			<navigator v-if="isLoginStatus" url="/pages/index/vipOrder" class="text-center round margin-lr margin-tb-sm text-blue border-blue block" :render-link="true">
-				查看会员购买记录
-			</navigator>
 		</template>
+		
+		
+		<vip-rights></vip-rights>
 
 		<view class="text-center padding"></view>
 	</view>
@@ -82,6 +88,7 @@
 	import api from '@/request/api.js'
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
+	import vipRights from './components/vipRights.vue'
 
 	const app = getApp()
 	const appStore = useAppStore()

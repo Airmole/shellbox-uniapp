@@ -39,7 +39,9 @@
 					</picker>
 				</view>
 				<view class="cu-item">
-					<view class="content"></view>
+					<view class="content">
+						<button @click="exportScoreList" class="cu-btn round bg-gradual-blue" :disabled="!scoreList || !scoreList.ret"><text class="cuIcon-down"></text>导出数据</button>
+					</view>
 					<view class="action">
 						<button @click="resetOptionsForm" class="cu-btn round bg-red shadow margin-lr"><text
 								class="cuIcon cuIcon-refresh"></text> 重置</button>
@@ -115,6 +117,8 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
+	import {initalVideoAd, startPlayVideoAd} from '../../common/utils/mpAd.js'
+	let videoAd = null
 	export default {
 		data() {
 			return {
@@ -209,6 +213,11 @@
 				if (page >= this.scoreList.lastPage) page = this.scoreList.lastPage
 				this.optionsForm.page = page
 				this.fetchScore()
+			},
+			exportScoreList () {
+				if (videoAd) videoAd.destroy()
+				videoAd = initalVideoAd(api.exportLibspScoreList, {}, '导出借阅积分', 'adunit-2b2414afeb4f61a9')
+				startPlayVideoAd(videoAd, api.exportLibspScoreList, {}, '非VIP会员用户导出借阅积分需要观看广告！', this.isVip)
 			}
 		}
 	}

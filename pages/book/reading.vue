@@ -53,7 +53,9 @@
 					</picker>
 				</view>
 				<view class="cu-item">
-					<view class="content"></view>
+					<view class="content">
+						<button @click="exportReading" class="cu-btn round bg-gradual-blue" :disabled="!loanList || !loanList.searchResult"><text class="cuIcon-down"></text>导出数据</button>
+					</view>
 					<view class="action">
 						<button @click="resetOptionsForm" class="cu-btn round bg-red shadow margin-lr"><text
 								class="cuIcon cuIcon-refresh"></text> 重置</button>
@@ -88,8 +90,8 @@
 				<tips :tips="`当前没有正在借阅的${typeTabs[typeIndex]}`" image="/static/image/nothing.png"></tips>
 			</template>
 			<template v-if="loanList !== '' && loanList.numFound > 0">
-				<view class="flex justify-start margin">
-					<button @click="showBatchRenewModal=true" class="cu-btn round bg-green" :disabled="!loanList || !loanList.searchResult">批量续借</button>
+				<view class="flex justify-end margin">
+					<button @click="tryBatchRenew" class="cu-btn round bg-gradual-blue" :disabled="!loanList || !loanList.searchResult">批量续借</button>
 				</view>
 				<view class="cu-list menu sm-border card-menu shadow margin-top shadow bg-white" v-if="loanList && loanList.numFound">
 					<view class="cu-bar bg-white solid-bottom">
@@ -262,6 +264,8 @@
 	import { navigateToPlace } from '@/common/utils/location.js'
 	import { addPhoneCalendarEvent } from '@/common/utils/phone-calendar.js'
 	import bookItem from './components/bookItem.vue'
+	import {initalVideoAd, startPlayVideoAd} from '../../common/utils/mpAd.js'
+	let videoAd = null
 	export default {
 		components:{ bookItem },
 		data() {
@@ -487,6 +491,19 @@
 				}).finally(() => {
 					uni.hideLoading()
 				})
+			},
+			displayBatchRenewModal () {
+				this.showBatchRenewModal = true
+			},
+			tryBatchRenew () {
+				if (videoAd) videoAd.destroy()
+				videoAd = initalVideoAd(this.displayBatchRenewModal, {}, '批量续借图书', 'adunit-2b2414afeb4f61a9')
+				startPlayVideoAd(videoAd, this.displayBatchRenewModal, {}, '非VIP会员用户批量续借需要观看广告！', this.isVip)
+			},
+			exportReading () {
+				if (videoAd) videoAd.destroy()
+				videoAd = initalVideoAd(api.exportReadingBooks, this.loanList.searchResult, '导出当前借阅', 'adunit-2b2414afeb4f61a9')
+				startPlayVideoAd(videoAd, api.exportReadingBooks, this.loanList.searchResult, '非VIP会员用户导出当前借阅需要观看广告！', this.isVip)
 			}
 		}
 	}

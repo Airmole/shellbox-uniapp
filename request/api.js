@@ -4,12 +4,11 @@ import { httpBuildQuery } from '../common/utils/tools.js'
 /**
  * 下载并打开导出文件（xlsx/pdf通用）
  */
-function handleExportFile(exportRes, fileType = 'xlsx') {
-	const downloadUrl = exportRes.data.url
+function handleExportFile(downloadUrl, fileType = 'xlsx') {
 	// #ifdef H5
 	window.open(getOfficeViewerUrl(downloadUrl))
 	// #endif
-	// #ifdef MP
+	// #ifdef MP || APP
 	uni.downloadFile({
 	  url: downloadUrl,
 	  success: function (dlRes) {
@@ -21,12 +20,11 @@ function handleExportFile(exportRes, fileType = 'xlsx') {
 	// #endif
 }
 
-function handleExportPdf(exportRes) {
-	const downloadUrl = exportRes.data.url
+function handleExportPdf(downloadUrl) {
 	// #ifdef H5
 	window.open(getPdfViewerUrl(downloadUrl))
 	// #endif
-	// #ifdef MP
+	// #ifdef MP || APP
 	uni.downloadFile({
 	  url: downloadUrl,
 	  success: function (dlRes) {
@@ -41,18 +39,20 @@ function handleExportPdf(exportRes) {
 /**
  * 通用的文件导出请求封装
  */
-function exportRequest(url, data, { fileType = 'xlsx', errorMsg = '导出失败', isPdf = false } = {}) {
+function exportRequest(url, data, { fileType = 'xlsx', errorMsg = '导出失败', isPdf = false, method = 'POST' } = {}) {
 	uni.showLoading({ title: '加载中...'})
-	return request(url, 'POST', data).then((exportRes) => {
+	return request(url, method, data).then((exportRes) => {
 		if (isPdf) {
 			handleExportPdf(exportRes)
 		} else {
-			handleExportFile(exportRes, fileType)
+			handleExportFile(exportRes.data.url, fileType)
 		}
 	}).catch(error => {
 		uni.hideLoading()
 		console.log(errorMsg, error)
 		uni.showToast({ title: '获取失败', icon: 'none' })
+	}).finally(() => {
+		uni.hideLoading()
 	})
 }
 
@@ -205,6 +205,10 @@ export default {
 	exportClassCourse(courses) {
 		return exportRequest('/edusys/course/class/course/xlsx', courses, { errorMsg: '导出班级课表失败' })
 	},
+	// 导出全部班级课表
+	exportAllClassCourse () {
+		return handleExportFile('https://r2.airmole.cn/download/全部班级课表.xlsx')
+	},
 	// 教师课表筛选项
 	fetchTeacherCourseOptions() {
 		return request(`/edusys/course/teacher/options`, `GET`)
@@ -242,6 +246,10 @@ export default {
 	// 导出教师课表
 	exportTeacherCourse(course) {
 		return exportRequest('/edusys/course/teacher/course/xlsx', course, { errorMsg: '导出教师课表失败' })
+	},
+	// 导出全部教师课表
+	exportAllTeacherCourse () {
+		return handleExportFile('https://r2.airmole.cn/download/全部教师课表.xlsx')
 	},
 	// 课程课表筛选项
 	fetchLessonCourseOptions () {
@@ -284,6 +292,10 @@ export default {
 	// 导出课程课表
 	exportLessonCourse(course) {
 		return exportRequest('/edusys/course/lesson/course/xlsx', course, { errorMsg: '导出课程课表失败' })
+	},
+	// 导出全部课程课表
+	exportAllLessonCourse () {
+		return handleExportFile('https://r2.airmole.cn/download/全部课程课表.xlsx')
 	},
 	// 教师获取授课列表
 	fetchTeacherCourseList () {
@@ -383,6 +395,10 @@ export default {
 	fetchTrainingPlan () {
 		return request('/edusys/trainingPlan', 'GET')
 	},
+	// 导出下载培养方案
+	exportTrainingPlan () {
+		return exportRequest('/edusys/trainingPlan/xlsx', {}, {method: 'GET'})
+	},
 	// 获取评教批次列表
 	fetchEvaluateTeacherSemester () {
 		return request(`/edusys/evaluateTeacher/semester`)
@@ -424,6 +440,10 @@ export default {
 	},
 	fetchMapAllPoi () {
 		return request(`/school/map/poi`)
+	},
+	// 导出下载地图POI坐标点
+	exportMapAllPoi () {
+		return exportRequest(`/school/map/poi/xlsx`, {}, { errorMsg: '下载坐标点失败', method: 'GET' })
 	},
 	fetchSchoolMediaList () {
 		return request(`/school/media`)
@@ -571,6 +591,10 @@ export default {
 		let body = { page, rows, scoreSign, startDate, endDate, timeType }
 		return request('/libsp/scoreList', 'POST', body)
 	},
+	// 导出借阅积分记录
+	exportLibspScoreList () {
+		return exportRequest('/libsp/scoreList/xlsx', {}, { errorMsg: '' })
+	},
 	fetchLibspDailyBook () {
 		return request('/libsp/dailyBook')
 	},
@@ -597,6 +621,10 @@ export default {
 			return request('/libsp/loanList', 'POST', body)
 		}
 	},
+	// 导出下载当前借阅
+	exportReadingBooks (books) {
+		return exportRequest('/libsp/loanList/xlsx', books, { errorMsg: '导出当前借阅图书失败' })
+	},
 	fetchLibspLoanHistory (
 	    isIssue = false,
 	    searchType = 1,
@@ -613,6 +641,10 @@ export default {
 		} else {
 			return request('/libsp/loanHistory', 'POST', body)
 		}
+	},
+	// 导出下载历史借阅
+	exportHistoryBooks () {
+		return exportRequest('/libsp/loanHistory/xlsx', {}, { errorMsg: '导出历史借阅图书失败' })
 	},
 	fetchLibspRenewBooks (loanIds = []) {
 		let body = { loanIds }
@@ -728,5 +760,8 @@ export default {
 	// 发放会员
 	paidSendVip: (outTradeNo) => {
 		return request('/vp/sendVip', 'POST', {outTradeNo})
+	},
+	fetchVipRights () {
+		return request(`/vip/rights`, 'GET')
 	}
 }

@@ -24,7 +24,7 @@
 		</template>
 		
 		<template v-if="showCardView">
-			<letterIndexSelectorVue :list="teacherKeywordList" @change="letterChange"></letterIndexSelectorVue>
+			<letterIndexSelectorVue :list="teacherKeywordList" @change="letterChange" @allDownload="allDownload"></letterIndexSelectorVue>
 			<!-- #ifdef MP-WEIXIN -->
 			<view v-if="!isVip" class="margin margin-tb-xl radius">
 				<ad-custom unit-id="adunit-3d7f1704631ec7ea" ad-intervals="30"></ad-custom>
@@ -227,6 +227,7 @@
 	const app = getApp()
 	import api from '@/request/api.js'
 	import courseTable from './components/courseTable.vue'
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import letterIndexSelectorVue from './components/letterIndexSelector.vue'
 	import { initalVideoAd, startPlayVideoAd } from '../../common/utils/mpAd.js'
 	let interstitialAd = null
@@ -506,6 +507,27 @@
 			},
 			exportXlsx () {
 				startPlayVideoAd(videoAd, api.exportTeacherCourse, this.teacherCourses, '非VIP会员用户导出教师课表需要观看广告！', this.isVip)
+			},
+			allDownload () {
+				if (getEdusysAccount() === false) {
+					uni.showToast({title: '会员功能，请先登录', icon: 'none'})
+					return
+				}
+				if (!this.isVip) {
+					uni.showModal({
+						title: '会员功能',
+						content: '本项功能需开通会员方可使用~',
+						cancelText: '取消操作',
+						confirmText: '开通会员',
+						success: function (res) {
+							if (res.confirm) {
+								uni.navigateTo({ url: '/pages/index/vip'})
+							}
+						}
+					})
+					return
+				}
+				api.exportAllTeacherCourse()
 			}
 		},
 		onShareAppMessage() {
