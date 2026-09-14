@@ -1,9 +1,12 @@
 <template>
 	<view class="margin bg-white card-radius flex flex-wrap" v-if="letters.length">
-		<view class="cu-bar bg-white card-radius">
+		<view class="cu-bar bg-white card-radius" style="width: 100%;">
 			<view class="action">
 				<text class="cuIcon-titles text-blue"></text>
 				<text class="text-xl text-bold">拼音首字母检索</text>
+			</view>
+			<view class="action">
+				<button v-if="showAllDownloadBtn" @click="allDownload" class="cu-btn bg-gradual-blue shadow-blur round sm"><text class="cuIcon-down"></text>全部下载</button>
 			</view>
 		</view>
 		<view class="padding-lr padding-bottom">
@@ -19,12 +22,17 @@
 
 <script>
 	export default {
-		emits: ['change'],
+		emits: ['change', 'allDownload'],
 		props: {
 			list: {
 				type: [Object, Array],
 				default: {},
 				required: true
+			},
+			showAllDownloadBtn: {
+				type: [Boolean],
+				default: true,
+				required: false
 			}
 		},
 		data() {
@@ -53,6 +61,9 @@
 				}
 				this.currentIndex = index
 				this.$emit('change', { index, letter })
+			},
+			allDownload () {
+				this.$emit('allDownload')
 			}
 		}
 	}

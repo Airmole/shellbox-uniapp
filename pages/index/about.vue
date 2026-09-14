@@ -126,7 +126,7 @@
 				 	<text class="cuIcon-title text-green"></text> 音像放映安排信息来源于<text @tap="goLibraryOffical" class="text-blue">图书馆微信公众号</text>
 				</view>
 				<view>
-				 	<text class="cuIcon-title text-green"></text> 学校地图建筑照片来源于<text @tap="goTjustb720yun" class="text-blue">涂志远&王道钦学院全景图</text>
+				 	<text class="cuIcon-title text-green"></text> 学校地图建筑照片来源于<text @tap="goTjustb720yun" class="text-blue">涂志远&王道钦</text>
 				</view>
 				<view>
 				 	<text class="cuIcon-title text-green"></text> 学校手绘地图来源于<text @tap="goTjustbMetaWeapp" class="text-blue">北科天院校友之家</text>

@@ -41,12 +41,13 @@
 			</view>
 			
 			<view :class="`padding-lr-sm poi-card cu-list menu sm-border ${foldPoiCardArea?'round':'card-radius'}`" :style="foldPoiCardArea?'':'height: 40vh;'">
-				<view class="cu-item press-class" @click="showPoiCardArea" style="background-color: transparent;">
+				<view class="cu-item press-class" style="background-color: transparent;">
 					<view class="content">
 						<text class="cuIcon-title text-green"></text> 共{{currentTabPoi.length}}个{{categories[currentTab]}}地点
 					</view>
 					<view class="action text-right">
-						<text :class="'cuIcon-'+(foldPoiCardArea?'right':'unfold')"></text>
+						<button @click="exportAllPoi" class="cu-btn round bg-gradual-blue margin-right sm"><text class="cuIcon-down"></text>导出</button>
+						<text @click="showPoiCardArea" :class="'cuIcon-'+(foldPoiCardArea?'right':'unfold')"></text>
 					</view>
 				</view>
 				<scroll-view v-if="!foldPoiCardArea" :scroll-into-view="scrollTop" scroll-y scroll-with-animation class="padding-tb-sm poi-card-content">
@@ -66,6 +67,7 @@
 </template>
 
 <script>
+	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import { getGlobalData } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	let interstitialAd = null
@@ -310,6 +312,27 @@
 				// #ifdef H5
 				window.open(url)
 				// #endif
+			},
+			exportAllPoi () {
+				if (getEdusysAccount() === false) {
+					uni.showToast({title: '会员功能，请先登录', icon: 'none'})
+					return
+				}
+				if (!this.isVip) {
+					uni.showModal({
+						title: '会员功能',
+						content: '本项功能需开通会员方可使用~',
+						cancelText: '取消操作',
+						confirmText: '开通会员',
+						success: function (res) {
+							if (res.confirm) {
+								uni.navigateTo({ url: '/pages/index/vip'})
+							}
+						}
+					})
+					return
+				}
+				api.exportMapAllPoi()
 			}
 		},
 		onShareAppMessage() {

@@ -88,12 +88,12 @@
 				<view class="flex justify-center">
 					<view class="cu-avatar round xxl" :style="`background-image: url(${(loginStatus && profile && profile.avatar) ? profile.avatar : defaultAvatar});`"></view>
 				</view>
-				<view class="margin">{{(loginStatus?profile.nickname:'未登录')}} <text class="cuIcon-vip text-yellow"></text> </view>
+				<view class="margin">{{(loginStatus?profile.nickname:'未登录')}} <text v-if="profile.isVip" class="cuIcon-vip text-yellow"></text> </view>
 				<view class="margin">{{(loginStatus?edusysAccount.account:'未登录')}}</view>
 				<view v-if="profile.isVip" class="margin">会员到期：{{profile.vipExpireAt}}</view>
 				<view v-else-if="profile.vipExpireAt===null" class="margin">您还没有成为过会员</view>
 				<view v-else-if="profile.vipExpireAt===''" class="margin">您的会员被禁用</view>
-				<view v-else class="margin">会员已于{{profile.vipExpireAt}}过期</view>
+				<view v-else-if="profile.profile" class="margin">会员已于{{profile.vipExpireAt}}过期</view>
 				<view class="cu-list menu sm-border card-menu margin-top text-left">
 					<navigator v-if="loginStatus" url="/pages/points/balance" class="cu-item arrow" :render-link="false">
 					    <view class="content">
@@ -101,6 +101,19 @@
 					        <text class="text-grey">我的金贝壳</text>
 					    </view>
 						<view class="action text-yellow"><text v-if="loginStatus">{{balance}}</text><text v-else>*</text></view>
+					</navigator>
+					<navigator url="/pages/index/vip" class="cu-item arrow" :render-link="false">
+					    <view class="content">
+					        <text class="cuIcon-vip text-yellow"></text>
+					        <text class="text-grey">开通会员</text>
+					    </view>
+						<view class="action text-yellow" v-if="isVip">已开通</view>
+					</navigator>
+					<navigator url="/pages/index/vipOrder" class="cu-item arrow">
+					    <view class="content">
+					        <text class="cuIcon-form text-blue"></text>
+					        <text class="text-grey">会员购买记录</text>
+					    </view>
 					</navigator>
 					<!-- #ifndef MP-QQ -->
 					<view v-if="isReleaseEnv" @click="goRecharge" class="cu-item arrow">
@@ -309,8 +322,10 @@
 		return
 		// #endif
 		
-		// App / H5 / 其他小程序端统一打开爱发电页面
-		openWebview('https://ifdian.net/a/Airmole?tab=shop')
+		// #ifdef H5
+		window.open('https://ifdian.net/item/04e7c5c0295e11f0b88d52540025c377')
+		return
+		// #endif
 	}
 	
 	onShareAppMessage (() => {

@@ -58,7 +58,7 @@ export function startPlayVideoAd(
 	tips = '非VIP会员需要观看广告!',
 	isVip = false,
 	confirmText = '观看广告',
-	cancelText = '取消操作'
+	cancelText = '开通会员'
 ) {
 	// #ifdef MP-WEIXIN
 	if (!isVip) {
@@ -77,6 +77,8 @@ export function startPlayVideoAd(
 									uni.showModal({ title: err, showCancel: false })
 								})
 						})
+					} else {
+						uni.navigateTo({ url: '/pages/index/vip'})
 					}
 				}
 			})

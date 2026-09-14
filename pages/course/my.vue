@@ -134,7 +134,7 @@
 				startPlayVideoAd(videoAd, this.exportXlsxAction, {
 					_this: this,
 					callback: api.exportSemesterCourse
-				}, '导出学期课表数据非会员用户需要观看广告！', this.isVip, '观看广告', '取消导出')
+				}, '导出学期课表数据非会员用户需要观看广告！', this.isVip, '观看广告', '开通会员')
 			},
 			exportXlsxAction (params) {
 				const {_this, callback} = params

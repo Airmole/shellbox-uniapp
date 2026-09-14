@@ -53,7 +53,9 @@
 					</picker>
 				</view>
 				<view class="cu-item">
-					<view class="content"></view>
+					<view class="content">
+						<button @click="exportHistoryBooks" class="cu-btn round bg-gradual-blue" :disabled="!historyList || !historyList.numFound"><text class="cuIcon-down"></text>导出数据</button>
+					</view>
 					<view class="action">
 						<button @click="resetOptionsForm" class="cu-btn round bg-red shadow margin-lr"><text
 								class="cuIcon cuIcon-refresh"></text> 重置</button>
@@ -122,6 +124,8 @@
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import bookItem from './components/bookItem.vue'
+	import {initalVideoAd, startPlayVideoAd} from '../../common/utils/mpAd.js'
+	let videoAd = null
 	let interstitialAd = null
 	export default {
 		components:{ bookItem },
@@ -268,6 +272,11 @@
 				if (page >= this.historyList.lastPage) page = this.historyList.lastPage
 				this.optionsForm.page = page
 				this.fetchHistory()
+			},
+			exportHistoryBooks () {
+				if (videoAd) videoAd.destroy()
+				videoAd = initalVideoAd(api.exportHistoryBooks, {}, '导出借阅记录', 'adunit-2b2414afeb4f61a9')
+				startPlayVideoAd(videoAd, api.exportHistoryBooks, {}, '非VIP会员用户导出借阅记录需要观看广告！', this.isVip)
 			}
 		}
 	}
