@@ -79,7 +79,7 @@
 			<template v-if="data && data.pager && data.pager.total==0"><tips tips="还没有符合条件的数据" image="https://r2.airmole.cn/i/2025/05/02/%E7%82%92%E9%A5%AD.gif"></tips></template>
 			<!-- 分页器 -->
 			<view v-if="data && data.pager" class="flex margin align-center text-center">
-				<view class="flex-sub"><button v-if="data.pager.currentPage!=1" @click="lastPage" class="cu-btn round bg-gradual-blue">上一页</button></view>
+				<view class="flex-sub"><button v-if="data && data.pager.currentPage>1" @click="lastPage" class="cu-btn round bg-gradual-blue">上一页</button></view>
 				<view class="flex-sub">第{{data.pager.currentPage}}页丨共{{data.pager.pageCount}}页</view>
 				<view class="flex-sub"><button v-if="data.pager.currentPage!=data.pager.pageCount" @click="nextPage" class="cu-btn round bg-gradual-blue">下一页</button></view>
 			</view>
@@ -126,7 +126,7 @@
 					bizType: ''
 				},
 				data: '',
-				foldOptionsArea: true,
+				foldOptionsArea: false,
 			}
 		},
 		onLoad() {

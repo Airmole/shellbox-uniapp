@@ -78,7 +78,7 @@
 				<view class="text-right">
 					<view class="action text-blue text-xxl" @tap="showCheckinDocument"><text class="cuIcon-close text-red"></text></view>
 				</view>
-				<scroll-view class="padding text-left bg-white radius" style="height: 800rpx;" :scroll-y="true">
+				<scroll-view class="padding text-left bg-white card-radius" style="height: 800rpx;" :scroll-y="true">
 					<ua-markdown :source="checkinDocument"/>
 				</scroll-view>
 			</view>

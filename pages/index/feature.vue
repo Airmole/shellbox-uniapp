@@ -3,7 +3,7 @@
 		<view class="padding-top bg-height bg-img bg-mask"
 			:style="{backgroundImage: `url(${backgroundImageUrl})`}">
 			<!-- #ifdef MP -->
-			<view class="text-xl margin-lr text-left margin-top-xl padding-top-sm text-bold"><text @click="moreModal=true" class="cuIcon-more text-white"></text></view>
+			<view class="text-xl margin-lr text-left margin-top-xl padding-top text-bold"><text @click="moreModal=true" class="cuIcon-more text-white"></text></view>
 			<view class="text-white radius bg-card">
 				<navigator :url="loginStatus?'/pages/setting/profile':'/pages/index/login'" class="flex justify-center">
 					<image class="cu-avatar round avatar"
@@ -20,7 +20,7 @@
 			</view>
 			<!-- #endif -->
 			<!-- #ifndef MP -->
-			<view class="text-xl margin-lr text-right text-bold"><text @click="moreModal=true" class="cuIcon-more text-white"></text></view>
+			<view class="text-xl margin-lr text-right text-bold padding-top-xl"><text @click="moreModal=true" class="cuIcon-more text-white"></text></view>
 			<view class="padding-xl text-white radius bg-card">
 				<view class="flex justify-center">
 					<image
@@ -164,6 +164,7 @@
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
 	import menuGuide from './components/menuGuide.vue'
+	import { openWebview } from '../../common/utils/tools'
 	
 	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页空白
 	const appStore = useAppStore()
@@ -248,10 +249,7 @@
 		})
 	}
 	function shareApp() {
-		// #ifdef MP-WEIXIN
-		return
-		// #endif
-		// #ifdef MP-QQ
+		// #ifdef MP
 		return
 		// #endif
 		uni.setClipboardData({
@@ -268,17 +266,6 @@
 		return
 		// #endif
 		uni.showToast({ title: '暂仅支持在微信小程序端修改头像昵称', icon: 'none' })
-	}
-	
-	// 使用内嵌 web-view 打开外部 H5（App / 小程序通用兜底）
-	function openWebview (url) {
-		// #ifdef H5
-		window.location.href = url
-		return
-		// #endif
-		uni.navigateTo({
-			url: '/pages/webview/webview?url=' + encodeURIComponent(url)
-		})
 	}
 	
 	function goUserGuide () {
@@ -308,7 +295,9 @@
 	}
 	
 	function openWechatAuthSetting () {
+		// #ifdef MP-WEIXIN
 		wx.openAppAuthorizeSetting()
+		// #endif
 	}
 	
 	function goRecharge () {
@@ -325,6 +314,10 @@
 		// #ifdef H5
 		window.open('https://ifdian.net/item/04e7c5c0295e11f0b88d52540025c377')
 		return
+		// #endif
+		
+		// #ifdef APP
+		openWebview('https://ifdian.net/item/04e7c5c0295e11f0b88d52540025c377')
 		// #endif
 	}
 	

@@ -31,3 +31,14 @@ export function getTodayDateString () {
 	const day = String(date.getDate()).padStart(2, '0')
 	return `${year}-${month}-${day}`
 }
+
+// 使用内嵌 web-view 打开外部 H5（App / 小程序通用兜底）
+export function openWebview (url) {
+	// #ifdef H5
+	window.location.href = url
+	return
+	// #endif
+	uni.navigateTo({
+		url: '/pages/webview/webview?url=' + encodeURIComponent(url)
+	})
+}

@@ -52,7 +52,9 @@
 			<view class="padding-bottom-sm">
 				<text class="cuIcon-info"></text> 本项目前端代码已于 <text class="cuIcon-github">Github</text> 开源，欢迎fork参与开发优化。<br/>
 				前端项目：<text @tap="clickUrl('https://github.com/Airmole/shellbox-uniapp')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/shellbox-uniapp</text><br/>
-				后端依赖：<text @tap="clickUrl('https://github.com/Airmole/tjustb-edusys')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/tjustb-edusys</text><br/>
+				统一登录：<text @tap="clickUrl('https://github.com/Airmole/tjustb-authsys')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/tjustb-authsys</text><br/>
+				教务数据：<text @tap="clickUrl('https://github.com/Airmole/tjustb-edusys')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/tjustb-edusys</text><br/>
+				图书检索：<text @tap="clickUrl('https://github.com/Airmole/tjustb-libsp')" class="text-blue"><text class="cuIcon-github text-blue margin-lr-xs"></text>Airmole/tjustb-libsp</text><br/>
 				API接口：<text @tap="clickUrl('https://doc.shellbox.ustb.tj.cn')" class="text-blue"><text class="cuIcon-link text-blue margin-lr-xs"></text>https://doc.shellbox.ustb.tj.cn</text><br/>
 			</view>
 		</view>
@@ -185,6 +187,7 @@
 </template>
 
 <script>
+	import { openWebview } from '../../common/utils/tools'
 	import { getGlobalData, getAppInstance } from '@/common/store/globalData.js'
 	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页白屏
 	export default {
@@ -238,20 +241,14 @@
 				return
 				// #endif
 				
-				// #ifdef H5
-				uni.showLoading({ title: '加载中...' })
-				window.location.href = url
-				return
-				// #endif
+				openWebview(url)
 			},
 			goPrivacy () {
 				// #ifdef MP-WEIXIN
 				wx.openPrivacyContract()
 				// #endif
-				// #ifdef H5
-				uni.showLoading({ title: '加载中...' })
-				window.location.href = 'https://mp.weixin.qq.com/wxawap/waprivacyinfo?action=show&appid=wxf0ba93e3faff4eda&uin=NzAzMDY5MTYx&key=daf9bdc5abc4e8d00b52309f7a57e7745045ac5c5dd36db87634096c1ad8de1245a7fc007c5ced485b1cbde43de0ddf5205f2591e059c93cda77956646a487bbfb1cc788d678ead931433cc83fd434902a38a01d84b51aba008649223d36573a11148bbcb4a64ee7d89ad52db0fe5703fb265cf96872be2099e43fdb9ec9fe76&version=2800363b'
-				// #endif
+				
+				openWebview('https://mp.weixin.qq.com/wxawap/waprivacyinfo?action=show&appid=wxf0ba93e3faff4eda&uin=NzAzMDY5MTYx&key=daf9bdc5abc4e8d00b52309f7a57e7745045ac5c5dd36db87634096c1ad8de1245a7fc007c5ced485b1cbde43de0ddf5205f2591e059c93cda77956646a487bbfb1cc788d678ead931433cc83fd434902a38a01d84b51aba008649223d36573a11148bbcb4a64ee7d89ad52db0fe5703fb265cf96872be2099e43fdb9ec9fe76&version=2800363b')
 			},
 			goLibraryOffical () {
 				uni.navigateTo({ url: '/pages/school/media?account=tjclib' })
@@ -270,10 +267,7 @@
 				})
 				// #endif
 				
-				// #ifdef H5
-				uni.showLoading({ title: '加载中...' })
-				window.open(url)
-				// #endif
+				openWebview(url)
 			},
 			goShellboxOffical () {
 				// #ifdef MP-WEIXIN
@@ -299,9 +293,8 @@
 				this.copyText('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w')
 				// #endif
 				
-				// #ifdef H5
-				uni.showLoading({ title: '加载中...' })
-				window.location.href = 'https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w'
+				// #ifdef H5 || APP
+				openWebview('https://mp.weixin.qq.com/s/XcTFGHHu57y9fw_t7F8A-w')
 				// #endif
 			},
 			goJumpGuide () {
@@ -324,9 +317,8 @@
 				})
 				// #endif
 				
-				// #ifdef H5
-				uni.showLoading({ title: '加载中...' })
-				window.location.href = 'https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzIyOTYyMjE1NQ==&action=getalbum&album_id=3752283129172738048#wechat_redirect'
+				// #ifdef H5 || APP
+				openWebview('https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzIyOTYyMjE1NQ==&action=getalbum&album_id=3752283129172738048#wechat_redirect')
 				// #endif
 			},
 			goFAQ () {
@@ -336,9 +328,8 @@
 				// #ifdef MP-QQ
 				this.copyText('https://docs.qq.com/doc/DREhocFliTUFRS0dt')
 				// #endif
-				// #ifdef H5
-				uni.showLoading({ title: '加载中...' })
-				window.location.href = 'https://docs.qq.com/doc/DREhocFliTUFRS0dt'
+				// #ifdef H5 || APP
+				openWebview('https://docs.qq.com/doc/DREhocFliTUFRS0dt')
 				// #endif
 			}
 		}

@@ -86,7 +86,8 @@ export function startPlayVideoAd(
 		callback(callbackData)
 	}
 	// #endif
-	// #ifdef H5
+	
+	// #ifdef H5 || APP
 	callback(callbackData)
 	// #endif
 }
