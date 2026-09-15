@@ -248,4 +248,12 @@
 	.card-radius {
 		border-radius: 30rpx;
 	}
+	.card-radius-top {
+		border-top-left-radius: 30rpx;
+		border-top-right-radius: 30rpx;
+	}
+	.card-radius-bottom {
+		border-bottom-left-radius: 30rpx;
+		border-bottom-right-radius: 30rpx;
+	}
 </style>

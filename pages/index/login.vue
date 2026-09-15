@@ -142,6 +142,18 @@
 	}
 	function autoLogin (formData) {
 		api.autoLogin(formData).then(res => {
+			// #ifdef APP
+			if (!res.data.isVip) {
+				uni.showModal({
+					title: '会员专享',
+					content: '仅会员用户可登录使用App',
+					showCancel: false,
+					confirmText: '确认'
+				})
+				return
+			}
+			// #endif
+			
 			const loginData = Object.assign({
 				account: formData.account,
 				password: formData.password

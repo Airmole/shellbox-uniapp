@@ -22,12 +22,12 @@
 			</view>
 			<!-- 明细 -->
 			<view class="cu-list menu sm-border card-menu margin-top-lg">
-				<navigator v-if="isReleaseEnv" url="/pages/points/mall" class="cu-item arrow" :render-link="false">
+				<!-- <navigator v-if="isReleaseEnv" url="/pages/points/mall" class="cu-item arrow" :render-link="false">
 				    <view class="content">
 				        <text class="cuIcon-shop text-blue"></text>
 				        <text class="text-grey">积分兑换商场</text>
 				    </view>
-				</navigator>
+				</navigator> -->
 			    <view v-if="isReleaseEnv" class="cu-item arrow" @click="goRecharge">
 			        <view class="content">
 			            <text class="cuIcon-moneybag text-blue"></text>
@@ -95,7 +95,7 @@
 						</view>
 					</view>
 				</view>
-				<navigator url="/pages/points/mall" class="text-center text-blue"><text>更多积分商品兑换...</text></navigator>
+				<!-- <navigator url="/pages/points/mall" class="text-center text-blue"><text>更多积分商品兑换...</text></navigator> -->
 			</template>
 		</template>
 		
@@ -116,7 +116,7 @@
 				<view class="text-right">
 					<view class="action text-blue text-xxl" @tap="showPointsDocument"><text class="cuIcon-close text-red"></text></view>
 				</view>
-				<scroll-view class="padding text-left bg-white radius" style="height: 800rpx;" :scroll-y="true">
+				<scroll-view class="padding text-left bg-white card-radius" style="height: 800rpx;" :scroll-y="true">
 					<ua-markdown :source="pointsDocument"/>
 				</scroll-view>
 			</view>

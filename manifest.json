@@ -2,8 +2,8 @@
     "name" : "贝壳小盒子",
     "appid" : "__UNI__86442D4",
     "description" : "",
-    "versionName" : "4.11.0",
-    "versionCode" : 41100,
+    "versionName" : "4.12.0",
+    "versionCode" : 41200,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
