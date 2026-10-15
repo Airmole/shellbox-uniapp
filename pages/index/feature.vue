@@ -163,6 +163,7 @@
 	import api from '@/request/api.js'
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
+	import { getGlobalDataRef } from '@/common/store/globalData.js'
 	import menuGuide from './components/menuGuide.vue'
 	import { openWebview } from '../../common/utils/tools'
 	
@@ -173,7 +174,8 @@
 	const backgroundImageUrl = 'https://r2.airmole.cn/i/2026/09/10/4znexf-91nh.webp'
 	let waterWaveUrl = ref('https://r2.airmole.cn/images/weapp/water-wave-light.webp')
 	
-	const isVip = ref(false)
+	// 响应式会员状态：避免 onLoad 快照导致会员身份异步到达后页面不更新
+	const isVip = getGlobalDataRef('isVip')
 	const profile = ref('')
 	const menuList = ref([])
 	const moreModal = ref(false)
@@ -181,7 +183,6 @@
 	const isReleaseEnv = ref(false)
 	
 	onLoad(() => {
-		isVip.value = appStore.getIsVip()
 		// #ifdef MP-WEIXIN
 		isReleaseEnv.value = (appStore.getGlobalData('env') === 'release')
 		// #endif

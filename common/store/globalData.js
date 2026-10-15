@@ -1,3 +1,5 @@
+import { ref } from 'vue'
+
 /**
  * App 全局状态的安全读写层（storage-first）
  *
@@ -29,6 +31,16 @@ export const GLOBAL_DATA_DEFAULTS = {
 
 // 内存兜底：始终可读写，作为 storage / App 实例都不可用时的最后防线
 const memory = Object.assign({}, GLOBAL_DATA_DEFAULTS)
+
+// ---------- 响应式镜像 ----------
+// isVip 是全站高频读取字段（首页广告、插屏广告、会员入口都依赖它），
+// 但它可能在任何时刻变化（App 冷启动异步登录、支付成功、退出登录）。
+// 普通对象/Storage 的值不是响应式的，页面只在 onLoad 读一次快照，
+// 之后 isVip 从 false 变 true 时页面不会重新计算 -> 会员仍然看到广告。
+// 因此这里额外维护一份 ref 镜像，配合 getGlobalDataRef 让模板能自动更新。
+const reactiveRefs = {
+	isVip: ref(GLOBAL_DATA_DEFAULTS.isVip),
+}
 
 // 参与持久化的字段（Promise / 运行时字段不入库）
 const PERSIST_KEYS = ['env', 'screenHeight', 'isVip', 'logoImageUrl', 'defaultAvatar']
@@ -127,7 +139,7 @@ export function getGlobalData(key, fallback = undefined) {
 		return result
 	}
 
-	let value = memory[key]
+	let value = typeof reactiveRefs[key] !== 'undefined' ? reactiveRefs[key].value : memory[key]
 	if (typeof value === 'undefined' && isAppDataReady()) {
 		const gd = readAppGlobalData()
 		if (gd && typeof gd[key] !== 'undefined') value = gd[key]
@@ -144,6 +156,7 @@ export function getGlobalData(key, fallback = undefined) {
 export function setGlobalData(key, value) {
 	if (typeof key === 'undefined') return
 	memory[key] = value
+	if (reactiveRefs[key]) reactiveRefs[key].value = value
 	if (PERSIST_KEYS.indexOf(key) !== -1) setStorage(key, value)
 	try {
 		const app = getAppInstance()
@@ -164,9 +177,13 @@ export function syncToAppInstance() {
 		if (!app.globalData || typeof app.globalData !== 'object') app.globalData = {}
 		Object.keys(memory).forEach((key) => {
 			if (key === APP_READY_FLAG) return
-			if (typeof app.globalData[key] === 'undefined') {
-				app.globalData[key] = memory[key]
+			// App 实例上的值（真实来源）优先回灌到内存与响应式镜像
+			if (typeof app.globalData[key] !== 'undefined') {
+				memory[key] = app.globalData[key]
+				if (reactiveRefs[key]) reactiveRefs[key].value = app.globalData[key]
+				return
 			}
+			app.globalData[key] = memory[key]
 		})
 		memory[APP_READY_FLAG] = true
 		return true
@@ -182,10 +199,20 @@ export function getIsVip() {
 	return !!getGlobalData('isVip', false)
 }
 
+/**
+ * 读取全局数据字段的响应式引用（无对应 ref 时回退为一次性 ref 包装）
+ * 用法：const isVip = getGlobalDataRef('isVip')，模板中 isVip.value 会随会员状态自动更新
+ */
+export function getGlobalDataRef(key) {
+	if (key === 'isVip') return reactiveRefs.isVip
+	return ref(getGlobalData(key))
+}
+
 export default {
 	getGlobalData,
 	setGlobalData,
 	getIsVip,
+	getGlobalDataRef,
 	getStorage,
 	setStorage,
 	getAppInstance,

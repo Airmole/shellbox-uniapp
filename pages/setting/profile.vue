@@ -45,6 +45,7 @@
 	import { request } from '../../request'
 	import api from '@/request/api.js'
 	import { useAppStore } from '@/stores/app.js'
+	import { getGlobalDataRef } from '@/common/store/globalData.js'
 
 	/**
 	 * ⚠️ 本组件是 Options API（<script> + export default），
@@ -67,7 +68,15 @@
 		return cachedAppStore
 	}
 
+	// 响应式会员状态：登录/会员信息是异步到达的，用快照会导致会员暂时看到广告
+	const isVipRef = getGlobalDataRef('isVip')
+
 	export default {
+		computed: {
+			isVip() {
+				return isVipRef.value
+			}
+		},
 		data() {
 			return {
 				avatarUrl: getAppStore().getGlobalData('defaultAvatar'),
@@ -75,7 +84,6 @@
 			}
 		},
 		onLoad() {
-			this.isVip = !!getAppStore().getIsVip()
 			uni.showLoading({ title: '加载中...'})
 			this.fetchProfile()
 		},

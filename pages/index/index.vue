@@ -96,6 +96,7 @@
 	import { getWeekNameByDayNumber } from '@/common/utils/tools.js'
 	import { useAppStore } from '@/stores/app'
 	import { storeToRefs } from 'pinia'
+	import { getGlobalDataRef } from '@/common/store/globalData.js'
 	// 注意：这里绝不能出现 getApp()，App 冷启动时它会抛错导致整页拿不到数据
 	const appStore = useAppStore()
 	const { courses, calendar, loginStatus } = storeToRefs(appStore)
@@ -111,9 +112,11 @@
 		todayCourses.value = items.filter((item) => item && item.courseName)
 	})
 
-	const isVip = ref(false)
+	// 会员状态必须是响应式的：App 冷启动时登录/会员信息是异步返回的，
+	// 过去在 onLoad 里一次性取快照，登录完成前 isVip 恒为 false，
+	// 导致会员用户在本页依然看到广告（且此后不会自行刷新）。
+	const isVip = getGlobalDataRef('isVip')
 	onLoad(() => {
-		isVip.value = appStore.getIsVip()
 		// #ifdef MP
 		uni.showShareMenu({ menus: ["shareAppMessage", "shareTimeline"] })
 		// #endif
