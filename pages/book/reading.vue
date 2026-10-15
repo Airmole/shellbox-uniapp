@@ -258,7 +258,7 @@
 </template>
 
 <script>
-	import { getGlobalData } from '@/common/store/globalData.js'
+	import { getGlobalData, getGlobalDataRef } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import { navigateToPlace } from '@/common/utils/location.js'
@@ -266,11 +266,16 @@
 	import bookItem from './components/bookItem.vue'
 	import {initalVideoAd, startPlayVideoAd} from '../../common/utils/mpAd.js'
 	let videoAd = null
+	const isVipRef = getGlobalDataRef('isVip')
+
 	export default {
 		components:{ bookItem },
+		// 响应式会员状态：登录/会员信息异步到达，用 onLoad 快照会让会员短暂看到广告
+		computed: {
+			isVip() { return isVipRef.value }
+		},
 		data() {
 			return {
-				isVip: false,
 				isLogined: true,
 				typeIndex: 0,
 				typeTabs: ['图书', '现刊'],
@@ -299,7 +304,7 @@
 			}
 		},
 		onLoad() {
-			this.isVip = getGlobalData('isVip', false)
+			// 会员状态改为响应式（见 computed isVip），此处无需再取快照
 			if (getEdusysAccount() === false) {
 				this.isLogined = false
 				return

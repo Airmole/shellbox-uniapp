@@ -84,10 +84,11 @@
 
 <script setup>
 	import { ref } from 'vue'
-	import { onLoad, onShow } from '@dcloudio/uni-app'
+	import { onShow } from '@dcloudio/uni-app'
 	import api from '@/request/api.js'
 	import { useAppStore } from '@/stores/app.js'
 	import { storeToRefs } from 'pinia'
+	import { getGlobalDataRef } from '@/common/store/globalData.js'
 	import vipRights from './components/vipRights.vue'
 
 	const app = getApp()
@@ -96,19 +97,15 @@
 	
 	const usercode = ref('')
 	const isLoginStatus = ref(false)
-	const isVip = ref(false)
+	// 会员状态使用全局响应式引用，支付成功/资料刷新后自动同步到其他页面
+	const isVip = getGlobalDataRef('isVip')
 	const vipExpireAt = ref('')
 	const products = ref([])
 	const selected = ref(null)
 	const loading = ref(true)
 	const buying = ref(false)
 
-	onLoad(() => {
-		isVip.value = app.globalData.isVip
-	})
-
 	onShow(() => {
-		isVip.value = app.globalData.isVip
 		isLoginStatus.value = loginStatus.value || !!app.globalData.profile || !!uni.getStorageSync('auth')
 		if (isLoginStatus.value) {
 			loadVipProfile()
@@ -122,8 +119,8 @@
 			const profile = res.data.data || res.data
 			usercode.value = profile.usercode
 			if (typeof profile.isVip !== 'undefined') {
-				isVip.value = !!profile.isVip
-				app.globalData.isVip = !!profile.isVip
+				// 统一写入全局层（内存 + storage + App.globalData + 响应式引用）
+				appStore.setGlobalData('isVip', !!profile.isVip)
 			}
 			if (profile.vipExpireAt) vipExpireAt.value = profile.vipExpireAt
 		} catch (e) {

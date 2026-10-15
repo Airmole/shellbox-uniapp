@@ -3,6 +3,7 @@ import { reactive, toRefs, ref } from 'vue'
 import { getEdusysAccount, setLoginStatus, clearLoginStatus } from '@/common/utils/auth.js'
 import {
 	getGlobalData,
+	getGlobalDataRef,
 	setGlobalData,
 	getIsVip,
 	getAppInstance,
@@ -191,6 +192,7 @@ export const useAppStore = defineStore('app', () => {
 		getGlobalData,
 		setGlobalData,
 		getIsVip,
+		getGlobalDataRef,
 		getAppInstance,
 		...toRefs(storeState)
 	}

@@ -87,14 +87,19 @@
 	</view>
 </template> 
 <script>
-	import { getGlobalData } from '@/common/store/globalData.js'
+	import { getGlobalData, getGlobalDataRef } from '@/common/store/globalData.js'
 	import api from '../../request/api'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import { getTodayDateString } from '../../common/utils/tools'
+	const isVipRef = getGlobalDataRef('isVip')
+
 	export default {
+		// 响应式会员状态：登录/会员信息异步到达，用 onLoad 快照会让会员短暂看到广告
+		computed: {
+			isVip() { return isVipRef.value }
+		},
 		data() {
 			return {
-				isVip: false,
 				waterWaveUrl: 'https://r2.airmole.cn/images/weapp/water-wave-light.webp',
 				date: "",
 				type: "week",
@@ -120,7 +125,7 @@
 			}
 		},
 		onLoad () {
-			this.isVip = getGlobalData('isVip', false)
+			// 会员状态改为响应式（见 computed isVip），此处无需再取快照
 			this.date = getTodayDateString()
 			const sysInfo = uni.getSystemInfoSync()
 			if (sysInfo.theme === 'dark') this.waterWaveUrl = 'https://r2.airmole.cn/images/weapp/water-wave-dark.webp'

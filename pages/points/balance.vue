@@ -127,17 +127,22 @@
 </template>
 
 <script>
-	import { getGlobalData } from '@/common/store/globalData.js'
+	import { getGlobalData, getGlobalDataRef } from '@/common/store/globalData.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import api from '../../request/api'
 	let videoAd = null
 	// 条件编译下同一标识符只能声明一次，否则会被拼进同一作用域导致重复声明
 	let adUnitId = ''
+	const isVipRef = getGlobalDataRef('isVip')
+
 	export default {
+		// 响应式会员状态：登录/会员信息异步到达，用 onLoad 快照会让会员短暂看到广告
+		computed: {
+			isVip() { return isVipRef.value }
+		},
 		data() {
 			return {
 				isReleaseEnv: false,
-				isVip: false,
 				isLogined: true,
 				pointsDocument: '',
 				showDocument: false,
@@ -153,7 +158,7 @@
 			// #ifdef H5
 			this.isReleaseEnv = true
 			// #endif
-			this.isVip = !!getGlobalData('isVip', false)
+			// 会员状态改为响应式（见 computed isVip），此处无需再取快照
 			const usercode = getEdusysAccount()
 			this.usercode = usercode
 			if (usercode === false) {

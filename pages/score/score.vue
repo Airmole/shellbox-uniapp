@@ -289,7 +289,7 @@
 </template>
 
 <script>
-	import { getGlobalData } from '@/common/store/globalData.js'
+	import { getGlobalData, getGlobalDataRef } from '@/common/store/globalData.js'
 	import api from '@/request/api.js'
 	import { getEdusysAccount } from '@/common/utils/auth.js'
 	import {initalVideoAd, startPlayVideoAd} from '../../common/utils/mpAd.js'
@@ -297,10 +297,15 @@
 	var uChartsInstance = {}
 	let interstitialAd = null
 	let videoAd = null
+	const isVipRef = getGlobalDataRef('isVip')
+
 	export default {
+		// 响应式会员状态：登录/会员信息异步到达，用 onLoad 快照会让会员短暂看到广告
+		computed: {
+			isVip() { return isVipRef.value }
+		},
 		data() {
 			return {
-				isVip: false,
 				isLogined: true,
 				foldOptionsArea: true,
 				semesterOptionsList: [],
@@ -333,7 +338,7 @@
 			}
 		},
 		onLoad() {
-			this.isVip = getGlobalData('isVip', false)
+			// 会员状态改为响应式（见 computed isVip），此处无需再取快照
 			// #ifdef MP-WEIXIN
 			if (wx.createInterstitialAd) interstitialAd = wx.createInterstitialAd({
 				adUnitId: 'adunit-5a3621a7eb4da121'
