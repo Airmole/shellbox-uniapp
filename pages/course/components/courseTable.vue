@@ -1,76 +1,84 @@
 <template>
 	<view>
 		<scroll-view scroll-y="true" scroll-x="true">
-			<view class="ct-head ct-head-line" :style="{width: `${tableWidth}px`}">
-				<view class="ct-head-gutter border-right" :style="{width: `${columnTitleWidth}px`}"></view>
-				<view
-					v-for="(day, dayIdx) in columnTitles"
-					class="ct-head-day text-gray"
-					:class="dayIdx === todayIndex ? 'ct-today-head' : ''"
-					:style="{width: `${itemWidth}px`}"
-					:key="dayIdx"
-				>{{day}}</view>
-			</view>
-			<view class="ct-row" :style="{width: `${tableWidth}px`}" v-for="(courses, rowIdx) in sectionItems" :key="rowIdx">
-				<view
-					class="border-right ct-time text-center flex justify-center align-center"
-					:style="{width: `${columnTitleWidth}px`, height: `${itemHeight}px`}"
-				>
-					<view class="text-gray">{{rowTitles[rowIdx][0]}}<br/>~<br/>{{rowTitles[rowIdx][1]}}</view>
+			<view class="ct-table" :style="{width: `${tableWidth}px`}">
+				<!-- 整列高亮层：画在课程卡片下面一层，卡片自身不做任何高亮，避免空卡片也被染色 -->
+				<view class="ct-mask" :style="todayColumnStyle"></view>
+				
+				<view class="ct-head ct-head-line" :style="{width: `${tableWidth}px`}">
+					<view class="ct-head-gutter border-right" :style="{width: `${columnTitleWidth}px`}"></view>
+					<view
+						v-for="(day, dayIdx) in columnTitles"
+						class="ct-head-day text-gray"
+						:class="dayIdx === todayIndex ? 'ct-today-head' : ''"
+						:style="{width: `${itemWidth}px`}"
+						:key="dayIdx"
+					>{{day}}</view>
 				</view>
-				<view
-					v-for="(dayCourses, dayIdx) in courses"
-					class="ct-item tb-head-x"
-					:class="[
-						dayCourses.length ? `bg-${bgColors[dayCourses[0].courseName.length % bgColors.length]} shadow course-item radius` : '',
-						dayIdx === todayIndex ? 'ct-today-column' : ''
-					]"
-					:style="columnStyle(dayIdx)"
-					:key="dayIdx"
-				>
-					<!-- 当前节次指针：只画在今天所在列、当前正在上的那一节 -->
+				<view class="ct-row" :style="{width: `${tableWidth}px`}" v-for="(courses, rowIdx) in sectionItems" :key="rowIdx">
 					<view
-						v-if="pointer && dayIdx === todayIndex && rowIdx === pointer.section"
-						class="ct-pointer"
-						:style="{top: `${pointer.top}px`}"
-					></view>
-					<!-- 一节一门课程 -->
-					<view
-						v-if="dayCourses.length === 1"
-						class="ct-course"
-						v-bind="cellAttrs(dayIdx, rowIdx, 0)"
-						@click="showDetail"
+						class="border-right ct-time text-center flex justify-center align-center"
+						:style="{width: `${columnTitleWidth}px`, height: `${itemHeight}px`}"
 					>
-						<view class="margin-tb-xs place-name">{{dayCourses[0].place}}</view>
-						<view class="margin-tb-xs course-name" :style="{height: `${itemHeight - 50}px`}">
-							{{dayCourses[0].courseName}}
-						</view>
+						<view class="text-gray">{{rowTitles[rowIdx][0]}}<br/>~<br/>{{rowTitles[rowIdx][1]}}</view>
 					</view>
-					<!-- 一节多门课程：按门数均分单元格，最后一门吃掉剩余高度 -->
-					<template v-else-if="dayCourses.length">
+					<view
+						v-for="(dayCourses, dayIdx) in courses"
+						class="ct-item tb-head-x"
+						:class="dayCourses.length
+							? `bg-${bgColors[dayCourses[0].courseName.length % bgColors.length]} shadow course-item radius`
+							: 'ct-item-empty'"
+						:style="columnStyle(dayIdx)"
+						:key="dayIdx"
+					>
+						<!-- 一节一门课程 -->
 						<view
-							v-for="(itm, idx) in dayCourses.slice(0, 5)"
-							:key="idx"
+							v-if="dayCourses.length === 1"
 							class="ct-course"
-							:class="dayCourses.length > 3 ? 'text-sm' : ''"
-							:style="subItemStyle(dayCourses.length, idx === Math.min(dayCourses.length, 5) - 1)"
-							v-bind="cellAttrs(dayIdx, rowIdx, idx)"
+							v-bind="cellAttrs(dayIdx, rowIdx, 0)"
 							@click="showDetail"
 						>
-							<view class="place-name ct-sub text-cut">{{dayCourses.length > 3 ? (itm.place || itm.courseName) : itm.place}}</view>
-							<view v-if="dayCourses.length <= 3" class="course-name">{{itm.courseName}}</view>
+							<view class="margin-tb-xs place-name">{{dayCourses[0].place}}</view>
+							<view class="margin-tb-xs course-name" :style="{height: `${itemHeight - 50}px`}">
+								{{dayCourses[0].courseName}}
+							</view>
 						</view>
-						<view
-							v-if="dayCourses.length > 5"
-							class="text-sm ct-sub"
-							v-bind="cellAttrs(dayIdx, rowIdx, 5)"
-							@click="showDetail"
-						>...共{{dayCourses.length}}门</view>
-					</template>
+						<!-- 一节多门课程：按门数均分单元格高度 -->
+						<template v-else-if="dayCourses.length">
+							<view
+								v-for="(itm, idx) in dayCourses.slice(0, 5)"
+								:key="idx"
+								class="ct-course"
+								:class="dayCourses.length > 3 ? 'text-sm' : ''"
+								:style="subItemStyle(dayCourses.length, idx === Math.min(dayCourses.length, 5) - 1)"
+								v-bind="cellAttrs(dayIdx, rowIdx, idx)"
+								@click="showDetail"
+							>
+								<view class="place-name ct-sub text-cut">{{dayCourses.length > 3 ? (itm.place || itm.courseName) : itm.place}}</view>
+								<view v-if="dayCourses.length <= 3" class="course-name">{{itm.courseName}}</view>
+							</view>
+							<view
+								v-if="dayCourses.length > 5"
+								class="text-sm ct-sub"
+								v-bind="cellAttrs(dayIdx, rowIdx, 5)"
+								@click="showDetail"
+							>...共{{dayCourses.length}}门</view>
+						</template>
+					</view>
 				</view>
+				
+				<view class="ct-footer" :style="{width: `${tableWidth}px`}"></view>
+				
+				<!-- 当前节次指针：两条红线卡在今天正在上的那一节上下，位置由时间换算 -->
+				<template v-if="pointer">
+					<view class="ct-pointer" :style="pointerStyle(pointer.top)" :key="'p-top'">
+						<view class="ct-pointer-dot"></view>
+					</view>
+					<view class="ct-pointer" :style="pointerStyle(pointer.bottom)" :key="'p-bottom'">
+						<view class="ct-pointer-dot"></view>
+					</view>
+				</template>
 			</view>
-			
-			<view class="ct-footer" :style="{width: `${tableWidth}px`}"></view>
 		</scroll-view>
 		
 		<view class="flex" v-if="tips">
@@ -190,7 +198,7 @@
 </template>
 
 <script setup>
-	import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+	import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 	import { onHide, onLoad, onShow, onUnload } from '@dcloudio/uni-app'
 	import { getGlobalDataRef } from '@/common/store/globalData.js'
 	import { navigateToPlace } from '@/common/utils/location.js'
@@ -211,7 +219,7 @@
 	let isVip = getGlobalDataRef('isVip')
 	let courseCellIndex = ref(0)
 	
-	// 当前时间：驱动 todayIndex 与课表指针
+	// 当前时间：驱动今日列高亮与课表指针
 	const now = ref(new Date())
 	let clockTimer = null
 	
@@ -230,14 +238,32 @@
 			type: String,
 			default: '',
 			required: false
-		},
+		}
 	})
 	
 	// 表体固定 6 行（与 rowTitles 一一对应），每格统一尺寸，边框才能对齐
 	const SECTION_COUNT = rowTitles.value.length
+	// 横向间距：与 .ct-item 的左右 margin 对齐，算表头底线与高亮层的起点
+	const ITEM_GAP = 4
+	
+	const instance = getCurrentInstance()
 	
 	// 今天对应的列下标：周一为 0，周日为 6
 	const todayIndex = computed(() => (now.value.getDay() + 6) % 7)
+	
+	// 整列高亮层的位置与尺寸：先量出表头真实高度、节次栏真实宽度，
+	// 数据没到（表格还没渲染完）时也给一套按布局推算的兜底值，避免测量失败就不显示
+	const headHeight = ref(0)
+	const gutterWidth = ref(0)
+	const todayColumnStyle = computed(() => {
+		const left = (gutterWidth.value || columnTitleWidth.value) + todayIndex.value * itemWidth.value + ITEM_GAP
+		return {
+			left: `${left}px`,
+			width: `${itemWidth.value - ITEM_GAP * 2}px`,
+			top: `${headHeight.value}px`,
+			height: `${itemHeight.value * SECTION_COUNT}px`
+		}
+	})
 	
 	// 全天对应的分钟数
 	function toMinutes(time = '') {
@@ -246,7 +272,7 @@
 		return hour * 60 + minute
 	}
 	
-	// 时间指针位置：落在哪一节就在那一列的格子里画线，课间或课后不显示
+	// 时间指针：今天正在上课的那一节，返回这一节的上下边界（相对表格容器）
 	const pointer = computed(() => {
 		const current = now.value.getHours() * 60 + now.value.getMinutes()
 		for (let idx = 0; idx < rowTitles.value.length; idx++) {
@@ -255,14 +281,18 @@
 			const endAt = toMinutes(end)
 			if (startAt === null || endAt === null) continue
 			if (current < startAt || current > endAt) continue
-			const ratio = Math.min(Math.max((current - startAt) / (endAt - startAt), 0), 1)
-			// 限制在单元格内部，避免指针压到边框或相邻格子
-			return {
-				section: idx,
-				top: Math.min(Math.max(ratio * itemHeight.value, 2), itemHeight.value - 4)
-			}
+			const top = headHeight.value + idx * itemHeight.value
+			return { section: idx, top, bottom: top + itemHeight.value }
 		}
 		return null
+	})
+	
+	// 指针只画在今天那一列：一条红线卡在这一节的上/下边界，左端圆点做箭头收口
+	const pointerStyle = (y) => Object.assign({}, todayColumnStyle.value, {
+		top: `${y}px`,
+		height: '3px',
+		background: '#ff3b30',
+		border: 'none'
 	})
 	
 	// 表体：按 [节][天] 组织成二维数组，模板只需两层循环，并做空数组兜底
@@ -310,7 +340,7 @@
 		}
 	}
 	
-	// 每分钟刷新一次，跨天后 todayIndex 与指针自动跟随
+	// 每分钟刷新一次，跨天后今日列与指针自动跟随
 	function startClock() {
 		stopClock()
 		now.value = new Date()
@@ -324,6 +354,23 @@
 		}
 	}
 	
+	function measure() {
+		const vm = instance && instance.proxy
+		if (!vm || typeof vm.$nextTick !== 'function') return
+		vm.$nextTick(() => {
+			// 表头高度参与高亮层与指针的纵向定位；节次栏宽度取实测值，兼容各端 1px 边框的四舍五入
+			uni.createSelectorQuery().in(vm)
+				.select('.ct-head').boundingClientRect()
+				.select('.ct-time').boundingClientRect()
+				.exec((res) => {
+					const head = res && res[0]
+					const time = res && res[1]
+					if (head && head.height > 0) headHeight.value = head.height
+					if (time && time.width > 0) gutterWidth.value = time.width
+				})
+		})
+	}
+	
 	onLoad(() => {
 		calcTableSize()
 	})
@@ -335,6 +382,9 @@
 	
 	onMounted(() => { startClock() })
 	onBeforeUnmount(() => { stopClock() })
+	
+	// 课表数据异步到达后才真正有表头/节次栏可供测量
+	watch(() => props.table, () => measure(), { deep: true })
 	
 	function hideModal() {
 		displayDetailModal.value = false
@@ -364,6 +414,7 @@
 		itemHeight.value = itmHeight
 		tableWidth.value = tablWidth
 		tableHeight.value = tablHeight
+		measure()
 	}
 	
 	function goClassNameSearchPage (className = '') {
@@ -384,17 +435,36 @@
 </script>
 
 <style>
+	/* 整张表的定位容器：今日列高亮层与节次指针都相对它绝对定位，压在卡片下面 */
+	.ct-table {
+		position: relative;
+	}
+	
+	/* 今日列高亮：只染「今天这一列」的底色与边框，不碰任何课程卡片 */
+	.ct-mask {
+		position: absolute;
+		border-radius: 10rpx;
+		background-color: rgba(39, 125, 255, 0.08);
+		border: 1px solid rgba(39, 125, 255, 0.22);
+		pointer-events: none;
+		z-index: 0;
+	}
+	
 	/* 表头：与表体列宽严格一致（节次栏 42 + 每天 itemWidth），分隔线由整行拉通 */
 	.ct-head {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-wrap: nowrap;
+		align-items: center;
 	}
 	
 	.ct-head-gutter {
 		flex: 0 0 auto;
 	}
 	
-	/* 只留水平间距，垂直方向不加 margin，避免表头各行高度被 margin 累加而错位 */
+	/* 只留水平间距，垂直方向不加 margin，避免表头各行高度被 margin 累加而错位。
+	   不设背景色，今日列的高亮由底下的 .ct-mask 提供 */
 	.ct-head-day {
 		flex: 0 0 auto;
 		margin-left: 4rpx;
@@ -406,21 +476,15 @@
 		border-bottom: 1px solid #ccc;
 	}
 	
-	/* 今日列高亮 */
 	.ct-today-head {
-		background-color: rgba(39, 125, 255, 0.12);
-		border-radius: 8rpx;
 		color: #277dff;
 		font-weight: bold;
 	}
 	
-	.ct-today-column {
-		background-color: rgba(39, 125, 255, 0.06);
-		box-shadow: inset 0 0 0 1px rgba(39, 125, 255, 0.28);
-	}
-	
 	/* 表体行：不换行，行高由单元格固定高度决定 */
 	.ct-row {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-wrap: nowrap;
 		align-items: stretch;
@@ -432,12 +496,28 @@
 		line-height: 1.2;
 	}
 	
-	/* 课程格：相对定位，供时间指针绝对定位；行高由 style 里的 height 决定 */
+	/* 课程格：行高由 style 里的 height 决定，横向间距与 .ct-mask / .ct-pointer 的 ITEM_GAP 保持一致。
+	   卡片样式（背景色/内边距/居中）写在这里，不再依赖各页面自己的 .course-item，
+	   否则班级课表、课程课表、教师课表这几个页面根本拿不到样式 */
 	.ct-item {
-		position: relative;
 		flex: 0 0 auto;
 		margin: 4rpx;
 		box-sizing: border-box;
+		text-align: center;
+	}
+
+	.ct-item.course-item {
+		padding: 6rpx;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* 空课程格：纯占位，不染色也不加边框，今日列的高亮交给底下的 .ct-mask */
+	.ct-item-empty {
+		background-color: transparent;
 	}
 	
 	/* 多课程子块：高度与间距由 JS 精确分配，保证总高不超出单元格 */
@@ -446,19 +526,29 @@
 		overflow: clip;
 	}
 	
-	/* 时间指针：小程序里 view 默认不是定位元素、position:fixed 支持也差，这里显式绝对定位 */
+	/* 当前节次指针：两条红线卡住这一节的上下边界，仅今天那一列。
+	   小程序里 view 默认不是定位元素，这里显式绝对定位 */
 	.ct-pointer {
 		position: absolute !important;
-		left: 2px;
-		right: 2px;
-		height: 3px;
-		border-radius: 3px;
-		background-color: #277dff;
-		box-shadow: 0 0 4px rgba(39, 125, 255, 0.6);
+		box-shadow: 0 0 4px rgba(255, 59, 48, 0.45);
+		pointer-events: none;
 		z-index: 2;
 	}
 	
+	/* 指针左端的小圆点，让两条线看起来像把这一节「卡」住的箭头，而不是普通分隔线 */
+	.ct-pointer-dot {
+		position: absolute;
+		left: -4px;
+		top: -5px;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background-color: #ff3b30;
+	}
+	
 	.ct-footer {
+		position: relative;
+		z-index: 1;
 		padding: 20rpx 0;
 	}
 	
