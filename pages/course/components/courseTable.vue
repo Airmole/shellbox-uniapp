@@ -1,123 +1,80 @@
 <template>
 	<view>
 		<scroll-view scroll-y="true" scroll-x="true">
-			<view class="flex border-bottom" :style="{width: `${tableWidth}px`}">
-				<view class="tb-head-y border-right" :style="{width: `${columnTitleWidth}px`}"></view>
-				<view v-for="(day, dayIdx) in columnTitles" class="tb-head-x text-gray"
-					:style="{width: `${itemWidth}px`}" :key="dayIdx">{{day}}</view>
-			</view>
-			<view class="flex" :style="{width: `${tableWidth}px`}" v-for="(row, rowIdx) in [0,1,2,3,4,5]"
-				:key="rowIdx">
-				<view class="border-right tb-height text-center flex justify-center align-center"
-					:style="{width: `${columnTitleWidth}px`}">
-					<view class="text-gray">
-						{{rowTitles[rowIdx][0]}}<br/>~<br/>{{rowTitles[rowIdx][1]}}</view>
-				</view>
+			<view class="ct-head ct-head-line" :style="{width: `${tableWidth}px`}">
+				<view class="ct-head-gutter border-right" :style="{width: `${columnTitleWidth}px`}"></view>
 				<view
 					v-for="(day, dayIdx) in columnTitles"
-					:class="`${table[dayIdx] && table[dayIdx].items[rowIdx].length > 0 ? `bg-${bgColors[table[dayIdx].items[rowIdx][0].courseName.length%bgColors.length]} shadow` : ``} text-white course-item radius tb-head-x tb-height flex justify-center align-center`"
-					:style="{
-						width: `${itemWidth}px`,
-						height: `${itemHeight}px`,
-						animation: `show ${((dayIdx+1)*0.2+1)}s 1`
-					}"
+					class="ct-head-day text-gray"
+					:class="dayIdx === todayIndex ? 'ct-today-head' : ''"
+					:style="{width: `${itemWidth}px`}"
+					:key="dayIdx"
+				>{{day}}</view>
+			</view>
+			<view class="ct-row" :style="{width: `${tableWidth}px`}" v-for="(courses, rowIdx) in sectionItems" :key="rowIdx">
+				<view
+					class="border-right ct-time text-center flex justify-center align-center"
+					:style="{width: `${columnTitleWidth}px`, height: `${itemHeight}px`}"
+				>
+					<view class="text-gray">{{rowTitles[rowIdx][0]}}<br/>~<br/>{{rowTitles[rowIdx][1]}}</view>
+				</view>
+				<view
+					v-for="(dayCourses, dayIdx) in courses"
+					class="ct-item tb-head-x"
+					:class="[
+						dayCourses.length ? `bg-${bgColors[dayCourses[0].courseName.length % bgColors.length]} shadow course-item radius` : '',
+						dayIdx === todayIndex ? 'ct-today-column' : ''
+					]"
+					:style="columnStyle(dayIdx)"
 					:key="dayIdx"
 				>
-					<template v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 0"></template>
+					<!-- 当前节次指针：只画在今天所在列、当前正在上的那一节 -->
+					<view
+						v-if="pointer && dayIdx === todayIndex && rowIdx === pointer.section"
+						class="ct-pointer"
+						:style="{top: `${pointer.top}px`}"
+					></view>
 					<!-- 一节一门课程 -->
-					<view 
-						v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length == 1" 
-						:style="{width: `${itemWidth}px`}"
-						:data-dayidx="dayIdx"
-						:data-rowidx="rowIdx"
-						:data-cellidx="0"
+					<view
+						v-if="dayCourses.length === 1"
+						class="ct-course"
+						v-bind="cellAttrs(dayIdx, rowIdx, 0)"
 						@click="showDetail"
 					>
-						<view class="margin-tb-xs place-name">{{table[dayIdx].items[rowIdx][0].place}}</view>
-						<view class="margin-tb-xs course-name" :style="{height: `${itemHeight-50}px`}">
-							{{table[dayIdx].items[rowIdx][0].courseName}}
+						<view class="margin-tb-xs place-name">{{dayCourses[0].place}}</view>
+						<view class="margin-tb-xs course-name" :style="{height: `${itemHeight - 50}px`}">
+							{{dayCourses[0].courseName}}
 						</view>
 					</view>
-					<!-- 一节三门以下课程 -->
-					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 1 && table[dayIdx].items[rowIdx].length <= 3">
+					<!-- 一节多门课程：按门数均分单元格，最后一门吃掉剩余高度 -->
+					<template v-else-if="dayCourses.length">
 						<view
-							v-for="(itm, idx) in table[dayIdx].items[rowIdx]"
+							v-for="(itm, idx) in dayCourses.slice(0, 5)"
 							:key="idx"
-							:style="{
-								height: `${(itemHeight)/table[dayIdx].items[rowIdx].length}px`,
-								width: `${itemWidth}px`,
-								margin: '1px 0',
-								overflow: 'clip',
-								borderBottom: idx === table[dayIdx].items[rowIdx].length - 1 ? '' : '1px solid white'
-							}"
-							:data-dayidx="dayIdx"
-							:data-rowidx="rowIdx"
-							:data-cellidx="idx"
+							class="ct-course"
+							:class="dayCourses.length > 3 ? 'text-sm' : ''"
+							:style="subItemStyle(dayCourses.length, idx === Math.min(dayCourses.length, 5) - 1)"
+							v-bind="cellAttrs(dayIdx, rowIdx, idx)"
 							@click="showDetail"
 						>
-							<view class="place-name text-cut" style="height: 1.1rem;">{{itm.place}}</view>
-							<view class="course-name">
-								{{itm.courseName}}
-							</view>
+							<view class="place-name ct-sub text-cut">{{dayCourses.length > 3 ? (itm.place || itm.courseName) : itm.place}}</view>
+							<view v-if="dayCourses.length <= 3" class="course-name">{{itm.courseName}}</view>
 						</view>
-					</template>
-					<!-- 一节三门以上五门以下课程 -->
-					<template v-else-if="table[dayIdx] && table[dayIdx].items[rowIdx].length > 3 && table[dayIdx].items[rowIdx].length <= 5">
 						<view
-							v-for="(itm, idx) in table[dayIdx].items[rowIdx]"
-							:key="idx"
-							:style="{
-								height: `${(itemHeight)/table[dayIdx].items[rowIdx].length}px`,
-								width: `${itemWidth}px`,
-								margin: '1px 0',
-								overflow: 'clip',
-								borderBottom: idx === table[dayIdx].items[rowIdx].length - 1 ? '' : '1px solid white'
-							}"
-							:data-dayidx="dayIdx"
-							:data-rowidx="rowIdx"
-							:data-cellidx="idx"
+							v-if="dayCourses.length > 5"
+							class="text-sm ct-sub"
+							v-bind="cellAttrs(dayIdx, rowIdx, 5)"
 							@click="showDetail"
-						>
-							<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
-						</view>
-					</template>
-					<!-- 一节五门以上课程 -->
-					<template v-else>
-						<template v-for="(itm, idx) in (table[dayIdx] && table[dayIdx].items[rowIdx])" :key="idx">
-							<view
-								v-if="idx < 5"
-								:style="{
-									height: `${(itemHeight)/5}px`,
-									width: `${itemWidth}px`,
-									margin: '1px 0',
-									overflow: 'clip',
-									borderBottom:idx === 4 ? '' : '1px solid white'
-								}"
-								:data-dayidx="dayIdx"
-								:data-rowidx="rowIdx"
-								:data-cellidx="idx"
-								@click="showDetail"
-							>
-								<view class="place-name text-cut text-sm" style="height: 1.1rem;">{{itm.place || itm.courseName}}</view>
-							</view>
-						</template>
-						<view
-							class="text-sm"
-							v-if="table[dayIdx] && table[dayIdx].items[rowIdx].length"
-							:data-dayidx="dayIdx"
-							:data-rowidx="rowIdx"
-							:data-cellidx="5"
-							@click="showDetail"
-						>...共{{table[dayIdx] && table[dayIdx].items[rowIdx].length}}门</view>
+						>...共{{dayCourses.length}}门</view>
 					</template>
 				</view>
 			</view>
 			
-			<view class="flex padding-tb-sm" :style="{width: `${tableWidth}px`}"></view>
+			<view class="ct-footer" :style="{width: `${tableWidth}px`}"></view>
 		</scroll-view>
 		
 		<view class="flex" v-if="tips">
-			<view class="tb-height text-center flex justify-center align-center">
+			<view class="text-center flex justify-center align-center">
 				<view class="padding-tb-sm margin-lr-xs text-gray">{{tips}}</view>
 			</view>
 		</view>
@@ -233,25 +190,30 @@
 </template>
 
 <script setup>
-	import { getGlobalData, getGlobalDataRef } from '@/common/store/globalData.js'
-	import { ref } from 'vue'
-	import { onLoad } from '@dcloudio/uni-app'
+	import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+	import { onHide, onLoad, onShow, onUnload } from '@dcloudio/uni-app'
+	import { getGlobalDataRef } from '@/common/store/globalData.js'
 	import { navigateToPlace } from '@/common/utils/location.js'
 
+	// 节次与上课时间的对应关系，数组下标即节次（0-5）
+	const rowTitles = ref([["08:00","09:35"], ["09:55","11:30"], ["13:10","14:45"], ["15:00","16:35"], ["16:50","18:25"], ["19:10","21:35"]])
+	const bgColors = ref(['red', 'orange', 'yellow', 'olive', 'green', 'cyan', 'blue', 'purple', 'mauve', 'pink', 'brown','grey'])
+	
 	let screenWidth = ref(375)
 	let columnTitleWidth = ref(42)
 	let tableWidth = ref(500)
 	let tableHeight = ref(732)
 	let itemWidth = ref(64)
 	let itemHeight = ref(120)
-	const bgColors = ref(['red', 'orange', 'yellow', 'olive', 'green', 'cyan', 'blue', 'purple', 'mauve', 'pink', 'brown','grey'])
 	let displayDetailModal = ref(false)
 	let details = ref([])
-	let newRowTitles = ref([])
-	const rowTitles = ref([["08:00","09:35"], ["09:55","11:30"], ["13:10","14:45"], ["15:00","16:35"], ["16:50","18:25"], ["19:10","21:35"]])
 	// 会员状态使用全局响应式引用，会员身份异步到达时自动刷新
 	let isVip = getGlobalDataRef('isVip')
 	let courseCellIndex = ref(0)
+	
+	// 当前时间：驱动 todayIndex 与课表指针
+	const now = ref(new Date())
+	let clockTimer = null
 	
 	const props = defineProps({
 		columnTitles: {
@@ -271,9 +233,108 @@
 		},
 	})
 	
+	// 表体固定 6 行（与 rowTitles 一一对应），每格统一尺寸，边框才能对齐
+	const SECTION_COUNT = rowTitles.value.length
+	
+	// 今天对应的列下标：周一为 0，周日为 6
+	const todayIndex = computed(() => (now.value.getDay() + 6) % 7)
+	
+	// 全天对应的分钟数
+	function toMinutes(time = '') {
+		const [hour, minute] = time.split(':').map(Number)
+		if (isNaN(hour) || isNaN(minute)) return null
+		return hour * 60 + minute
+	}
+	
+	// 时间指针位置：落在哪一节就在那一列的格子里画线，课间或课后不显示
+	const pointer = computed(() => {
+		const current = now.value.getHours() * 60 + now.value.getMinutes()
+		for (let idx = 0; idx < rowTitles.value.length; idx++) {
+			const [start, end] = rowTitles.value[idx]
+			const startAt = toMinutes(start)
+			const endAt = toMinutes(end)
+			if (startAt === null || endAt === null) continue
+			if (current < startAt || current > endAt) continue
+			const ratio = Math.min(Math.max((current - startAt) / (endAt - startAt), 0), 1)
+			// 限制在单元格内部，避免指针压到边框或相邻格子
+			return {
+				section: idx,
+				top: Math.min(Math.max(ratio * itemHeight.value, 2), itemHeight.value - 4)
+			}
+		}
+		return null
+	})
+	
+	// 表体：按 [节][天] 组织成二维数组，模板只需两层循环，并做空数组兜底
+	const sectionItems = computed(() => {
+		const days = props.columnTitles.length
+		const result = []
+		for (let rowIdx = 0; rowIdx < SECTION_COUNT; rowIdx++) {
+			const row = []
+			for (let dayIdx = 0; dayIdx < days; dayIdx++) {
+				const day = props.table[dayIdx]
+				const items = day && day.items && day.items[rowIdx]
+				row.push(Array.isArray(items) ? items : [])
+			}
+			result.push(row)
+		}
+		return result
+	})
+	
+	// 每格固定宽高（高度必须写在本格上，节次栏才会与课程格严格等高）
+	function columnStyle(dayIdx) {
+		return {
+			width: `${itemWidth.value}px`,
+			height: `${itemHeight.value}px`,
+			animation: `show ${((dayIdx + 1) * 0.2 + 1)}s 1`
+		}
+	}
+	
+	// 多门课程的子块：按门数均分高度，再各减掉自身 2px 的上下间距，
+	// 保证「块高 + 间距」之和不超过单元格高度——超出会把格子撑高，节次栏的右边框就断了
+	function subItemStyle(count, isLast) {
+		const units = count > 5 ? 5.6 : count
+		const height = Math.max(itemHeight.value / units - 2, 14)
+		return {
+			width: `${itemWidth.value}px`,
+			height: `${height}px`,
+			borderBottom: isLast ? '' : '1px solid white'
+		}
+	}
+	
+	function cellAttrs(dayIdx, rowIdx, cellIdx) {
+		return {
+			'data-dayidx': dayIdx,
+			'data-rowidx': rowIdx,
+			'data-cellidx': cellIdx
+		}
+	}
+	
+	// 每分钟刷新一次，跨天后 todayIndex 与指针自动跟随
+	function startClock() {
+		stopClock()
+		now.value = new Date()
+		clockTimer = setInterval(() => { now.value = new Date() }, 60 * 1000)
+	}
+	
+	function stopClock() {
+		if (clockTimer) {
+			clearInterval(clockTimer)
+			clockTimer = null
+		}
+	}
+	
 	onLoad(() => {
 		calcTableSize()
 	})
+	
+	// 页面切后台/卸载时停表，回到前台重新对齐时间，避免长期驻留的小程序空转
+	onShow(() => { startClock() })
+	onHide(() => { stopClock() })
+	onUnload(() => { stopClock() })
+	
+	onMounted(() => { startClock() })
+	onBeforeUnmount(() => { stopClock() })
 	
 	function hideModal() {
 		displayDetailModal.value = false
@@ -283,7 +344,7 @@
 		const dayIdx = e.currentTarget.dataset.dayidx
 		const rowIdx = e.currentTarget.dataset.rowidx
 		const cellIdx = e.currentTarget.dataset.cellidx
-		const itemCourses = props.table[dayIdx].items[rowIdx]
+		const itemCourses = props.table[dayIdx] && props.table[dayIdx].items[rowIdx]
 		if (!itemCourses || itemCourses.length == 0) return
 		details.value = itemCourses
 		courseCellIndex.value = cellIdx
@@ -323,26 +384,82 @@
 </script>
 
 <style>
-	.tb-head-x {
-		margin: 4rpx;
+	/* 表头：与表体列宽严格一致（节次栏 42 + 每天 itemWidth），分隔线由整行拉通 */
+	.ct-head {
+		display: flex;
+		flex-wrap: nowrap;
+	}
+	
+	.ct-head-gutter {
+		flex: 0 0 auto;
+	}
+	
+	/* 只留水平间距，垂直方向不加 margin，避免表头各行高度被 margin 累加而错位 */
+	.ct-head-day {
+		flex: 0 0 auto;
+		margin-left: 4rpx;
+		margin-right: 4rpx;
 		text-align: center;
 	}
 	
-	.border-bottom {
+	.ct-head-line {
 		border-bottom: 1px solid #ccc;
 	}
 	
-	.border-right {
-		border-right: 1px solid #ccc;
+	/* 今日列高亮 */
+	.ct-today-head {
+		background-color: rgba(39, 125, 255, 0.12);
+		border-radius: 8rpx;
+		color: #277dff;
+		font-weight: bold;
 	}
 	
-	.course-item {
-		padding: 6rpx;
-		overflow: hidden;
+	.ct-today-column {
+		background-color: rgba(39, 125, 255, 0.06);
+		box-shadow: inset 0 0 0 1px rgba(39, 125, 255, 0.28);
+	}
+	
+	/* 表体行：不换行，行高由单元格固定高度决定 */
+	.ct-row {
 		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
+		flex-wrap: nowrap;
+		align-items: stretch;
+	}
+	
+	/* 节次栏：高度必须显式等于课程格高度（见模板 style），两栏才能严格等高 */
+	.ct-time {
+		flex: 0 0 auto;
+		line-height: 1.2;
+	}
+	
+	/* 课程格：相对定位，供时间指针绝对定位；行高由 style 里的 height 决定 */
+	.ct-item {
+		position: relative;
+		flex: 0 0 auto;
+		margin: 4rpx;
+		box-sizing: border-box;
+	}
+	
+	/* 多课程子块：高度与间距由 JS 精确分配，保证总高不超出单元格 */
+	.ct-course {
+		flex: 0 0 auto;
+		overflow: clip;
+	}
+	
+	/* 时间指针：小程序里 view 默认不是定位元素、position:fixed 支持也差，这里显式绝对定位 */
+	.ct-pointer {
+		position: absolute !important;
+		left: 2px;
+		right: 2px;
+		height: 3px;
+		border-radius: 3px;
+		background-color: #277dff;
+		box-shadow: 0 0 4px rgba(39, 125, 255, 0.6);
+		z-index: 2;
+	}
+	
+	.ct-footer {
+		padding: 20rpx 0;
 	}
 	
 	.content {
