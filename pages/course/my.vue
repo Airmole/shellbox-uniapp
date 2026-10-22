@@ -24,7 +24,7 @@
 			</view>
 		</view>
 		
-		<courseTable v-if="isLogined" :columnTitles="courseData.columnTitle" :table="courseData.table" :tips="courseData.tips"></courseTable>
+		<courseTable v-if="isLogined" :columnTitles="courseData.columnTitle" :table="courseData.table" :tips="courseData.tips" :isMyCourses="true"></courseTable>
 		<template v-else>
 			<!-- #ifdef MP-WEIXIN -->
 			<view v-if="!isVip" class="margin margin-tb-xl radius">

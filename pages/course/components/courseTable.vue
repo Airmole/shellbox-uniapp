@@ -244,6 +244,11 @@
 			type: String,
 			default: '',
 			required: false
+		},
+		isMyCourses: {
+			type: Boolean,
+			default: false,
+			required: false
 		}
 	})
 	
@@ -264,10 +269,10 @@
 	const todayColumnStyle = computed(() => {
 		const left = (gutterWidth.value || columnTitleWidth.value) + todayIndex.value * itemWidth.value + ITEM_GAP
 		return {
-			left: `${left+8}px`,
+			left: `${left+7}px`,
 			width: `${itemWidth.value+14 - ITEM_GAP * 2}px`,
 			top: `${headHeight.value}px`,
-			height: `${itemHeight.value * SECTION_COUNT+30}px`
+			height: `${itemHeight.value * SECTION_COUNT+60}px`
 		}
 	})
 	
@@ -287,8 +292,14 @@
 			const endAt = toMinutes(end)
 			if (startAt === null || endAt === null) continue
 			if (current < startAt || current > endAt) continue
-			const top = (headHeight.value + idx * itemHeight.value) + 9
-			return { section: idx, top, bottom: top + itemHeight.value }
+			let top = headHeight.value + idx * itemHeight.value
+			top = top + 10
+			// 我的个人课表页面课表组件节次指针偏移
+			// #ifdef MP-WEIXIN
+			top = top + 24
+			if (props.isMyCourses) top = top - 20
+			// #endif
+			return { section: idx, top, bottom: top + itemHeight.value + 2 }
 		}
 		return null
 	})
