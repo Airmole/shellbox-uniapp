@@ -24,7 +24,7 @@
 					</view>
 					<view
 						v-for="(dayCourses, dayIdx) in courses"
-						class="ct-item tb-head-x"
+						class="ct-item"
 						:class="dayCourses.length
 							? `bg-${bgColors[dayCourses[0].courseName.length % bgColors.length]} shadow course-item radius`
 							: 'ct-item-empty'"
@@ -35,7 +35,9 @@
 						<view
 							v-if="dayCourses.length === 1"
 							class="ct-course"
-							v-bind="cellAttrs(dayIdx, rowIdx, 0)"
+							:data-dayidx="dayIdx"
+							:data-rowidx="rowIdx"
+							:data-cellidx="0"
 							@click="showDetail"
 						>
 							<view class="margin-tb-xs place-name">{{dayCourses[0].place}}</view>
@@ -51,7 +53,9 @@
 								class="ct-course"
 								:class="dayCourses.length > 3 ? 'text-sm' : ''"
 								:style="subItemStyle(dayCourses.length, idx === Math.min(dayCourses.length, 5) - 1)"
-								v-bind="cellAttrs(dayIdx, rowIdx, idx)"
+								:data-dayidx="dayIdx"
+								:data-rowidx="rowIdx"
+								:data-cellidx="idx"
 								@click="showDetail"
 							>
 								<view class="place-name ct-sub text-cut">{{dayCourses.length > 3 ? (itm.place || itm.courseName) : itm.place}}</view>
@@ -60,7 +64,9 @@
 							<view
 								v-if="dayCourses.length > 5"
 								class="text-sm ct-sub"
-								v-bind="cellAttrs(dayIdx, rowIdx, 5)"
+								:data-dayidx="dayIdx"
+								:data-rowidx="rowIdx"
+								:data-cellidx="5"
 								@click="showDetail"
 							>...共{{dayCourses.length}}门</view>
 						</template>
@@ -332,14 +338,6 @@
 		}
 	}
 	
-	function cellAttrs(dayIdx, rowIdx, cellIdx) {
-		return {
-			'data-dayidx': dayIdx,
-			'data-rowidx': rowIdx,
-			'data-cellidx': cellIdx
-		}
-	}
-	
 	// 每分钟刷新一次，跨天后今日列与指针自动跟随
 	function startClock() {
 		stopClock()
@@ -460,13 +458,17 @@
 	}
 	
 	.ct-head-gutter {
-		flex: 0 0 auto;
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: auto;
 	}
 	
 	/* 只留水平间距，垂直方向不加 margin，避免表头各行高度被 margin 累加而错位。
 	   不设背景色，今日列的高亮由底下的 .ct-mask 提供 */
 	.ct-head-day {
-		flex: 0 0 auto;
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: auto;
 		margin-left: 4rpx;
 		margin-right: 4rpx;
 		text-align: center;
@@ -492,7 +494,9 @@
 	
 	/* 节次栏：高度必须显式等于课程格高度（见模板 style），两栏才能严格等高 */
 	.ct-time {
-		flex: 0 0 auto;
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: auto;
 		line-height: 1.2;
 	}
 	
@@ -500,7 +504,9 @@
 	   卡片样式（背景色/内边距/居中）写在这里，不再依赖各页面自己的 .course-item，
 	   否则班级课表、课程课表、教师课表这几个页面根本拿不到样式 */
 	.ct-item {
-		flex: 0 0 auto;
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: auto;
 		margin: 4rpx;
 		box-sizing: border-box;
 		text-align: center;
@@ -522,8 +528,10 @@
 	
 	/* 多课程子块：高度与间距由 JS 精确分配，保证总高不超出单元格 */
 	.ct-course {
-		flex: 0 0 auto;
-		overflow: clip;
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: auto;
+		overflow: hidden;
 	}
 	
 	/* 当前节次指针：两条红线卡住这一节的上下边界，仅今天那一列。
@@ -557,7 +565,7 @@
 	}
 	
 	.course-name {
-		overflow-y: clip;
+		overflow-y: hidden;
 		text-overflow: ellipsis;
 	}
 	
