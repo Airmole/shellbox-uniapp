@@ -258,10 +258,10 @@
 	const todayColumnStyle = computed(() => {
 		const left = (gutterWidth.value || columnTitleWidth.value) + todayIndex.value * itemWidth.value + ITEM_GAP
 		return {
-			left: `${left}px`,
-			width: `${itemWidth.value - ITEM_GAP * 2}px`,
+			left: `${left+8}px`,
+			width: `${itemWidth.value+14 - ITEM_GAP * 2}px`,
 			top: `${headHeight.value}px`,
-			height: `${itemHeight.value * SECTION_COUNT}px`
+			height: `${itemHeight.value * SECTION_COUNT+30}px`
 		}
 	})
 	
@@ -281,7 +281,7 @@
 			const endAt = toMinutes(end)
 			if (startAt === null || endAt === null) continue
 			if (current < startAt || current > endAt) continue
-			const top = headHeight.value + idx * itemHeight.value
+			const top = (headHeight.value + idx * itemHeight.value) + 9
 			return { section: idx, top, bottom: top + itemHeight.value }
 		}
 		return null
